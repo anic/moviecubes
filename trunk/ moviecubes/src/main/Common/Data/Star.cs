@@ -39,7 +39,7 @@ namespace MovieCube.Common.Data
         /// <summary>
         /// 分值（用于排序）
         /// </summary>
-        public int Rank { get; set; }
+        public double Rank { get; set; }
 
     }
 }
