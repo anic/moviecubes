@@ -29,17 +29,17 @@ namespace MovieCube.Common.Data
         /// <summary>
         /// 导演
         /// </summary>
-        public List<string> Directors { get; set; }
+        public List<Star> Directors { get; set; }
 
         /// <summary>
         /// 编剧
         /// </summary>
-        public List<string> Writers { get; set; }
+        public List<Star> Writers { get; set; }
 
         /// <summary>
         /// 演员（有个关系表，演员ID，演员的角色（主演之类的））
         /// </summary>
-        public List<string> Actors { get; set; }
+        public List<Star> Actors { get; set; }
 
         /// <summary>
         /// 类型
