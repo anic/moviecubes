@@ -24,7 +24,7 @@ namespace MovieCube.Common.Data
         /// <summary>
         /// 参与电影（对应关系表，movieID，演的角色（导演，主演，编剧之类的））
         /// </summary>
-        public List<string> Movies { get; set; }
+        public List<Movie> Movies { get; set; }
 
         /// <summary>
         /// 地区
