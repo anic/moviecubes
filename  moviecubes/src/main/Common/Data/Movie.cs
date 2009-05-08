@@ -60,5 +60,10 @@ namespace MovieCube.Common.Data
         /// 分值
         /// </summary>
         public double Rank { get; set; }
+
+        /// <summary>
+        /// 默认图片
+        /// </summary>
+        public string Image { get; set; }
     }
 }
