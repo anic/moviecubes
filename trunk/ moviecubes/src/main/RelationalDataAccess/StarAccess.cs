@@ -40,6 +40,36 @@ namespace MovieCube.RelationalDataAccess
         }
 
         /// <summary>
+        /// 根据starID获得star信息和star的star信息
+        /// </summary>
+        /// <param name="starID"></param>
+        /// <returns></returns>
+        public static DataSet GetInfoByStarID(int starID)
+        {
+            DataSet ds = new DataSet();
+
+            using (MySqlConnection conn = new MySqlConnection(
+                ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("sp_GetInfoByStarID", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("starID_", MySqlDbType.MediumText);
+                cmd.Parameters["starID_"].Direction = ParameterDirection.Input;
+                cmd.Parameters["starID_"].Value = starID;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                da.Fill(ds);
+
+                conn.Close();
+            }
+
+            return ds;
+        }
+
+        /// <summary>
         /// 根据name获得star
         /// </summary>
         /// <param name="name"></param>
