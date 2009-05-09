@@ -15,7 +15,27 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Movie> QueryMovieByName(string name)
         {
-            return GetMovieByName(name);
+            List<Movie> resultMovies = GetMovieInfoByName(name);
+            //循环获得指定层数的数据
+            if(resultMovies.Count > 0)
+            {
+                Movie extendedMovie = resultMovies[0];
+                int layer = Definition.Max_Node_Layer - 2;
+                for (int i = 0; i < extendedMovie.Directors.Count; i++)
+                {
+                    extendedMovie.Directors[i] = CommonQuery.ExtendStar(extendedMovie.Directors[i], layer);
+                }
+                for (int i = 0; i < extendedMovie.Writers.Count; i++)
+                {
+                    extendedMovie.Writers[i] = CommonQuery.ExtendStar(extendedMovie.Writers[i], layer);
+                }
+                for (int i = 0; i < extendedMovie.Actors.Count; i++)
+                {
+                    extendedMovie.Actors[i] = CommonQuery.ExtendStar(extendedMovie.Actors[i], layer);
+                }
+            }
+
+            return resultMovies;
         }
 
         public List<Movie> QueryMovieByActor(string actorName)
@@ -25,12 +45,23 @@ namespace MovieCube.RelationalDataAccess
 
         #endregion
 
-        private List<Movie> GetMovieByName(string name)
+        public static List<Movie> GetMovieInfoByName(string name)
+        {
+            DataSet ds = MovieAccess.GetInfoByMovieName(name);
+            return GetInfoByDataSet(ds);
+        }
+
+        public static List<Movie> GetMovieInfoByID(int id)
+        {
+            DataSet ds = MovieAccess.GetInfoByMovieID(id);
+            return GetInfoByDataSet(ds);
+        }
+
+        private static List<Movie> GetInfoByDataSet(DataSet ds)
         {
             List<Movie> resultMovies = new List<Movie>();
-            DataSet ds = MovieAccess.GetInfoByMovieName(name);
 
-            for (int i = 0; i < ds.Tables[0].Rows.Count; i++ )
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
                 DataRow dr = ds.Tables[0].Rows[i];
 
@@ -43,7 +74,7 @@ namespace MovieCube.RelationalDataAccess
                 star.Image = dr["starImage"].ToString();
 
                 string staralias = dr["starAlia"].ToString();
-                if(staralias != "")
+                if (staralias != "")
                     Util.ProcessStringItem(staralias, star.Alias);
 
                 string role = dr["role"].ToString();

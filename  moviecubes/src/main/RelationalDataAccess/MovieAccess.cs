@@ -39,6 +39,37 @@ namespace MovieCube.RelationalDataAccess
             return ds;
         }
 
+
+        /// <summary>
+        /// 根据movieID获得movie信息和movie的star信息
+        /// </summary>
+        /// <param name="movieID"></param>
+        /// <returns></returns>
+        public static DataSet GetInfoByMovieID(int movieID)
+        {
+            DataSet ds = new DataSet();
+
+            using (MySqlConnection conn = new MySqlConnection(
+                ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("sp_GetInfoByMovieID", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("movieID_", MySqlDbType.MediumText);
+                cmd.Parameters["movieID_"].Direction = ParameterDirection.Input;
+                cmd.Parameters["movieID_"].Value = movieID;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                da.Fill(ds);
+
+                conn.Close();
+            }
+
+            return ds;
+        }
+
         /// <summary>
         /// 根据id获得movie
         /// </summary>

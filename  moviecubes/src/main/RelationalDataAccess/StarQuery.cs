@@ -16,7 +16,27 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Star> QueryStarByName(string name)
         {
-            return GetStarByName(name);
+            List<Star> resultStars = GetStarInfoByName(name);
+
+            if (resultStars.Count > 0)
+            {
+                Star extendedStar = resultStars[0];
+                int layer = Definition.Max_Node_Layer - 2;
+                for (int i = 0; i < extendedStar.DirectMovies.Count; i++)
+                {
+                    extendedStar.DirectMovies[i] = CommonQuery.ExtendMovie(extendedStar.DirectMovies[i], layer);
+                }
+                for (int i = 0; i < extendedStar.WriteMovies.Count; i++)
+                {
+                    extendedStar.WriteMovies[i] = CommonQuery.ExtendMovie(extendedStar.WriteMovies[i], layer);
+                }
+                for (int i = 0; i < extendedStar.ActMovies.Count; i++)
+                {
+                    extendedStar.ActMovies[i] = CommonQuery.ExtendMovie(extendedStar.ActMovies[i], layer);
+                }
+            }
+
+            return resultStars;
         }
 
         public List<Star> QueryStarByMovie(string movieName)
@@ -27,10 +47,21 @@ namespace MovieCube.RelationalDataAccess
         #endregion
 
 
-        private List<Star> GetStarByName(string name)
+        public static List<Star> GetStarInfoByName(string name)
+        {
+            DataSet ds = StarAccess.GetInfoByStarName(name);
+            return GetInfoByDataSet(ds);
+        }
+
+        public static List<Star> GetStarInfoByID(int id)
+        {
+            DataSet ds = StarAccess.GetInfoByStarID(id);
+            return GetInfoByDataSet(ds);
+        }
+
+        private static List<Star> GetInfoByDataSet(DataSet ds)
         {
             List<Star> resultStars = new List<Star>();
-            DataSet ds = StarAccess.GetInfoByStarName(name);
 
             for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
