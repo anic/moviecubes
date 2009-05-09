@@ -6,6 +6,38 @@ namespace MovieCube.Common.Data
 {
     public class Star
     {
+        public Star()
+        {
+            Alias = new List<string>();
+            DirectMovies = new List<Movie>();
+            WriteMovies = new List<Movie>();
+            ActMovies = new List<Movie>();
+        }
+
+
+        public void AddMovies(Movie addMovie, string role)
+        {
+            switch (role)
+            {
+                case Definition.Role_Director:
+                    {
+                        DirectMovies.Add(addMovie);
+                        break;
+                    }
+                case Definition.Role_Writer:
+                    {
+                        WriteMovies.Add(addMovie);
+                        break;
+                    }
+                case Definition.Role_Actor:
+                    {
+                        ActMovies.Add(addMovie);
+                        break;
+                    }
+                default: break;
+            }
+        }
+
         /// <summary>
         /// ID
         /// </summary>
@@ -22,9 +54,19 @@ namespace MovieCube.Common.Data
         public List<string> Alias { get; set; }
 
         /// <summary>
-        /// 参与电影（对应关系表，movieID，演的角色（导演，主演，编剧之类的））
+        /// 作为导演的电影
         /// </summary>
-        public List<Movie> Movies { get; set; }
+        public List<Movie> DirectMovies { get; set; }
+
+        /// <summary>
+        /// 作为编剧的电影
+        /// </summary>
+        public List<Movie> WriteMovies { get; set; }
+
+        /// <summary>
+        /// 作为主演的电影
+        /// </summary>
+        public List<Movie> ActMovies { get; set; }
 
         /// <summary>
         /// 地区

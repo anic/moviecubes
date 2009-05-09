@@ -6,6 +6,38 @@ namespace MovieCube.Common.Data
 {
     public class Movie
     {
+        public Movie()
+        {
+            Alias = new List<string>();
+            Directors = new List<Star>();
+            Writers = new List<Star>();
+            Actors = new List<Star>();
+            Type = new List<string>();
+        }
+
+        public void AddStars(Star addStar, string role)
+        {
+            switch (role)
+            {
+                case Definition.Role_Director:
+                    {
+                        Directors.Add(addStar);
+                        break;
+                    }
+                case Definition.Role_Writer:
+                    {
+                        Writers.Add(addStar);
+                        break;
+                    }
+                case Definition.Role_Actor:
+                    {
+                        Actors.Add(addStar);
+                        break;
+                    }
+                default: break;
+            }
+        }
+
         /// <summary>
         /// ID
         /// </summary>
