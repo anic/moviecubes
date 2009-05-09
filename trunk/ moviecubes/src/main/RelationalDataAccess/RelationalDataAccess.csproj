@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MovieAccess.cs" />
+    <Compile Include="MovieQuery.cs" />
     <Compile Include="MovieStarAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StarAccess.cs" />
+    <Compile Include="StarQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
