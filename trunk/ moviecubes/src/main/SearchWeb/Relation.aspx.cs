@@ -21,7 +21,7 @@ namespace MovieCube.SearchWeb
                 //CreateXml();//创建Xml的方法，可使用XmlTextWriter、XmlDocument ，或者直接读取Xml文件等待
                 StarQuery query = new StarQuery();
                 List<Star> stars = query.QueryStarByName(star);
-                string result = JsonConvert.SerializeObject(stars).ToString();
+                string result = JsonConvert.SerializeObject(stars);
                 Response.Write(result);
             }
         }
