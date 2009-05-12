@@ -22,7 +22,7 @@ namespace MovieCube.SearchWeb
         {
             MovieQuery query = new MovieQuery();
             List<Movie> movies = query.QueryMovieByName(name);
-            string result = JsonConvert.SerializeObject(movies).ToString();
+            string result = JsonConvert.SerializeObject(movies);
             return result;
         }
 
@@ -31,7 +31,7 @@ namespace MovieCube.SearchWeb
         {
             StarQuery query = new StarQuery();
             List<Star> stars = query.QueryStarByName(name);
-            string result = JsonConvert.SerializeObject(stars).ToString();
+            string result = JsonConvert.SerializeObject(stars);
             return result;
         }
     }

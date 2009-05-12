@@ -14,9 +14,7 @@
     </div>
         
     <script type="text/javascript">
-        //alert(MovieCube.SearchWeb.RelationPage.GetMovieByName("回家").value);
-        //alert("梅兰芳");
-        alert(MovieCube.SearchWeb.RelationPage.GetStarByName("黄秋生").value);
+        alert(MovieCube.SearchWeb.RelationPage.GetStarByName("周迅").value);
         
     </script>
 </body>
