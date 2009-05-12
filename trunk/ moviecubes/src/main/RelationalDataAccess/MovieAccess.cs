@@ -10,7 +10,7 @@ namespace MovieCube.RelationalDataAccess
     public class MovieAccess
     {
         /// <summary>
-        /// 根据movieName获得movie信息和movie的star信息
+        /// 精确匹配movieName获得movie信息和movie的star信息
         /// </summary>
         /// <param name="movieName"></param>
         /// <returns></returns>
@@ -39,6 +39,66 @@ namespace MovieCube.RelationalDataAccess
             return ds;
         }
 
+        /// <summary>
+        /// 模糊匹配movieName获得movie信息和movie的star信息
+        /// </summary>
+        /// <param name="movieName"></param>
+        /// <returns></returns>
+        public static DataSet GetInfoLikeMovieName(string movieName)
+        {
+            DataSet ds = new DataSet();
+
+            using (MySqlConnection conn = new MySqlConnection(
+                ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("sp_GetInfoLikeMovieName", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("movieName_", MySqlDbType.MediumText);
+                cmd.Parameters["movieName_"].Direction = ParameterDirection.Input;
+                cmd.Parameters["movieName_"].Value = movieName;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                da.Fill(ds);
+
+                conn.Close();
+            }
+
+            return ds;
+        }
+
+
+        /// <summary>
+        /// 匹配movieAlia获得movie信息和movie的star信息
+        /// </summary>
+        /// <param name="movieName"></param>
+        /// <returns></returns>
+        public static DataSet GetInfoLikeMovieAlia(string movieAlia)
+        {
+            DataSet ds = new DataSet();
+
+            using (MySqlConnection conn = new MySqlConnection(
+                ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("sp_GetInfoByMovieAlia", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("alia_", MySqlDbType.MediumText);
+                cmd.Parameters["alia_"].Direction = ParameterDirection.Input;
+                cmd.Parameters["alia_"].Value = movieAlia;
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                da.Fill(ds);
+
+                conn.Close();
+            }
+
+            return ds;
+        }
 
         /// <summary>
         /// 根据movieID获得movie信息和movie的star信息
