@@ -17,7 +17,7 @@ namespace MovieCube.RelationalDataAccess
         {
             List<Movie> resultMovies = GetMovieInfoByName(name);
             //循环获得指定层数的数据
-            if(resultMovies.Count > 0)
+            if (resultMovies.Count > 0)
             {
                 Movie extendedMovie = resultMovies[0];
                 int layer = Definition.Max_Node_Layer - 2;
@@ -34,6 +34,13 @@ namespace MovieCube.RelationalDataAccess
                     extendedMovie.Actors[i] = CommonQuery.ExtendStar(extendedMovie.Actors[i], layer);
                 }
             }
+            //else
+            {
+                //精确匹配未果，粗匹配
+                resultMovies = GetMovieInfoLikeName(name);
+
+                resultMovies = GetMovieInfoByAlia(name);
+            }
 
             return resultMovies;
         }
@@ -48,6 +55,18 @@ namespace MovieCube.RelationalDataAccess
         public static List<Movie> GetMovieInfoByName(string name)
         {
             DataSet ds = MovieAccess.GetInfoByMovieName(name);
+            return GetInfoByDataSet(ds);
+        }
+
+        public static List<Movie> GetMovieInfoLikeName(string name)
+        {
+            DataSet ds = MovieAccess.GetInfoLikeMovieName(name);
+            return GetInfoByDataSet(ds);
+        }
+
+        public static List<Movie> GetMovieInfoByAlia(string alia)
+        {
+            DataSet ds = MovieAccess.GetInfoLikeMovieAlia(alia);
             return GetInfoByDataSet(ds);
         }
 
