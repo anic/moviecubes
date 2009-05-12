@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc"
+	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html">
+
+	
+	<mx:Style>
+		.text {
+			color: #222222;
+			font-family: Verdana;
+		}
+	</mx:Style>
+
+	<fc:SpringGraph id="s" backgroundColor="#ffffff" 
+		lineColor="#333388" left="0" right="0" top="0" bottom="0"
+		itemRenderer="RelationItemView" repulsionFactor="{rep.value}">
+	</fc:SpringGraph>
+	
+	<mx:Label x="10" y="10" text="Amazon Roamer" styleName="text" fontSize="15"/>
+	<mx:Text fontSize="9" textAlign="left" styleName="text"
+		htmlText="&lt;a href=&quot;http://mark-shepherd.com&quot;&gt;mark-shepherd.com&lt;/a&gt;" x="10" y="32"/>
+	<mx:HSlider x="9" y="52" value="1.0" minimum="0.05" maximum="1.5" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
+	<mx:HSlider id="rep" x="121" y="52" value="0.4" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
+	<mx:Label x="10" y="76" text="Double-click an Amazon item to see similar items" fontSize="10" styleName="text" id="help"/>
+	
+	<mx:Script>
+		<![CDATA[
+		import com.adobe.flex.extras.controls.springgraph.Graph;	
+		import com.adobe.serialization.json.JSON;  
+				
+		[Bindable]
+		public var scaleFactor: Number = 1.0;
+		
+		private var items: Graph;
+		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		private var myLoader:URLLoader = new URLLoader();
+		private var myRequest:URLRequest;
+		
+
+		/*private function startup(): void {
+			items = new Graph();
+			//addItem("B000IJVETY", "loading...", null).createSimilars();
+			
+			trace("loading");
+		}*/
+		
+		/*public function addItem(id: String, name: String, linkTo: RelationItem): RelationItem {
+			var newItem: RelationItem = new RelationItem(id, name);
+			items.add(newItem);
+			if(linkTo != null)
+				items.link(newItem, linkTo);				
+			s.dataProvider = items;
+			return newItem;
+		}*/
+		
+		public function addItem(id: String, name: String, linkTo: RelationItem): RelationItem {
+			var newItem: RelationItem = new RelationItem(id, name);
+			items.add(newItem);
+			if(linkTo != null)
+				items.link(newItem, linkTo);
+			s.dataProvider = items;
+			return newItem;
+		}
+
+		
+	
+		public function createItems(items: XMLList, linkTo: RelationItem): void {
+			for(var i: int = 0; i < items.length(); i++) {
+				var product: XML = items[i];
+				var ns:Namespace = product.namespace("");
+				var asin: String = product.ns::ASIN;
+				var title: String = product.ns::Title;
+				addItem(asin, title, linkTo);
+			}
+		}
+		
+		
+	   private function init():void
+	   {
+	   		items = new Graph();
+		    
+		    loadStar("周迅");
+	   }
+	   
+	   
+	   public function loadStar(name:String):void
+	   {
+	   		myRequest = new URLRequest(serviceUrl);
+		    myRequest.method = URLRequestMethod.POST;
+		    var data:URLVariables = new URLVariables();
+		    //接收来自flash的参数调用,比如flash文件为 loadxml.swf，带参数 loadxml.swf?user_pkid=10001
+		    data.star = name; // 获取10001
+		    myRequest.data = data;
+		    myLoader.load(myRequest);
+		    myLoader.addEventListener(Event.COMPLETE,onLoadStarComplete);
+	   }
+	   
+	   public function loadMovie(name:String):void
+	   {
+	   		myRequest = new URLRequest(serviceUrl);
+		    myRequest.method = URLRequestMethod.POST;
+		    var data:URLVariables = new URLVariables();
+		    //接收来自flash的参数调用,比如flash文件为 loadxml.swf，带参数 loadxml.swf?user_pkid=10001
+		    data.movie = name; // 获取10001
+		    myRequest.data = data;
+		    myLoader.load(myRequest);
+		    myLoader.addEventListener(Event.COMPLETE,onLoadMovieComplete);
+	   }
+	   
+	   private function addMovieArray(arr:Array,item:RelationItem):void
+	   {
+	   		if(arr == null)
+	   			return; 
+	   		for(var j:int = 0;j<arr.length;++j)
+			{
+				var asin: String = arr[j].ID;
+				var title: String = arr[j].Name;
+				var newItem:RelationItem = items.find(asin) as RelationItem;
+				if (newItem ==null)
+					newItem = addItem(asin, title, item);
+					
+				addStarArray(arr[j].Actors,newItem);
+			}
+	   }
+	   
+	   private function addStarArray(arr:Array,item:RelationItem):void
+	   {
+	   		if(arr == null)
+	   			return; 
+	   		for(var j:int = 0;j<arr.length;++j)
+			{
+				var asin: String = arr[j].ID;
+				var title: String = arr[j].Name;
+				
+				var newItem:RelationItem = items.find(asin) as RelationItem;
+				if (newItem ==null)
+					newItem = addItem(asin, title, item);
+					
+				addMovieArray(arr[j].DirectMovies,newItem);
+				addMovieArray(arr[j].WriteMovies,newItem);
+				addMovieArray(arr[j].ActMovies,newItem);
+		}
+	   }
+   
+	   private function onLoadStarComplete(event:Event):void
+	   {
+		    var loader:URLLoader = URLLoader(event.target);
+		  	var arr:Array = (JSON.decode(loader.data) as Array);
+		  	addStarArray(arr,null);
+	   }
+	   
+	   private function onLoadMovieComplete(event:Event):void
+	   {
+		    var loader:URLLoader = URLLoader(event.target);
+		  	var arr:Array = (JSON.decode(loader.data) as Array);
+		  	addMovieArray(arr,null);
+	   }
+		
+		
+		private var helpRemoved: Boolean = false;
+		
+		public function gotDoubleClick(): void {
+			help.visible = false;
+		}
+		]]>
+	</mx:Script>
+</mx:Application>
