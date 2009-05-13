@@ -10,7 +10,6 @@
 </compiler>
 <applications>
 <application path="RelationGraph.mxml"/>
-<application path="RelationDemo.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

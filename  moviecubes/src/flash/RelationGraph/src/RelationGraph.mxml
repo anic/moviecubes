@@ -52,8 +52,8 @@
 			return newItem;
 		}*/
 		
-		public function addItem(id: String, name: String, linkTo: RelationItem): RelationItem {
-			var newItem: RelationItem = new RelationItem(id, name);
+		public function addItem(id: String, name: String,isStar:Boolean, linkTo: RelationItem): RelationItem {
+			var newItem: RelationItem = new RelationItem(id, name,isStar);
 			items.add(newItem);
 			if(linkTo != null)
 				items.link(newItem, linkTo);
@@ -63,7 +63,7 @@
 
 		
 	
-		public function createItems(items: XMLList, linkTo: RelationItem): void {
+		/*public function createItems(items: XMLList, linkTo: RelationItem): void {
 			for(var i: int = 0; i < items.length(); i++) {
 				var product: XML = items[i];
 				var ns:Namespace = product.namespace("");
@@ -71,39 +71,44 @@
 				var title: String = product.ns::Title;
 				addItem(asin, title, linkTo);
 			}
-		}
+		}*/
 		
 		
 	   private function init():void
 	   {
 	   		items = new Graph();
 		    
-		    loadStar("周迅");
+		    loadStar("刘德华");
 	   }
 	   
 	   
 	   public function loadStar(name:String):void
 	   {
+	   		help.text = "加载明星 "+name+" 中...";
 	   		myRequest = new URLRequest(serviceUrl);
 		    myRequest.method = URLRequestMethod.POST;
 		    var data:URLVariables = new URLVariables();
-		    //接收来自flash的参数调用,比如flash文件为 loadxml.swf，带参数 loadxml.swf?user_pkid=10001
-		    data.star = name; // 获取10001
+		    data.type = "queryStarByName";
+		    data.query = name; 
 		    myRequest.data = data;
 		    myLoader.load(myRequest);
 		    myLoader.addEventListener(Event.COMPLETE,onLoadStarComplete);
+		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 	   }
 	   
 	   public function loadMovie(name:String):void
 	   {
+	   		help.text = "加载电影 "+name+" 中...";
+	   		
 	   		myRequest = new URLRequest(serviceUrl);
 		    myRequest.method = URLRequestMethod.POST;
 		    var data:URLVariables = new URLVariables();
-		    //接收来自flash的参数调用,比如flash文件为 loadxml.swf，带参数 loadxml.swf?user_pkid=10001
-		    data.movie = name; // 获取10001
+		    data.type = "queryMovieByStar";
+		    data.query = name; 
 		    myRequest.data = data;
 		    myLoader.load(myRequest);
 		    myLoader.addEventListener(Event.COMPLETE,onLoadMovieComplete);
+		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 	   }
 	   
 	   private function addMovieArray(arr:Array,item:RelationItem):void
@@ -116,7 +121,9 @@
 				var title: String = arr[j].Name;
 				var newItem:RelationItem = items.find(asin) as RelationItem;
 				if (newItem ==null)
-					newItem = addItem(asin, title, item);
+					newItem = addItem(asin, title,false, item);
+				else if (item!=null)
+					items.link(newItem, item);
 					
 				addStarArray(arr[j].Actors,newItem);
 			}
@@ -133,8 +140,10 @@
 				
 				var newItem:RelationItem = items.find(asin) as RelationItem;
 				if (newItem ==null)
-					newItem = addItem(asin, title, item);
-					
+					newItem = addItem(asin, title,true, item);
+				else if (item!=null)
+					items.link(newItem, item);
+				
 				addMovieArray(arr[j].DirectMovies,newItem);
 				addMovieArray(arr[j].WriteMovies,newItem);
 				addMovieArray(arr[j].ActMovies,newItem);
@@ -143,13 +152,20 @@
    
 	   private function onLoadStarComplete(event:Event):void
 	   {
+	   		//this.help.text = "";
 		    var loader:URLLoader = URLLoader(event.target);
 		  	var arr:Array = (JSON.decode(loader.data) as Array);
 		  	addStarArray(arr,null);
 	   }
 	   
+	   private function errorHandler(e:IOErrorEvent):void
+	   {
+	   		this.help.text = "加载失败";	   		
+	   }
+	   
 	   private function onLoadMovieComplete(event:Event):void
 	   {
+	   		//this.help.text = "";
 		    var loader:URLLoader = URLLoader(event.target);
 		  	var arr:Array = (JSON.decode(loader.data) as Array);
 		  	addMovieArray(arr,null);
@@ -159,7 +175,7 @@
 		private var helpRemoved: Boolean = false;
 		
 		public function gotDoubleClick(): void {
-			help.visible = false;
+			//help.visible = false;
 		}
 		]]>
 	</mx:Script>

@@ -27,7 +27,15 @@
 			private var app: RelationGraph = RelationGraph(Application.application);
 			
 			public function doubleClick(event: Event): void {
-				RelationGraph(Application.application).loadStar(data.name);
+				if (data.isStar)
+				{
+					RelationGraph(Application.application).loadStar(data.name);	
+				}
+				else
+				{
+					RelationGraph(Application.application).loadMovie(data.name);
+				}
+				
 			}
 		]]>
 	</mx:Script>
