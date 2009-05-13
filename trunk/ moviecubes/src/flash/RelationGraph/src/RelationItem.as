@@ -24,44 +24,23 @@ package
 	 */
 	public class RelationItem extends Item
 	{
+		
+		
 		[Bindable]
 		public var name: String;
 		
 		[Bindable]
 		public var imageUrl: String;
 				
-		private var similarProducts: XMLList;
-		private var createSimilarsASAP: Boolean = false;
+		[Bindable]				
+		public var isStar:Boolean;
 		
-		public function RelationItem(itemId: String, name: String) {
+		public function RelationItem(itemId: String, name: String, isStar:Boolean) {
 			super(itemId);
 			
 			this.name = name;
-//			RelationService.getItemInfo(itemId, this);
+			this.isStar = isStar;
 		}
 		
-		public function getItemInfoResult(event:ResultEvent):void {
-			var info: XML = XML(event.result);
-			var ns:Namespace = info.namespace("");
-			this.name = info.ns::Items.ns::Item.ns::ItemAttributes.ns::Title;
-			this.imageUrl = info.ns::Items.ns::Item.ns::SmallImage.ns::URL;
-			similarProducts = info.ns::Items.ns::Item.ns::SimilarProducts.ns::SimilarProduct;
-			if(createSimilarsASAP)
-				createSimilars();
-		}
-
-		public function getItemInfoFault(event:FaultEvent):void {
-			Alert.show("getItemInfoFault " + event.toString());
-		}
-		
-		public function createSimilars(): void {
-			if(similarProducts == null) {
-				createSimilarsASAP = true;
-				return;
-			}
-			var app: RelationGraph = RelationGraph(Application.application);
-			app.createItems(similarProducts, this);
-			similarProducts = null;
-		}
 	}
 }
