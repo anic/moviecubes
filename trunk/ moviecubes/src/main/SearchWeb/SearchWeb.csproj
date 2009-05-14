@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="flash\RelationGraph.swf" />
     <Content Include="Relation.aspx" />
     <Content Include="RelationPage.aspx" />
     <Content Include="Web.config" />
@@ -105,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="flash\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -135,4 +135,9 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>if exist ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf copy ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf ..\flash\</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
