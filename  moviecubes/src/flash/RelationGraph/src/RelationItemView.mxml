@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">	
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{init();}" 
+	 width="192" height="66"
+	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}">	
+
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
 	//
@@ -14,14 +18,42 @@
 	<!-- AmazonItemView.mxml is the UI component that displays one AmazonItem, which
 		is pointed to by our "data" property. -->
 
-	<mx:Image id="image" source="{data.imageUrl}" toolTip="{data.name}" 
-		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"/>
+	<!--<mx:Image id="image" source="{data.imageUrl}" toolTip="{data.name}" 
+		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"/>-->
+	   <mx:Glow id="buttonGrow" duration="5000" 
+        alphaFrom="1.0" alphaTo="0.3" 
+        blurXFrom="0.0" blurXTo="50.0" 
+        blurYFrom="0.0" blurYTo="50.0" 
+        color="0x00FF00" target="{this.txtName}"/>
+
 		
-	<mx:Label text="{data.name}" width="{image.width > 75 ? image.width : 75}" textAlign="center" styleName="text" fontSize="10"/>
+	<mx:Label id="txtName" text="{data.name}" width="150" textAlign="center" styleName="text" fontSize="18" 
+		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" x="10" y="10" color="#FFFFFF"/>
+	 
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.TextArea;
 			import mx.core.Application;
+			import tipBubble.*;
+			
+			public var tipMan:BubbleTipManager = new BubbleTipManager();
+			
+
+			
+			public function init():void
+			{
+				this.buttonGrow.play();
+				
+				if (data.isStar)
+				{
+					tipMan.createBubbleTip(this,"演员 "+data.name,null ,"");
+				}
+				else
+				{
+					tipMan.createBubbleTip(this,"电影 "+data.name,null ,"");
+				}
+			}
 			
 			[Bindable]
 			private var app: RelationGraph = RelationGraph(Application.application);
@@ -37,6 +69,11 @@
 				}
 				
 			}
+			
+			
+			
+
 		]]>
 	</mx:Script>
-</mx:VBox>
+	
+</mx:Canvas>

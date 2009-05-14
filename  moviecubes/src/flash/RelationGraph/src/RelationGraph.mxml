@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc"
-	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html">
+	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" width="653">
 
 	
 	<mx:Style>
@@ -9,81 +9,69 @@
 			font-family: Verdana;
 		}
 	</mx:Style>
+	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="13" width="285" keyDown="{if (event.keyCode == 13) search();}" />
 
-	<fc:SpringGraph id="s" backgroundColor="#ffffff" 
-		lineColor="#333388" left="0" right="0" top="0" bottom="0"
-		itemRenderer="RelationItemView" repulsionFactor="{rep.value}">
+	<fc:SpringGraph id="s" backgroundColor="#0" 
+		lineColor="#333388" left="0" right="0" top="69" bottom="0"
+		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
+		 >
 	</fc:SpringGraph>
 	
-	<mx:Label x="10" y="10" text="Amazon Roamer" styleName="text" fontSize="15"/>
-	<mx:Text fontSize="9" textAlign="left" styleName="text"
-		htmlText="&lt;a href=&quot;http://mark-shepherd.com&quot;&gt;mark-shepherd.com&lt;/a&gt;" x="10" y="32"/>
-	<mx:HSlider x="9" y="52" value="1.0" minimum="0.05" maximum="1.5" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
-	<mx:HSlider id="rep" x="121" y="52" value="0.4" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
-	<mx:Label x="10" y="76" text="Double-click an Amazon item to see similar items" fontSize="10" styleName="text" id="help"/>
+	<mx:Label x="10" y="10" text="Movie Cube" styleName="text" fontSize="15"/>
+	<mx:Label x="123" y="43" fontSize="10" styleName="text" id="help"/>
 	
 	<mx:Script>
 		<![CDATA[
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
 		import com.adobe.serialization.json.JSON;  
+		import mx.controls.Alert;
 				
 		[Bindable]
 		public var scaleFactor: Number = 1.0;
 		
 		private var items: Graph;
 		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-		private var myLoader:URLLoader = new URLLoader();
-		private var myRequest:URLRequest;
-		
 
-		/*private function startup(): void {
-			items = new Graph();
-			//addItem("B000IJVETY", "loading...", null).createSimilars();
+		
+		[Bindable]
+		private var keys:Array = null;
+
+		public function addItem(data:Object,isStar:Boolean, linkTo: RelationItem): RelationItem {
+			var newItem: RelationItem = new RelationItem(data,isStar);
+			items.add(newItem);
 			
-			trace("loading");
-		}*/
-		
-		/*public function addItem(id: String, name: String, linkTo: RelationItem): RelationItem {
-			var newItem: RelationItem = new RelationItem(id, name);
-			items.add(newItem);
-			if(linkTo != null)
-				items.link(newItem, linkTo);				
-			s.dataProvider = items;
-			return newItem;
-		}*/
-		
-		public function addItem(id: String, name: String,isStar:Boolean, linkTo: RelationItem): RelationItem {
-			var newItem: RelationItem = new RelationItem(id, name,isStar);
-			items.add(newItem);
 			if(linkTo != null)
 				items.link(newItem, linkTo);
 			s.dataProvider = items;
 			return newItem;
 		}
-
-		
-	
-		/*public function createItems(items: XMLList, linkTo: RelationItem): void {
-			for(var i: int = 0; i < items.length(); i++) {
-				var product: XML = items[i];
-				var ns:Namespace = product.namespace("");
-				var asin: String = product.ns::ASIN;
-				var title: String = product.ns::Title;
-				addItem(asin, title, linkTo);
-			}
-		}*/
-		
 		
 	   private function init():void
 	   {
 	   		items = new Graph();
 		    
-		    loadStar("刘德华");
+		    loadKeys();
+		     
+		    //loadStar("刘德华");
 	   }
 	   
+	   private function loadKeys():void
+	   {
+	   		var request:URLRequest = new URLRequest(serviceUrl);
+		    request.method = URLRequestMethod.POST;
+		    var data:URLVariables = new URLVariables();
+		    data.type = "queryKeys";
+		    request.data = data;
+		    var loader:URLLoader = new URLLoader();
+		    loader.load(request);
+		    loader.addEventListener(Event.COMPLETE,onLoadKeyComplete);
+		    loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+	   }
 	   
 	   public function loadStar(name:String):void
 	   {
+	   		var myLoader:URLLoader = new URLLoader();
+			var myRequest:URLRequest;
 	   		help.text = "加载明星 "+name+" 中...";
 	   		myRequest = new URLRequest(serviceUrl);
 		    myRequest.method = URLRequestMethod.POST;
@@ -100,6 +88,8 @@
 	   {
 	   		help.text = "加载电影 "+name+" 中...";
 	   		
+	   		var myLoader:URLLoader = new URLLoader();
+			var myRequest:URLRequest;
 	   		myRequest = new URLRequest(serviceUrl);
 		    myRequest.method = URLRequestMethod.POST;
 		    var data:URLVariables = new URLVariables();
@@ -118,10 +108,9 @@
 	   		for(var j:int = 0;j<arr.length;++j)
 			{
 				var asin: String = arr[j].ID;
-				var title: String = arr[j].Name;
 				var newItem:RelationItem = items.find(asin) as RelationItem;
 				if (newItem ==null)
-					newItem = addItem(asin, title,false, item);
+					newItem = addItem(arr[j],false, item);
 				else if (item!=null)
 					items.link(newItem, item);
 					
@@ -136,11 +125,9 @@
 	   		for(var j:int = 0;j<arr.length;++j)
 			{
 				var asin: String = arr[j].ID;
-				var title: String = arr[j].Name;
-				
 				var newItem:RelationItem = items.find(asin) as RelationItem;
 				if (newItem ==null)
-					newItem = addItem(asin, title,true, item);
+					newItem = addItem(arr[j],true, item);
 				else if (item!=null)
 					items.link(newItem, item);
 				
@@ -152,7 +139,7 @@
    
 	   private function onLoadStarComplete(event:Event):void
 	   {
-	   		//this.help.text = "";
+	   		help.text += "完成";
 		    var loader:URLLoader = URLLoader(event.target);
 		  	var arr:Array = (JSON.decode(loader.data) as Array);
 		  	addStarArray(arr,null);
@@ -160,23 +147,37 @@
 	   
 	   private function errorHandler(e:IOErrorEvent):void
 	   {
-	   		this.help.text = "加载失败";	   		
+	   		this.help.text = "加载失败";
+	   		  		
 	   }
 	   
 	   private function onLoadMovieComplete(event:Event):void
 	   {
-	   		//this.help.text = "";
+	   		help.text += "完成";
 		    var loader:URLLoader = URLLoader(event.target);
 		  	var arr:Array = (JSON.decode(loader.data) as Array);
 		  	addMovieArray(arr,null);
 	   }
 		
-		
-		private var helpRemoved: Boolean = false;
-		
-		public function gotDoubleClick(): void {
-			//help.visible = false;
+		private function onLoadKeyComplete(event:Event):void
+		{
+			var loader:URLLoader = URLLoader(event.target);
+			keys = (JSON.decode(loader.data) as Array);
+			txtSearch.dataProvider=keys;
+			txtSearch.labelField = "Key";
+			this.help.text = "加载关键字成功";
 		}
+		
+		private function search():void
+		{
+			items.empty();
+			this.loadStar(this.txtSearch.text);
+		}
+
 		]]>
 	</mx:Script>
+	<mx:Button x="416" y="13" label="搜索" id="btnSearch" click="{search();}" 
+		/>
+	<mx:HSlider id="rep" x="416" y="43" value="0.14" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
+	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
 </mx:Application>
