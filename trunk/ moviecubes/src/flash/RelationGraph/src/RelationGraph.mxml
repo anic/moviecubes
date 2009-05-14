@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc"
-	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" width="653">
+	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" width="653" height="658">
 
 	
 	<mx:Style>
@@ -30,9 +30,10 @@
 		public var scaleFactor: Number = 1.0;
 		
 		private var items: Graph;
-		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-
-		
+		//private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		private var serviceUrl:String = "/Relation.aspx";
+ 
+		 
 		[Bindable]
 		private var keys:Array = null;
 

@@ -35,7 +35,8 @@ package
 			
 			this.name = data.Name;
 			this.isStar = isStar;
-			this.data = data; 
+			this.data = data;
+	   
 		}
 		
 	}
