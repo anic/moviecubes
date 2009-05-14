@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Data\Definition.cs" />
     <Compile Include="Data\Movie.cs" />
+    <Compile Include="Data\QueryKey.cs" />
     <Compile Include="Data\RelationResult.cs" />
     <Compile Include="Data\Star.cs" />
     <Compile Include="Interface\IMovieQuery.cs" />

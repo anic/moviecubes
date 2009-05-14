@@ -189,5 +189,40 @@ namespace MovieCube.RelationalDataAccess
 
             return ds;
         }
+
+        public static void InsertData(string name)
+        {
+           // DataSet ds = new DataSet();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(
+                    ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+                {
+                    conn.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("sp_InsertData", conn);
+                    //cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "INSERT INTO table1(name) VALUES(\'"+name+"\') ";
+                    
+                    //cmd.Parameters.Add("@name_", MySqlDbType.String).Value = name;
+                    //cmd.Parameters["name_"].Direction = ParameterDirection.Input;
+                    //cmd.Parameters["name_"].Value = name;
+
+                    int result = cmd.ExecuteNonQuery();
+                    //MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                    //da.Fill(ds);
+
+                    conn.Close();
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
+
+           // return ds;
+        }
     }
 }

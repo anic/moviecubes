@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace MovieCube.Common.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Movie
+    public class Movie:ICloneable
     {
         public Movie()
         {
@@ -15,6 +15,14 @@ namespace MovieCube.Common.Data
             Writers = new List<Star>();
             Actors = new List<Star>();
             Type = new List<string>();
+
+            //ID = 0;
+            //Time = "";
+            //Name = "";
+            //Area = "";
+            //Language = "";
+            //Rank = 0;
+            //Image = "";
         }
 
 
@@ -112,5 +120,45 @@ namespace MovieCube.Common.Data
         /// </summary>
         [JsonProperty]
         public string Image { get; set; }
+
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            Movie result = new Movie();
+            result.ID = ID;
+            result.Time = Time;
+            result.Name = Name;
+            result.Area = Area;
+            result.Language = Language;
+            result.Rank = Rank;
+            result.Image = Image;
+            return result;
+        }
+
+        #endregion
+
+        public Movie Clone(int level)
+        {
+            Movie result = this.Clone() as Movie;
+            if (level > 0)
+            {
+                foreach (Star s in Actors)
+                {
+                    result.Actors.Add(s.Clone(level - 1));
+                }
+
+                foreach (Star s in Writers)
+                {
+                    result.Writers.Add(s.Clone(level - 1));
+                }
+
+                foreach (Star s in Directors)
+                {
+                    result.Directors.Add(s.Clone(level - 1));
+                }
+            }
+            return result;
+        }
     }
 }
