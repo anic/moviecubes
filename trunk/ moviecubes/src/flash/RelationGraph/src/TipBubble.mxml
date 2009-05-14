@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" horizontalScrollPolicy="off" verticalScrollPolicy="off" clipContent="false" width="0" height="0" enabled="false" disabledOverlayAlpha="0" move="setQuad(event)">
+<mx:Image id="arrow" source="@Embed('images/tipBubble_14.png')" x="24" y="-47" alpha="0" creationComplete="fader.play()"/>
+<mx:Image id="arrow2" source="@Embed('images/tipBubble_15.png')" x="{-arrow2.width-14}" y="-47" alpha="1"/>
+<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import tipBubble.*;
+	
+	[Embed(source="images/tipBubble_03.png")]
+    [Bindable]
+    public var imgClsTop:Class;
+    [Embed(source="images/tipBubble_06.png")]
+    [Bindable]
+    public var imgClsLeft:Class;
+    [Embed(source="images/tipBubble_08.png")]
+    [Bindable]
+    public var imgClsRight:Class;
+    [Embed(source="images/tipBubble_11.png")]
+    [Bindable]
+    public var imgClsBottom:Class;
+    [Embed(source="images/tipBubble_01.png")]
+    [Bindable]
+    public var imgClsCenter:Class;
+	
+	//[Embed(source="arial.ttf", fontFamily="arialFont")] 
+	public var theFont:String;
+	
+				
+		public function get bubbleTop():Number
+		{
+			var value:Number = 0;
+			try{
+				switch (Quad) {
+					case "default": value = bubbleYOffset-this.bubble.height;
+					break;
+					case "tooWide": value = bubbleYOffset-this.bubble.height;
+					break;
+					case "tooTall": value = -this.y;
+					break;
+					case "tooBoth": value = -this.y;
+					break;
+				}
+			}catch(err:Error){
+				//do nothing.
+			}
+			return value;
+		}
+		
+		public function get bubbleLeft():Number
+		{
+			var value:Number = 0;
+			try{
+				switch (Quad) {
+					case "default": value = bubbleXOffset;
+					break;
+					case "tooTall": value = bubbleXOffset;
+					break;
+					case "tooWide": value = (stage.stageWidth-this.x)-(this.bubble.width);
+					break;
+					case "tooBoth": value = -bubbleXOffset-this.bubble.width;
+					break;
+				}
+			}catch(err:Error){
+				//do nothing.
+			}
+			return value;
+		}
+		
+		public var Quad:String = "default";//can also be "tooTall", "tooWide" or "tooBoth"
+		
+		public var bubbleXOffset:Number = 60;
+		public var bubbleYOffset:Number = -6;
+		
+		[Bindable]
+		public var actualBubbleX:Number = 0;
+		[Bindable]
+		public var actualBubbleY:Number = 0;
+		
+		public function setQuad(event:Event = null):void
+		{
+			try{
+				if(this.x+bubbleXOffset+bubble.width > stage.stageWidth && this.y+bubbleYOffset-bubble.height < 0){
+					Quad = "tooBoth";
+					arrow2.visible = true;
+					arrow.visible = false;
+				}else if(this.y+bubbleYOffset-bubble.height < 0){
+					Quad = "tooTall";
+					arrow2.visible = false;
+					arrow.visible = true;
+				}else if(this.x+bubbleXOffset+bubble.width > stage.stageWidth){
+					Quad = "tooWide";
+					arrow2.visible = false;
+					arrow.visible = true;
+				}else{
+					Quad = "default";
+					arrow2.visible = false;
+					arrow.visible = true;
+				}
+				actualBubbleX = bubbleLeft;
+				actualBubbleY = bubbleTop;
+			}catch(err:Error){
+				//do nothing.
+			}
+		}
+		
+		public function init():void
+		{
+			var topBG:EmbededBGImage = new EmbededBGImage(topBar, imgClsTop);
+			var leftBG:EmbededBGImage = new EmbededBGImage(leftBar, imgClsLeft);
+			var rightBG:EmbededBGImage = new EmbededBGImage(rightBar, imgClsRight);
+			var bottomBG:EmbededBGImage = new EmbededBGImage(bottomBar, imgClsBottom);
+			var centerBG:EmbededBGImage = new EmbededBGImage(contentArea, imgClsCenter);
+			actualBubbleX = bubbleLeft;
+			actualBubbleY = bubbleTop;
+		}
+		
+		public function get text():String
+		{
+			return this.textField.htmlText;
+		}
+		
+		public function set text(str:String):void
+		{
+			this.textField.htmlText = str;
+		}
+		
+		public function initCoords():void
+		{
+			actualBubbleX = bubbleLeft;
+			actualBubbleY = bubbleTop;
+			this.setQuad();
+		}
+	]]>
+</mx:Script>
+<mx:Resize id="open" duration="400" target="{contentMask}" widthFrom="0" heightFrom="0" widthTo="{contentArea.width}" heightTo="{contentArea.height}"/>
+<mx:Fade id="fader" duration="800" target="{arrow}" alphaFrom="0" alphaTo="1"/>
+<mx:VBox id="bubble" horizontalAlign="center" verticalAlign="middle" verticalGap="0" creationComplete="init()" x="{actualBubbleX}" y="{actualBubbleY}" resize="initCoords()" mouseOver="this.parentApplication.dispatchEvent(new TipBubbleEvent(this, TipBubbleEvent.ROLL_OVER, true))">
+	<mx:HBox width="100%" horizontalGap="0">
+		<mx:Image source="@Embed('images/tipBubble_02.png')"/>
+		<mx:Canvas width="100%" height="100%" id="topBar">
+			<mx:Button id="closeBtn" color="black" textRollOverColor="#aaaa00" textSelectedColor="black" click="this.dispatchEvent(new Event('closeBubble', true))" visible="false" width="0" label="close" textDecoration="underline" bottom="-4" right="0" upSkin="@Embed('images/tipBubble_01.png')" downSkin="@Embed('images/tipBubble_01.png')" overSkin="@Embed('images/tipBubble_01.png')"/>
+		</mx:Canvas>
+		<mx:Image source="@Embed('images/tipBubble_04.png')"/>
+	</mx:HBox>
+	<mx:HBox width="100%" height="100%" horizontalGap="0">
+		<mx:Canvas width="36" height="100%" id="leftBar">
+		</mx:Canvas>
+		<mx:Canvas id="contentMask" width="0" height="0" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:VBox id="contentArea" horizontalAlign="center" verticalAlign="middle" creationComplete="open.play()" resize="open.play()" backgroundColor="white">
+				<mx:Text fontSize="14" id="textField" fontFamily="arialFont" cacheAsBitmap="true" selectable="false" minWidth="{this.contentArea.width}"/>
+			</mx:VBox>
+		</mx:Canvas>
+		<mx:Canvas width="41" height="100%" id="rightBar">
+		</mx:Canvas>
+	</mx:HBox>
+	<mx:HBox width="100%" horizontalGap="0">
+		<mx:Image source="@Embed('images/tipBubble_10.png')"/>
+		<mx:Canvas width="100%" height="100%" id="bottomBar">
+		</mx:Canvas>
+		<mx:Image source="@Embed('images/tipBubble_12.png')"/>
+	</mx:HBox>
+	
+</mx:VBox>
+</mx:Canvas>
