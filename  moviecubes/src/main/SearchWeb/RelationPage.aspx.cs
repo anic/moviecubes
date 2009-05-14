@@ -35,31 +35,6 @@ namespace MovieCube.SearchWeb
             string result = JsonConvert.SerializeObject(stars);
             return result;
 
-
-            //byte[] value = Encoding.Default.GetBytes(name);
-            //byte[] newValue = Encoding.Convert(Encoding.Default, Encoding.UTF8, value);
-
-            //char[] asciiChars = new char[Encoding.UTF8.GetCharCount(newValue, 0, newValue.Length)];
-            //Encoding.UTF8.GetChars(newValue, 0, newValue.Length, asciiChars, 0);
-            //string asciiString = new string(asciiChars);
-
-
-
-            //name = "郭德纲";
-            //string str = "郭德纲"; 
-            //string s = System.Text.Encoding.UTF8.GetString(System.Text.Encoding.UTF8.GetBytes(str)); 
-            //byte[] value = Encoding.Default.GetBytes(name);
-            //byte[] newValue = Encoding.Convert(Encoding.Default, Encoding.UTF8, value);
-
-            //char[] asciiChars = new char[Encoding.UTF8.GetCharCount(newValue, 0, newValue.Length)];
-            //Encoding.UTF8.GetChars(newValue, 0, newValue.Length, asciiChars, 0);
-            //string asciiString = new string(asciiChars);
-            //MovieAccess.InsertData(asciiString);
-            
-            //string s = "AAA bbb CCC";
-            //MovieAccess.InsertData(name);
-
-            //return "";
         }
     }
 }
