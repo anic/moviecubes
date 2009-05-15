@@ -5,15 +5,30 @@ using Newtonsoft.Json;
 
 namespace MovieCube.Common.Data
 {
+    public class StarMovie
+    {
+        public Movie Movie { get; set; }
+        public string Role { get; set; }
+
+        public StarMovie()
+        {
+            Movie = new Movie();
+        }
+
+        public StarMovie(Movie movie, string role)
+        {
+            Movie = movie;
+            Role = role;
+        }
+    }
+
     [JsonObject(MemberSerialization.OptIn)]
-    public class Movie:ICloneable
+    public class Movie : ICloneable, IComparable<Movie>
     {
         public Movie()
         {
             Alias = new List<string>();
-            Directors = new List<Star>();
-            Writers = new List<Star>();
-            Actors = new List<Star>();
+            Stars = new List<MovieStar>();
             Type = new List<string>();
 
             //ID = 0;
@@ -26,27 +41,9 @@ namespace MovieCube.Common.Data
         }
 
 
-        public void AddStars(Star addStar, string role)
+        public void AddStar(Star addStar, string role)
         {
-            switch (role)
-            {
-                case Definition.Role_Director:
-                    {
-                        Directors.Add(addStar);
-                        break;
-                    }
-                case Definition.Role_Writer:
-                    {
-                        Writers.Add(addStar);
-                        break;
-                    }
-                case Definition.Role_Actor:
-                    {
-                        Actors.Add(addStar);
-                        break;
-                    }
-                default: break;
-            }
+            Stars.Add(new MovieStar(addStar, role));
         }
 
         /// <summary>
@@ -74,22 +71,11 @@ namespace MovieCube.Common.Data
         public List<string> Alias { get; set; }
 
         /// <summary>
-        /// 导演
+        /// 明星
         /// </summary>
         [JsonProperty]
-        public List<Star> Directors { get; set; }
+        public List<MovieStar> Stars { get; set; }
 
-        /// <summary>
-        /// 编剧
-        /// </summary>
-        [JsonProperty]
-        public List<Star> Writers { get; set; }
-
-        /// <summary>
-        /// 演员（有个关系表，演员ID，演员的角色（主演之类的））
-        /// </summary>
-        [JsonProperty]
-        public List<Star> Actors { get; set; }
 
         /// <summary>
         /// 类型
@@ -143,22 +129,24 @@ namespace MovieCube.Common.Data
             Movie result = this.Clone() as Movie;
             if (level > 0)
             {
-                foreach (Star s in Actors)
-                {
-                    result.Actors.Add(s.Clone(level - 1));
-                }
-
-                foreach (Star s in Writers)
-                {
-                    result.Writers.Add(s.Clone(level - 1));
-                }
-
-                foreach (Star s in Directors)
-                {
-                    result.Directors.Add(s.Clone(level - 1));
-                }
+                //TO DO
             }
             return result;
         }
+
+        #region IComparable<Movie> 成员
+
+        public int CompareTo(Movie other)
+        {
+            //throw new NotImplementedException();
+            if (this.Rank < other.Rank)
+                return 1;
+            else if (this.Rank == other.Rank)
+                return 0;
+            else
+                return -1;
+        }
+
+        #endregion
     }
 }
