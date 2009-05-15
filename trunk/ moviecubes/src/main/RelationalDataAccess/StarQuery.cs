@@ -1,42 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
 
 using MovieCube.Common;
 using MovieCube.Common.Data;
 using MovieCube.Common.Interface;
-using System.Data;
+
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using Lucene.Net.Index;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.QueryParsers;
+
+using Document = Lucene.Net.Documents.Document;
+using Field = Lucene.Net.Documents.Field;
+using Directory = Lucene.Net.Store.Directory;
 
 namespace MovieCube.RelationalDataAccess
 {
     public class StarQuery : IStarQuery
     {
-
         #region IStarQuery 成员
 
-        public List<Star> QueryStarByName(string name)
+        public List<Star> QueryStarByKeyword(string keyword)
         {
-            List<Star> resultStars = GetStarInfoByName(name);
+            List<Star> resultStars = GetStarInfoByName(keyword);
+
+            //如果resultStars的count==0，则再根据keyword来选取
+            if (resultStars.Count < 1)
+                resultStars = GetStarInfoByKeyword(keyword);
 
             if (resultStars.Count > 0)
             {
+                //resultMovies根据rank、time等排序
+                resultStars.Sort();
+
+                //选取排名第一的Star进行扩展，扩展movie即可
                 Star extendedStar = resultStars[0];
-                int layer = Definition.Max_Node_Layer - 2;
-                for (int i = 0; i < extendedStar.DirectMovies.Count; i++)
+                for (int i = 0; i < extendedStar.Movies.Count; i++)
                 {
-                    extendedStar.DirectMovies[i] = CommonQuery.ExtendMovie(extendedStar.DirectMovies[i], layer);
-                }
-                for (int i = 0; i < extendedStar.WriteMovies.Count; i++)
-                {
-                    extendedStar.WriteMovies[i] = CommonQuery.ExtendMovie(extendedStar.WriteMovies[i], layer);
-                }
-                for (int i = 0; i < extendedStar.ActMovies.Count; i++)
-                {
-                    extendedStar.ActMovies[i] = CommonQuery.ExtendMovie(extendedStar.ActMovies[i], layer);
+                    extendedStar.Movies[i].Movie = CommonQuery.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
                 }
             }
 
             return resultStars;
+        }
+
+        public List<Star> QueryStarByName(string name)
+        {
+            throw new NotImplementedException();            
         }
 
         public List<Star> QueryStarByMovie(string movieName)
@@ -49,66 +62,92 @@ namespace MovieCube.RelationalDataAccess
 
         public static List<Star> GetStarInfoByName(string name)
         {
-            DataSet ds = StarAccess.GetInfoByStarName(name);
-            return GetInfoByDataSet(ds);
-        }
+            List<Star> result = new List<Star>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("starinfo");
+            QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+            query = queryParser.Parse(name);
+            hits = indexSearcher.Search(query);
 
-        public static List<Star> GetStarInfoByID(int id)
-        {
-            DataSet ds = StarAccess.GetInfoByStarID(id);
-            return GetInfoByDataSet(ds);
-        }
-
-        private static List<Star> GetInfoByDataSet(DataSet ds)
-        {
-            List<Star> resultStars = new List<Star>();
-
-            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            for (int i = 0; i < hits.Length(); i++)
             {
-                DataRow dr = ds.Tables[0].Rows[i];
+                Document hitDoc = hits.Doc(i);
 
-                int id = Convert.ToInt32(dr["starID"].ToString());
+                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                result.Add(star);
+            }
+            return result;
+        }
 
-                Movie movie = new Movie();
-                movie.ID = Convert.ToInt32(dr["movieID"].ToString());
-                movie.Name = dr["movieName"].ToString();
-                movie.Image = dr["movieImage"].ToString();
-                movie.Language = dr["movieLanguage"].ToString();
-                movie.Area = dr["movieArea"].ToString();
-                movie.Time = dr["movieTime"].ToString();
-                movie.Rank = Convert.ToDouble(dr["movieRank"].ToString());
+        public static List<Star> GetStarInfoByKeyword(string keyword)
+        {
+            List<Star> result = new List<Star>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("starinfo");
+            QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+            query = queryParser.Parse(keyword);
+            hits = indexSearcher.Search(query);
 
-                string movieType = dr["movieType"].ToString();
-                if (movieType != "")
-                    Util.ProcessStringItem(movieType, movie.Type);
+            for (int i = 0; i < hits.Length(); i++)
+            {
+                Document hitDoc = hits.Doc(i);
 
-                string movieAlias = dr["movieAlia"].ToString();
-                if (movieAlias != "")
-                    Util.ProcessStringItem(movieAlias, movie.Alias);
+                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                result.Add(star);
+            }
+            return result;
+        }
 
-                string role = dr["role"].ToString();
+        public static Star GetStarInfoByID(int id)
+        {
+            Star star = null;
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("starinfo");
+            QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
+            query = queryParser.Parse(id.ToString());
+            hits = indexSearcher.Search(query);
 
-                Star star = Util.FindStar(id, resultStars);
-                if (star == null)
+            if (hits.Length() > 0)
+            {
+                Document hitDoc = hits.Doc(0);
+
+                star = ConvertLuceneDocumentToStar(hitDoc);
+            }
+            return star;
+        }
+
+        private static Star ConvertLuceneDocumentToStar(Document doc)
+        {
+            Star result = new Star();
+
+            result.ID = Convert.ToInt32(doc.Get("ID"));
+            result.Name = doc.Get("Name");
+            result.Rank = Convert.ToDouble(doc.Get("Rank"));
+            result.Area = doc.Get("Area");
+
+            Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
+
+            string[] movieIDs = doc.Get("MovieID").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieRoles = doc.Get("MovieRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieName = doc.Get("MovieName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            int count = Math.Min(movieIDs.Length, movieRoles.Length);
+            for (int i = 0; i < count; i++)
+            {
+                movieIDs[i] = movieIDs[i].Trim();
+                if (movieIDs[i] != "")
                 {
-                    star = new Star();
-                    star.ID = id;
-                    star.Name = dr["starName"].ToString();
-                    star.Rank = Convert.ToDouble(dr["starRank"].ToString());
-                    star.Image = dr["starImage"].ToString();
-
-                    string staralias = dr["starAlia"].ToString();
-                    if (staralias != "")
-                        Util.ProcessStringItem(staralias, star.Alias);
-
-                    star.AddMovies(movie, role);
-                    resultStars.Add(star);
+                    Movie addMovie = new Movie();
+                    addMovie.ID = Convert.ToInt32(movieIDs[i].Trim());
+                    addMovie.Name = movieName[i].Trim();
+                    result.AddMovies(addMovie, movieRoles[i]);
                 }
-                else
-                    star.AddMovies(movie, role);
             }
 
-            return resultStars;
+            return result;
         }
     }
 }
