@@ -30,8 +30,8 @@
 		public var scaleFactor: Number = 1.0;
 		
 		private var items: Graph;
-		//private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-		private var serviceUrl:String = "/Relation.aspx";
+		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		//private var serviceUrl:String = "/Relation.aspx";
  
 		 
 		[Bindable]
@@ -51,9 +51,9 @@
 	   {
 	   		items = new Graph();
 		    
-		    loadKeys();
+		    //loadKeys();
 		     
-		    //loadStar("刘德华");
+		    loadStar("葛优");
 	   }
 	   
 	   private function loadKeys():void
@@ -114,8 +114,12 @@
 					newItem = addItem(arr[j],false, item);
 				else if (item!=null)
 					items.link(newItem, item);
-					
-				addStarArray(arr[j].Actors,newItem);
+
+				var sArray:Array = new Array();
+				for(var k:int = 0;k<arr[j].Stars.length;++k)
+					sArray.push(arr[j].Stars[k].Star);
+										
+				addStarArray(sArray,newItem);
 			}
 	   }
 	   
@@ -132,10 +136,12 @@
 				else if (item!=null)
 					items.link(newItem, item);
 				
-				addMovieArray(arr[j].DirectMovies,newItem);
-				addMovieArray(arr[j].WriteMovies,newItem);
-				addMovieArray(arr[j].ActMovies,newItem);
-		}
+				var mArray:Array = new Array();
+				for(var k:int = 0;k<arr[j].Movies.length;++k)
+					mArray.push(arr[j].Movies[k].Movie);
+				
+				addMovieArray(mArray,newItem);
+			}
 	   }
    
 	   private function onLoadStarComplete(event:Event):void
