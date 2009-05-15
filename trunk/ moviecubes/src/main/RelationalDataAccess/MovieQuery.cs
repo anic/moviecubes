@@ -21,6 +21,12 @@ namespace MovieCube.RelationalDataAccess
 {
     public class MovieQuery: IMovieQuery
     {
+        string movieInfo;
+        public MovieQuery(string movieInfo)
+        {
+            this.movieInfo = movieInfo;
+        }
+
         #region IMovieQuery 成员
 
         public List<Movie> QueryMovieByKeyword(string keyword)
@@ -40,7 +46,7 @@ namespace MovieCube.RelationalDataAccess
                 Movie extendedMovie = resultMovies[0];
                 for (int i = 0; i < extendedMovie.Stars.Count; i++)
                 {
-                    extendedMovie.Stars[i].Star = CommonQuery.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
                 }
             }
 
@@ -59,12 +65,12 @@ namespace MovieCube.RelationalDataAccess
 
         #endregion
 
-        public static List<Movie> GetMovieInfoByName(string name)
+        public List<Movie> GetMovieInfoByName(string name)
         {
             List<Movie> result = new List<Movie>();
             Query query = null;
             Hits hits = null;
-            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
             query = queryParser.Parse(name);
             hits = indexSearcher.Search(query);
@@ -79,12 +85,12 @@ namespace MovieCube.RelationalDataAccess
             return result;
         }
 
-        public static List<Movie> GetMovieInfoByKeyword(string keyword)
+        public List<Movie> GetMovieInfoByKeyword(string keyword)
         {
             List<Movie> result = new List<Movie>();
             Query query = null;
             Hits hits = null;
-            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
             query = queryParser.Parse(keyword);
             hits = indexSearcher.Search(query);
@@ -99,12 +105,12 @@ namespace MovieCube.RelationalDataAccess
             return result;
         }
 
-        public static Movie GetMovieInfoByID(int id)
+        public Movie GetMovieInfoByID(int id)
         {
             Movie movie = null;
             Query query = null;
             Hits hits = null;
-            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
             query = queryParser.Parse(id.ToString());
             hits = indexSearcher.Search(query);

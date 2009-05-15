@@ -9,12 +9,27 @@ namespace MovieCube.RelationalDataAccess
 {
     public class CommonQuery
     {
-        public static Movie ExtendMovie(Movie extendedMovie, int layer)
+        string starInfo;
+        string movieInfo;
+
+        public CommonQuery(string starInfo, string movieInfo)
+        {
+            this.starInfo = starInfo;
+            this.movieInfo = movieInfo;
+        }
+
+        public static CommonQuery Instance
+        {
+            get;
+            set;
+        }
+
+        public Movie ExtendMovie(Movie extendedMovie, int layer)
         {
             if (layer == 0)
                 return null;
 
-            Movie movie = MovieQuery.GetMovieInfoByID(extendedMovie.ID);
+            Movie movie = (new MovieQuery(movieInfo)).GetMovieInfoByID(extendedMovie.ID);
 
             if (movie == null)
                 return null;
@@ -35,12 +50,12 @@ namespace MovieCube.RelationalDataAccess
             }
         }
 
-        public static Star ExtendStar(Star extendedStar, int layer)
+        public Star ExtendStar(Star extendedStar, int layer)
         {
             if (layer == 0)
                 return null;
 
-            Star star = StarQuery.GetStarInfoByID(extendedStar.ID);
+            Star star = (new StarQuery(starInfo)).GetStarInfoByID(extendedStar.ID);
 
             if (star == null)
                 return null;
