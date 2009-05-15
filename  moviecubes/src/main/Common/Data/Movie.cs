@@ -5,9 +5,13 @@ using Newtonsoft.Json;
 
 namespace MovieCube.Common.Data
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class StarMovie
     {
+        [JsonProperty]
         public Movie Movie { get; set; }
+
+        [JsonProperty]
         public string Role { get; set; }
 
         public StarMovie()
