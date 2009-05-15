@@ -7,42 +7,49 @@ using MovieCube.Common;
 using MovieCube.Common.Data;
 using MovieCube.Common.Interface;
 
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using Lucene.Net.Index;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.QueryParsers;
+
+using Document = Lucene.Net.Documents.Document;
+using Field = Lucene.Net.Documents.Field;
+using Directory = Lucene.Net.Store.Directory;
+
 namespace MovieCube.RelationalDataAccess
 {
     public class MovieQuery: IMovieQuery
     {
         #region IMovieQuery 成员
 
-        public List<Movie> QueryMovieByName(string name)
+        public List<Movie> QueryMovieByKeyword(string keyword)
         {
-            List<Movie> resultMovies = GetMovieInfoByName(name);
-            //循环获得指定层数的数据
+            List<Movie> resultMovies = GetMovieInfoByName(keyword);
+
+            //如果resultMovies的count==0，则再根据keyword来选取
+            if (resultMovies.Count < 1)
+                resultMovies = GetMovieInfoByKeyword(keyword);
+
             if (resultMovies.Count > 0)
             {
-                Movie extendedMovie = resultMovies[0];
-                int layer = Definition.Max_Node_Layer - 2;
-                for (int i = 0; i < extendedMovie.Directors.Count; i++)
-                {
-                    extendedMovie.Directors[i] = CommonQuery.ExtendStar(extendedMovie.Directors[i], layer);
-                }
-                for (int i = 0; i < extendedMovie.Writers.Count; i++)
-                {
-                    extendedMovie.Writers[i] = CommonQuery.ExtendStar(extendedMovie.Writers[i], layer);
-                }
-                for (int i = 0; i < extendedMovie.Actors.Count; i++)
-                {
-                    extendedMovie.Actors[i] = CommonQuery.ExtendStar(extendedMovie.Actors[i], layer);
-                }
-            }
-            //else
-            {
-                //精确匹配未果，粗匹配
-                resultMovies = GetMovieInfoLikeName(name);
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
 
-                resultMovies = GetMovieInfoByAlia(name);
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+                for (int i = 0; i < extendedMovie.Stars.Count; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
+                }
             }
 
             return resultMovies;
+        }
+
+        public List<Movie> QueryMovieByName(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public List<Movie> QueryMovieByActor(string actorName)
@@ -54,78 +61,102 @@ namespace MovieCube.RelationalDataAccess
 
         public static List<Movie> GetMovieInfoByName(string name)
         {
-            DataSet ds = MovieAccess.GetInfoByMovieName(name);
-            return GetInfoByDataSet(ds);
-        }
+            List<Movie> result = new List<Movie>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+            query = queryParser.Parse(name);
+            hits = indexSearcher.Search(query);
 
-        public static List<Movie> GetMovieInfoLikeName(string name)
-        {
-            DataSet ds = MovieAccess.GetInfoLikeMovieName(name);
-            return GetInfoByDataSet(ds);
-        }
-
-        public static List<Movie> GetMovieInfoByAlia(string alia)
-        {
-            DataSet ds = MovieAccess.GetInfoLikeMovieAlia(alia);
-            return GetInfoByDataSet(ds);
-        }
-
-        public static List<Movie> GetMovieInfoByID(int id)
-        {
-            DataSet ds = MovieAccess.GetInfoByMovieID(id);
-            return GetInfoByDataSet(ds);
-        }
-
-        private static List<Movie> GetInfoByDataSet(DataSet ds)
-        {
-            List<Movie> resultMovies = new List<Movie>();
-
-            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            for (int i = 0; i < hits.Length(); i++)
             {
-                DataRow dr = ds.Tables[0].Rows[i];
+                Document hitDoc = hits.Doc(i);
 
-                int id = Convert.ToInt32(dr["movieID"].ToString());
-
-                Star star = new Star();
-                star.ID = Convert.ToInt32(dr["starID"].ToString());
-                star.Name = dr["starName"].ToString();
-                star.Rank = Convert.ToDouble(dr["starRank"].ToString());
-                star.Image = dr["starImage"].ToString();
-
-                string staralias = dr["starAlia"].ToString();
-                if (staralias != "")
-                    Util.ProcessStringItem(staralias, star.Alias);
-
-                string role = dr["role"].ToString();
-
-                Movie movie = Util.FindMovie(id, resultMovies);
-                if (movie == null)
-                {
-                    movie = new Movie();
-                    movie.ID = id;
-                    movie.Name = dr["movieName"].ToString();
-                    movie.Image = dr["movieImage"].ToString();
-                    movie.Language = dr["movieLanguage"].ToString();
-                    movie.Area = dr["movieArea"].ToString();
-                    movie.Time = dr["movieTime"].ToString();
-                    movie.Rank = Convert.ToDouble(dr["movieRank"].ToString());
-
-                    string movieType = dr["movieType"].ToString();
-                    if (movieType != "")
-                        Util.ProcessStringItem(movieType, movie.Type);
-
-                    string movieAlias = dr["movieAlia"].ToString();
-                    if (movieAlias != "")
-                        Util.ProcessStringItem(movieAlias, movie.Alias);
-
-                    movie.AddStars(star, role);
-                    resultMovies.Add(movie);
-                }
-                else
-                    movie.AddStars(star, role);
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc);
+                result.Add(movie);
             }
+            return result;
+        }
 
-            return resultMovies;
+        public static List<Movie> GetMovieInfoByKeyword(string keyword)
+        {
+            List<Movie> result = new List<Movie>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+            query = queryParser.Parse(keyword);
+            hits = indexSearcher.Search(query);
+
+            for (int i = 0; i < hits.Length(); i++)
+            {
+                Document hitDoc = hits.Doc(i);
+
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc);
+                result.Add(movie);
+            }
+            return result;
+        }
+
+        public static Movie GetMovieInfoByID(int id)
+        {
+            Movie movie = null;
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher("movieinfo");
+            QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
+            query = queryParser.Parse(id.ToString());
+            hits = indexSearcher.Search(query);
+
+            if (hits.Length() > 0)
+            {
+                Document hitDoc = hits.Doc(0);
+
+                movie = ConvertLuceneDocumentToMovie(hitDoc);
+            }
+            return movie;
+        }
+
+        private static Movie ConvertLuceneDocumentToMovie(Document doc)
+        {
+            Movie result = new Movie();
+
+            result.ID = Convert.ToInt32(doc.Get("ID"));
+            result.Name = doc.Get("Name");
+            result.Rank = Convert.ToDouble(doc.Get("Rank"));
+            result.Area = doc.Get("Area");
+            result.Language = doc.Get("Language");
+            result.Time = doc.Get("Time");
+
+            Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
+            Util.ProcessStringItem(doc.Get("Type"), result.Type);
+
+            string[] starIDs = doc.Get("StarID").Split(new string[]{","}, StringSplitOptions.RemoveEmptyEntries);
+            string[] starRoles = doc.Get("StarRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starName = doc.Get("StarName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            if (starIDs.Length == starRoles.Length && starRoles.Length == starName.Length)
+            {
+                for (int i = 0; i < starIDs.Length; i++)
+                {
+                    starIDs[i] = starIDs[i].Trim();
+                    if (starIDs[i] != "")
+                    {
+                        Star addStar = new Star();
+                        addStar.ID = Convert.ToInt32(starIDs[i].Trim());
+                        addStar.Name = starName[i].Trim();
+                        result.AddStar(addStar, starRoles[i]);
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("format error");
+            }
+ 
+            return result;
         }
     }
 }
