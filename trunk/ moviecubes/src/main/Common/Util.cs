@@ -16,9 +16,10 @@ namespace MovieCube.Common
         /// <param name="result"></param>
         public static void ProcessStringItem(string s, List<string> result)
         {
-            string[] resultArray = s.Split(new string[] { " , " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] resultArray = s.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < resultArray.Length; i++)
             {
+                resultArray[i] = resultArray[i].Trim();
                 if (resultArray[i] != "")
                     result.Add(resultArray[i]);
             }

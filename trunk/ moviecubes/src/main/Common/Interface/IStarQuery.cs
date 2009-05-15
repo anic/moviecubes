@@ -7,6 +7,8 @@ namespace MovieCube.Common.Interface
 {
     public interface IStarQuery
     {
+        List<Star> QueryStarByKeyword(string keyword);
+
         List<Star> QueryStarByName(string name);
 
         List<Star> QueryStarByMovie(string movieName);

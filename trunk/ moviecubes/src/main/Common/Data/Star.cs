@@ -5,16 +5,31 @@ using Newtonsoft.Json;
 
 namespace MovieCube.Common.Data
 {
+    public class MovieStar
+    {
+        public Star Star { get; set; }
+        public string Role { get; set; }
+
+        public MovieStar()
+        {
+            Star = new Star();
+        }
+
+        public MovieStar(Star star, string role)
+        {
+            Star = star;
+            Role = role;
+        }
+    }
+
     [JsonObject(MemberSerialization.OptIn)]
-    public class Star:ICloneable
+    public class Star : ICloneable, IComparable<Star>
     {
         public Star()
         {
             Alias = new List<string>();
-            DirectMovies = new List<Movie>();
-            WriteMovies = new List<Movie>();
-            ActMovies = new List<Movie>();
-
+            Movies = new List<StarMovie>();
+            
             //ID = 0;
             //Name = "";
             //Area = "";
@@ -26,25 +41,7 @@ namespace MovieCube.Common.Data
 
         public void AddMovies(Movie addMovie, string role)
         {
-            switch (role)
-            {
-                case Definition.Role_Director:
-                    {
-                        DirectMovies.Add(addMovie);
-                        break;
-                    }
-                case Definition.Role_Writer:
-                    {
-                        WriteMovies.Add(addMovie);
-                        break;
-                    }
-                case Definition.Role_Actor:
-                    {
-                        ActMovies.Add(addMovie);
-                        break;
-                    }
-                default: break;
-            }
+            Movies.Add(new StarMovie(addMovie, role));
         }
 
         /// <summary>
@@ -66,22 +63,10 @@ namespace MovieCube.Common.Data
         public List<string> Alias { get; set; }
 
         /// <summary>
-        /// 作为导演的电影
+        /// 参与的电影
         /// </summary>
         [JsonProperty]
-        public List<Movie> DirectMovies { get; set; }
-
-        /// <summary>
-        /// 作为编剧的电影
-        /// </summary>
-        [JsonProperty]
-        public List<Movie> WriteMovies { get; set; }
-
-        /// <summary>
-        /// 作为主演的电影
-        /// </summary>
-        [JsonProperty]
-        public List<Movie> ActMovies { get; set; }
+        public List<StarMovie> Movies { get; set; }
 
         /// <summary>
         /// 地区
@@ -129,18 +114,25 @@ namespace MovieCube.Common.Data
             Star result = this.Clone() as Star;
             if (level > 0)
             {
-                foreach (Movie m in ActMovies)
-                {
-                    result.ActMovies.Add(m.Clone(level - 1));
-                }
-
-                foreach (Movie m in DirectMovies)
-                {
-                    result.DirectMovies.Add(m.Clone(level - 1));
-                }
+                //TODO
                
             }
             return result;
         }
+
+        #region IComparable<Star> 成员
+
+        public int CompareTo(Star other)
+        {
+            //throw new NotImplementedException();
+            if (this.Rank < other.Rank)
+                return 1;
+            else if (this.Rank == other.Rank)
+                return 0;
+            else
+                return -1;
+        }
+
+        #endregion
     }
 }
