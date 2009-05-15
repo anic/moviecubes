@@ -46,9 +46,22 @@ namespace MovieCube.RelationalDataAccess
 
                 //选取排名第一的Star进行扩展，扩展movie即可
                 Star extendedStar = resultStars[0];
-                for (int i = 0; i < extendedStar.Movies.Count; i++)
+                //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
+
+                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
                 {
-                    extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
+                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
+                    {
+                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
+                    }
+                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
+                }
+                else
+                {
+                    for (int i = 0; i < extendedStar.Movies.Count; i++)
+                    {
+                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
+                    }
                 }
             }
 
@@ -82,7 +95,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                Star star = ConvertLuceneDocumentToStar(hitDoc, true);
                 result.Add(star);
             }
             return result;
@@ -102,7 +115,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                Star star = ConvertLuceneDocumentToStar(hitDoc, true);
                 result.Add(star);
             }
             return result;
@@ -122,12 +135,12 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(0);
 
-                star = ConvertLuceneDocumentToStar(hitDoc);
+                star = ConvertLuceneDocumentToStar(hitDoc, true);
             }
             return star;
         }
 
-        private static Star ConvertLuceneDocumentToStar(Document doc)
+        private static Star ConvertLuceneDocumentToStar(Document doc, bool limited)
         {
             Star result = new Star();
 
@@ -143,6 +156,8 @@ namespace MovieCube.RelationalDataAccess
             string[] movieName = doc.Get("MovieName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
             int count = Math.Min(movieIDs.Length, movieRoles.Length);
+            if (limited)
+                count = Math.Min(count, Definition.Max_Surround_Node_Num);
             for (int i = 0; i < count; i++)
             {
                 movieIDs[i] = movieIDs[i].Trim();

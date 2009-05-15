@@ -44,7 +44,10 @@ namespace MovieCube.RelationalDataAccess
 
                 //选取排名第一的movie进行扩展，扩展star即可
                 Movie extendedMovie = resultMovies[0];
-                for (int i = 0; i < extendedMovie.Stars.Count; i++)
+
+                int num = Math.Min(extendedMovie.Stars.Count, Definition.Max_Surround_Node_Num);
+
+                for (int i = 0; i < num; i++)
                 {
                     extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
                 }
@@ -79,7 +82,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Movie movie = ConvertLuceneDocumentToMovie(hitDoc);
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, true);
                 result.Add(movie);
             }
             return result;
@@ -99,7 +102,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Movie movie = ConvertLuceneDocumentToMovie(hitDoc);
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, true);
                 result.Add(movie);
             }
             return result;
@@ -119,12 +122,12 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(0);
 
-                movie = ConvertLuceneDocumentToMovie(hitDoc);
+                movie = ConvertLuceneDocumentToMovie(hitDoc, true);
             }
             return movie;
         }
 
-        private static Movie ConvertLuceneDocumentToMovie(Document doc)
+        private static Movie ConvertLuceneDocumentToMovie(Document doc, bool limited)
         {
             Movie result = new Movie();
 
@@ -145,7 +148,11 @@ namespace MovieCube.RelationalDataAccess
 
             if (starIDs.Length == starRoles.Length && starRoles.Length == starName.Length)
             {
-                for (int i = 0; i < starIDs.Length; i++)
+                int count = starIDs.Length;
+                if (limited)
+                    count = Math.Min(count, Definition.Max_Surround_Node_Num);
+
+                for (int i = 0; i < count; i++)
                 {
                     starIDs[i] = starIDs[i].Trim();
                     if (starIDs[i] != "")
