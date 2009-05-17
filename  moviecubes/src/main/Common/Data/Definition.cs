@@ -8,10 +8,10 @@ namespace MovieCube.Common.Data
     public class Definition
     {
         //节点搜索最大深度
-        public const int Max_Node_Layer = 3;
+        public const int Max_Node_Layer = 2;
         
         //周围节点最大个数
-        public const int Max_Surround_Node_Num = 5;
+        public const int Max_Surround_Node_Num = 3;
 
 
 
