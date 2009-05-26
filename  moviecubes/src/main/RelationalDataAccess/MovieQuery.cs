@@ -31,11 +31,7 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Movie> QueryMovieByKeyword(string keyword)
         {
-            List<Movie> resultMovies = GetMovieInfoByName(keyword);
-
-            //如果resultMovies的count==0，则再根据keyword来选取
-            if (resultMovies.Count < 1)
-                resultMovies = GetMovieInfoByKeyword(keyword);
+            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword);
 
             if (resultMovies.Count > 0)
             {
@@ -58,7 +54,25 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Movie> QueryMovieByName(string name)
         {
-            throw new NotImplementedException();
+            List<Movie> resultMovies = GetMovieInfoByName(name);
+
+            if (resultMovies.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
+
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+
+                int num = Math.Min(extendedMovie.Stars.Count, Definition.Max_Surround_Node_Num);
+
+                for (int i = 0; i < num; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
+                }
+            }
+
+            return resultMovies;
         }
 
         public List<Movie> QueryMovieByActor(string actorName)
