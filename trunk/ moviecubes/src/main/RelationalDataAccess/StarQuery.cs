@@ -33,11 +33,7 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Star> QueryStarByKeyword(string keyword)
         {
-            List<Star> resultStars = GetStarInfoByName(keyword);
-
-            //如果resultStars的count==0，则再根据keyword来选取
-            if (resultStars.Count < 1)
-                resultStars = GetStarInfoByKeyword(keyword);
+            List<Star> resultStars = GetStarInfoByKeyword(keyword);
 
             if (resultStars.Count > 0)
             {
@@ -70,7 +66,35 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Star> QueryStarByName(string name)
         {
-            throw new NotImplementedException();            
+            List<Star> resultStars = GetStarInfoByName(name);
+
+            if (resultStars.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultStars.Sort();
+
+                //选取排名第一的Star进行扩展，扩展movie即可
+                Star extendedStar = resultStars[0];
+                //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
+
+                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
+                {
+                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
+                    {
+                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
+                    }
+                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
+                }
+                else
+                {
+                    for (int i = 0; i < extendedStar.Movies.Count; i++)
+                    {
+                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
+                    }
+                }
+            }
+
+            return resultStars;           
         }
 
         public List<Star> QueryStarByMovie(string movieName)
