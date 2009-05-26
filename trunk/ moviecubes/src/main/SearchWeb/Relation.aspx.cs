@@ -51,36 +51,36 @@ namespace MovieCube.SearchWeb
                 {
                     case "queryByKey":
                         //先通过名称查找电影
-                        //movies = movieQuery.QueryMovieByName(query);
-                        //if (movies.Count != 0)
-                        //{
-                        //    Response.Write(JsonConvert.SerializeObject(movies));
-                        //    return;
-                        //}
+                        movies = movieQuery.QueryMovieByName(query);
+                        if (movies.Count != 0)
+                        {
+                            Response.Write(JsonConvert.SerializeObject(movies));
+                            return;
+                        }
 
-                        ////没有结果的话，通过名称查找明星
-                        //stars = starQuery.QueryStarByName(query);
-                        //if (stars.Count != 0)
-                        //{
-                        //    Response.Write(JsonConvert.SerializeObject(stars));
-                        //    return;
-                        //}
+                        //没有结果的话，通过名称查找明星
+                        stars = starQuery.QueryStarByName(query);
+                        if (stars.Count != 0)
+                        {
+                            Response.Write(JsonConvert.SerializeObject(stars));
+                            return;
+                        }
 
                         //没有结果的话，通过关键字查找电影
-                        //movies = movieQuery.QueryMovieByKeyword(query);
-                        //if (movies.Count != 0)
-                        //{
-                        //    Response.Write(JsonConvert.SerializeObject(movies));
-                        //    return;
-                        //}
+                        movies = movieQuery.QueryMovieByKeyword(query);
+                        if (movies.Count != 0)
+                        {
+                            Response.Write(JsonConvert.SerializeObject(movies));
+                            return;
+                        }
 
-                        ////没有结果的话，通过关键字查找明星
-                        //stars = starQuery.QueryStarByKeyword(query);
-                        //if (stars.Count != 0)
-                        //{
-                        //    Response.Write(JsonConvert.SerializeObject(stars));
-                        //    return;
-                        //}
+                        //没有结果的话，通过关键字查找明星
+                        stars = starQuery.QueryStarByKeyword(query);
+                        if (stars.Count != 0)
+                        {
+                            Response.Write(JsonConvert.SerializeObject(stars));
+                            return;
+                        }
 
                         Response.Write("[]");
                         return;

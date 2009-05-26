@@ -24,19 +24,19 @@ package
 		[Bindable]
 		public var name: String;
 		
-		[Bindable]
-		public var imageUrl: String;
-				
 		[Bindable]				
 		public var isStar:Boolean;
 		
-		public function RelationItem(data:Object) {
+		[Bindable]
+		public var rank:int;
+		
+		public function RelationItem(data:Object,rank:int = 0) {
 			super(data.ID);
 			
 			this.name = data.Name;
+			this.rank = rank;
 			this.isStar = data.ObjectType == "STAR";
 			this.data = data;
-	   
 		}
 		
 	}

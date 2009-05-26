@@ -44,9 +44,10 @@ package
 			// But instead, we'll use a gradient fill to get a simulated 3D effect.
 			// TODO: tweak the gradient fill settings to get a better looking gradient
 			graphics.clear();
-			graphics.beginGradientFill(GradientType.LINEAR, [0xffffff, _color], [1, 1], [0, 127], 
+			this.graphics.beginFill(_color);
+			/*graphics.beginGradientFill(GradientType.LINEAR, [0xffffff, _color], [1, 1], [0, 127], 
 			
-				null, SpreadMethod.PAD, InterpolationMethod.RGB, 0.75);
+				null, SpreadMethod.PAD, InterpolationMethod.RGB, 0.75);*/
 			graphics.drawCircle(unscaledWidth / 2, unscaledHeight / 2, unscaledHeight / 2);
 			graphics.endFill();
 		}

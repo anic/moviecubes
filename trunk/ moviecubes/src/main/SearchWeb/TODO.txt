@@ -1,2 +1,29 @@
-﻿1 QueryMovieByName/QueryStarByName 未实现？
-2 QueryMovieByKeyword返回结果太多
+﻿提示列表
+动态 or 静态?
+
+提示更多结果，控制数量
+
+可能有些通用的关键字，搜出来不是构成一棵树
+
+节点高亮
+节点信息
+单击跳转
+
+连线上显示：
+角色
+多角色问题
+高亮
+
+movie/star 区分颜色，圆形 done
+new:美化
+
+排名通过大小区分 基本解决
+new:明显
+
+
+
+没有结果提示
+根据name:movie/star;keyword:movie/star      done
+
+QueryMovieByName/QueryStarByName 未实现 ok
+QueryMovieByKeyword返回结果太多 未确定

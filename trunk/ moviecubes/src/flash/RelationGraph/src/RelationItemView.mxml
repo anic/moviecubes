@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{init();}" 
-	 width="192" height="66"
-	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}">	
+	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
+	 xmlns:local="*"
+	 width="110" height="100" >	
 
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
@@ -21,11 +22,15 @@
         alphaFrom="1.0" alphaTo="0.3" 
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 
-        color="0x00FF00" target="{this.txtName}"/>
+        color="0x00FF00" target="{this.circle}"/>
 
+	<local:Circle id="circle"
+		  width="80" height="80"/>
+
+	<mx:Label id="txtName" text="{data.name}" width ="{this.width -10}" textAlign="left" styleName="text" fontSize="15" 
 		
-	<mx:Label id="txtName" text="{data.name}" width="150" textAlign="center" styleName="text" fontSize="18" 
-		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" x="10" y="10" color="#FFFFFF"/>
+		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" color="#FFFFFF"
+		 x="10" y="19"/>
 	 
 	
 	<mx:Script>
@@ -36,12 +41,26 @@
 			
 			public var tipMan:BubbleTipManager = new BubbleTipManager();
 			
-
-			
 			public function init():void
 			{
 				this.buttonGrow.play();
+				var name:String = data.name;
+				//设置提示
+				this.toolTip = name;
+				//设置合适的字体大小
+				if (name.length>=5)
+					txtName.setStyle("fontSize",14);
+					
+				if(data.isStar)
+					this.circle.color = 0xff0000;
+				else
+					this.circle.color = 0x00ff00;
 				
+				var offset:int = data.rank*10; 
+				this.circle.width -= offset;
+				this.circle.height -= offset; 
+				
+				/*
 				if (data.isStar)
 				{
 					tipMan.createBubbleTip(this,"演员 "+data.name,null ,"");
@@ -49,7 +68,7 @@
 				else
 				{
 					tipMan.createBubbleTip(this,"电影 "+data.name,null ,"");
-				}
+				}*/
 			}
 			
 			[Bindable]
