@@ -15,12 +15,9 @@
 	////////////////////////////////////////////////////////////////////////////////
 	-->
 	
-	<!-- AmazonItemView.mxml is the UI component that displays one AmazonItem, which
-		is pointed to by our "data" property. -->
+	
 
-	<!--<mx:Image id="image" source="{data.imageUrl}" toolTip="{data.name}" 
-		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"/>-->
-	   <mx:Glow id="buttonGrow" duration="5000" 
+   <mx:Glow id="buttonGrow" duration="5000" 
         alphaFrom="1.0" alphaTo="0.3" 
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 

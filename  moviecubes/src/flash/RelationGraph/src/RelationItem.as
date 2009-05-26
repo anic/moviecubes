@@ -30,11 +30,11 @@ package
 		[Bindable]				
 		public var isStar:Boolean;
 		
-		public function RelationItem(data:Object, isStar:Boolean) {
+		public function RelationItem(data:Object) {
 			super(data.ID);
 			
 			this.name = data.Name;
-			this.isStar = isStar;
+			this.isStar = data.ObjectType == "STAR";
 			this.data = data;
 	   
 		}
