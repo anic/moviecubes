@@ -1,0 +1,2 @@
+﻿1 QueryMovieByName/QueryStarByName 未实现？
+2 QueryMovieByKeyword返回结果太多

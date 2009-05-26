@@ -96,6 +96,12 @@ namespace MovieCube.Common.Data
         [JsonProperty]
         public string Image { get; set; }
 
+        /// <summary>
+        /// 对象类型
+        /// </summary>
+        [JsonProperty]
+        public string ObjectType { get { return "STAR"; } }
+
 
         #region ICloneable Members
 

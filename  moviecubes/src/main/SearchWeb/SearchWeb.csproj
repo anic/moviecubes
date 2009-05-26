@@ -66,6 +66,7 @@
     <Content Include="Global.asax" />
     <Content Include="Relation.aspx" />
     <Content Include="RelationPage.aspx" />
+    <Content Include="TODO.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
