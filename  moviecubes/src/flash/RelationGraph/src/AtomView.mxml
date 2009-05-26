@@ -17,7 +17,7 @@
 		 An atomview is just a circle with a label on top.
 		 The color and size are set when we are given a particular atom to represent. -->
 	<local:Circle id="circle"/>
-	<mx:Label id="lab" fontSize="28" textAlign="center" fontFamily="verdana"/>
+	<mx:Label id="lab" fontSize="15" textAlign="center" fontFamily="verdana"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -79,12 +79,12 @@
 					color = atomColors[name];
 				else
 					// this atom type is not in the 'atomColors' table. use a default.
-					color = 0x666666;
+					color = 0xC8C8C8;
 
 				// determine the size. To a first approximation, all atoms are roughly the
 				// same size. See http://www.historyoftheuniverse.com/atomsize.html. 
 				var labelY: int = 4; // TODO: figure out how to do vertical centering automatically
-				var size: int = 50;
+				var size: int = 70;
 
 				// apply the settings to our UI components
 				circle.color = color;

@@ -40,8 +40,8 @@
 		[Bindable]
 		private var keys:Array = null;
 
-		public function addItem(data:Object, linkTo: RelationItem): RelationItem {
-			var newItem: RelationItem = new RelationItem(data);
+		public function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
+			var newItem: RelationItem = new RelationItem(data,rank);
 			items.add(newItem);
 			if(linkTo != null)
 				items.link(newItem, linkTo);
@@ -122,37 +122,37 @@
 		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 	   }
 	   
-	   private function addMovie(data:Object,item:RelationItem):void
+	   private function addMovie(data:Object,item:RelationItem,rank:int = 0):void
 	   {
 	   		if(data == null)
 	   			return; 
 			var id: String = data.ID;
 			var newItem:RelationItem = items.find(id) as RelationItem;
 			if (newItem == null)
-				newItem = addItem(data, item);
+				newItem = addItem(data, item,rank);
 			else if (item!=null)
 				items.link(newItem, item);
 				
 	   		for(var j:int = 0;j<data.Stars.length;++j)
 			{
-				addStar(data.Stars[j].Star,newItem);
+				addStar(data.Stars[j].Star,newItem,j);
 			}
 	   }
 	   
-	   private function addStar(data:Object,item:RelationItem):void
+	   private function addStar(data:Object,item:RelationItem,rank:int = 0):void
 	   {
 	   		if(data == null)
 	   			return; 
 			var id: String = data.ID;
 			var newItem:RelationItem = items.find(id) as RelationItem;
 			if (newItem == null)
-				newItem = addItem(data, item);
+				newItem = addItem(data, item,rank);
 			else if (item!=null)
 				items.link(newItem, item);
 				
 	   		for(var j:int = 0;j<data.Movies.length;++j)
 			{
-				addMovie(data.Movies[j].Movie,newItem);
+				addMovie(data.Movies[j].Movie,newItem,j);
 			}
 	   }
    
