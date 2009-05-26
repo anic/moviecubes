@@ -24,6 +24,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.LinkButton;
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
 		import com.adobe.serialization.json.JSON;  
 		import mx.controls.Alert;
@@ -198,24 +199,35 @@
 			resetRecommend();
 			if (txtSearch.text!="")
 				{
-					//this.searchKey(txtSearch.text);
-					this.loadStar(txtSearch.text);
+					this.searchKey(txtSearch.text);
+					//this.loadStar(txtSearch.text);
 				}
 		}
 		
 		public function createRecommend(recommend:String):void
 		{
 			this.lblRecommend.visible = true;
-			var lblRecommend:Label = new Label();
-			lblRecommend.text = recommend;
-			this.recommendBox.addChild(lblRecommend);
-		} 
+			var btnRecommend:Button = new Button();
+			btnRecommend.label = recommend;
+			btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
+			this.recommendBox.addChild(btnRecommend);
+		}
 		
-		public function resetRecommend():void
+		private function resetRecommend():void
 		{
 			this.recommendBox.removeAllChildren();
 			this.lblRecommend.visible = false;
+		} 
+		
+		//查找推荐
+		private function searchRecommend(event:MouseEvent):void
+		{
+			var btn:Button = event.target as Button;
+			this.txtSearch.text = btn.label;
+			search(); 
 		}
+		
+		
 
 
 		]]>
@@ -224,6 +236,6 @@
 		/>
 	<mx:HSlider id="rep" x="416" y="43" value="0.14" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
 	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
-	<mx:HBox x="214" y="77" width="557" id="recommendBox">
+	<mx:HBox width="100%" id="recommendBox" left="214" top="77" >
 	</mx:HBox>
 </mx:Application>
