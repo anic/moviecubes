@@ -31,7 +31,7 @@ namespace MovieCube.SearchWeb
 
             List<Star> stars;
             List<Movie> movies;
-            if (type != null && type == "queryKeys")
+            if (type != null && type == "loadKeys")
             {
                 List<QueryKey> result = new List<QueryKey>();
                 //FakeDb db = new FakeDb();
@@ -49,16 +49,53 @@ namespace MovieCube.SearchWeb
             {
                 switch (type)
                 {
+                    case "queryByKey":
+                        //先通过名称查找电影
+                        //movies = movieQuery.QueryMovieByName(query);
+                        //if (movies.Count != 0)
+                        //{
+                        //    Response.Write(JsonConvert.SerializeObject(movies));
+                        //    return;
+                        //}
+
+                        ////没有结果的话，通过名称查找明星
+                        //stars = starQuery.QueryStarByName(query);
+                        //if (stars.Count != 0)
+                        //{
+                        //    Response.Write(JsonConvert.SerializeObject(stars));
+                        //    return;
+                        //}
+
+                        //没有结果的话，通过关键字查找电影
+                        //movies = movieQuery.QueryMovieByKeyword(query);
+                        //if (movies.Count != 0)
+                        //{
+                        //    Response.Write(JsonConvert.SerializeObject(movies));
+                        //    return;
+                        //}
+
+                        ////没有结果的话，通过关键字查找明星
+                        //stars = starQuery.QueryStarByKeyword(query);
+                        //if (stars.Count != 0)
+                        //{
+                        //    Response.Write(JsonConvert.SerializeObject(stars));
+                        //    return;
+                        //}
+
+                        Response.Write("[]");
+                        return;
+
                     case "queryStarByName":
+                        //stars = starQuery.QueryStarByName(query);
                         stars = starQuery.QueryStarByKeyword(query);
                         Response.Write(JsonConvert.SerializeObject(stars));
                         return;
                     case "queryMovieByStar":
+                        //movies = movieQuery.QueryMovieByActor(query);
                         movies = movieQuery.QueryMovieByKeyword(query);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
-                        //只修改了2个
-                    case "queryMovieByNamer":
+                    case "queryMovieByName":
                         movies = movieQuery.QueryMovieByName(query);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
