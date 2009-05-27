@@ -3,7 +3,7 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{init();}" 
 	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
 	 xmlns:local="*"
-	 width="110" height="100" >	
+	 width="110" height="110" >	
 
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
@@ -18,12 +18,13 @@
 	
 	
 
-   <mx:Glow id="buttonGrow" duration="5000" 
-        alphaFrom="1.0" alphaTo="0.3" 
+   <mx:Glow id="buttonGrow" duration="3000" 
+        alphaFrom="1.0" alphaTo="0.0" 
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 
         color="0x00FF00" target="{this.circle}"/>
-
+        
+    
 	<local:Circle id="circle"
 		  width="80" height="80"/>
 
@@ -35,20 +36,19 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.VBox;
 			import mx.controls.TextArea;
 			import mx.core.Application;
-			import tipBubble.*;
 			
-			public var tipMan:BubbleTipManager = new BubbleTipManager();
 			
 			public function init():void
 			{
 				this.buttonGrow.play();
-				var name:String = data.name;
+				
 				//设置提示
-				this.toolTip = name;
+				//this.toolTip = name;
 				//设置合适的字体大小
-				if (name.length>=5)
+				if (data.name.length>=5)
 					txtName.setStyle("fontSize",14);
 					
 				if(data.isStar)
@@ -60,16 +60,39 @@
 				this.circle.width -= offset;
 				this.circle.height -= offset; 
 				
-				/*
+				(data as RelationItem).setOnUpdate(this.onDataUpdate);
+				onDataUpdate();
+				
+			}
+			
+			private function onSelected():void
+			{
+				this.buttonGrow.play();
+			}
+			
+			private function onNotSelected():void
+			{
+				this.buttonGrow.end();
+			}
+			
+			private function onDataUpdate():void
+			{
+				RelationGraph(Application.application).tipMan.removeBubbleTip(this.circle);
+				
 				if (data.isStar)
 				{
-					tipMan.createBubbleTip(this,"演员 "+data.name,null ,"");
+					var starBox:StarBox = new StarBox();
+					starBox.data = data.data;
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(this.circle,starBox,onSelected,onNotSelected); 
 				}
 				else
 				{
-					tipMan.createBubbleTip(this,"电影 "+data.name,null ,"");
-				}*/
+					var movieBox:MovieBox = new MovieBox();
+					movieBox.data = data.data;
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(this.circle,movieBox,onSelected,onNotSelected);
+				}
 			}
+			
 			
 			[Bindable]
 			private var app: RelationGraph = RelationGraph(Application.application);

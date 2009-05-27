@@ -19,8 +19,6 @@ package
 	 */
 	public class RelationItem extends Item
 	{
-		
-		
 		[Bindable]
 		public var name: String;
 		
@@ -29,6 +27,8 @@ package
 		
 		[Bindable]
 		public var rank:int;
+		
+		private var onUpdate:Function = null;
 		
 		public function RelationItem(data:Object,rank:int = 0) {
 			super(data.ID);
@@ -39,5 +39,45 @@ package
 			this.data = data;
 		}
 		
+		public function updateData(data:Object):void
+		{
+			var updated:Boolean = false;
+			if (data.ObjectType == "STAR")
+			{
+				if (data.Movies.length > this.data.Movies.length)
+				{
+					updated = true;
+					this.data.Movies = data.Movies;
+				}
+				
+				if (data.Alias.length > this.data.Alias.length)
+				{
+					updated = true;
+					this.data.Alias = data.Alias;
+				}	
+			}
+			else
+			{
+				if (data.Stars.length > this.data.Stars.length)
+				{
+					updated = true;
+					this.data.Stars = data.Stars;
+				}
+				
+				if (data.Alias.length > this.data.Alias.length)
+				{
+					updated = true;
+					this.data.Alias = data.Alias;
+				}	
+			}
+			
+			if (updated && this.onUpdate!=null )
+				this.onUpdate();
+		}
+		
+		public function setOnUpdate(func:Function):void
+		{
+			this.onUpdate = func;	
+		}
 	}
 }

@@ -28,6 +28,7 @@
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
 		import com.adobe.serialization.json.JSON;  
 		import mx.controls.Alert;
+		import tipBubble.*;
 				
 		[Bindable]
 		public var scaleFactor: Number = 1.0;
@@ -36,6 +37,7 @@
 		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
 		//private var serviceUrl:String = "/Relation.aspx";
 
+		public var tipMan:BubbleTipManager = new BubbleTipManager();
 		 
 		[Bindable]
 		private var keys:Array = null;
@@ -130,8 +132,13 @@
 			var newItem:RelationItem = items.find(id) as RelationItem;
 			if (newItem == null)
 				newItem = addItem(data, item,rank);
-			else if (item!=null)
-				items.link(newItem, item);
+			else{
+				//更新数据，新查出来的数据比较全
+				newItem.updateData(data);
+				
+				if (item!=null)
+					items.link(newItem, item);
+			}
 				
 	   		for(var j:int = 0;j<data.Stars.length;++j)
 			{
@@ -147,8 +154,14 @@
 			var newItem:RelationItem = items.find(id) as RelationItem;
 			if (newItem == null)
 				newItem = addItem(data, item,rank);
-			else if (item!=null)
-				items.link(newItem, item);
+			else
+			{
+				//更新数据，新查出来的数据比较全
+				newItem.updateData(data);
+				
+				if (item!=null)
+					items.link(newItem, item);
+			}
 				
 	   		for(var j:int = 0;j<data.Movies.length;++j)
 			{
@@ -238,4 +251,5 @@
 	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
 	<mx:HBox width="100%" id="recommendBox" left="214" top="77" >
 	</mx:HBox>
+	
 </mx:Application>

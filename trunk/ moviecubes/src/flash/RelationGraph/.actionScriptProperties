@@ -11,6 +11,8 @@
 <applications>
 <application path="RelationGraph.mxml"/>
 </applications>
-<modules/>
+<modules>
+<module application="src/RelationGraph.mxml" destPath="StarBox.swf" optimize="true" sourcePath="src/StarBox.mxml"/>
+</modules>
 <buildCSSFiles/>
 </actionScriptProperties>

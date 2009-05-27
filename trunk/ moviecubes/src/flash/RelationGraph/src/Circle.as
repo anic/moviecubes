@@ -9,12 +9,8 @@
 
 package
 {
+	import mx.controls.Label;
 	import mx.core.UIComponent;
-	import flash.display.GradientType;
-	import flash.display.SpreadMethod;
-	import flash.display.InterpolationMethod;
-	import flash.geom.Matrix;
-	import mx.effects.Rotate;
 
 	/** A UIComponent that is simply a colored circle.
 	 * 
@@ -32,6 +28,11 @@ package
 			// we need to be redrawn; the framework will ensure that updateDisplayList
 			// is invoked after all scripts have finished executing.
 			invalidateDisplayList(); 
+		}
+		
+		public function set text(txtBox:Label):void
+		{
+			
 		}
 		
 		/** our current color setting. */
