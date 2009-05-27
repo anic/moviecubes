@@ -1,13 +1,13 @@
 package tipBubble
 {
-	import mx.core.UIComponent;
-	import flash.events.MouseEvent;
-	import mx.managers.PopUpManager;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import mx.controls.Alert;
+	
+	import mx.core.UIComponent;
+	import mx.managers.PopUpManager;
 	
 	public class BubbleTipTarget
 	{
@@ -19,7 +19,23 @@ package tipBubble
 		[Bindable]
 		public var tipIsOpen:Boolean = false;
 		
-		public function BubbleTipTarget(target:UIComponent, htmlText:String, component:UIComponent = null, clickNotification:String = "")
+		private var onOpen:Function;
+		private var onClose:Function;
+		
+		public function BubbleTipTarget(target:UIComponent,component:UIComponent,onOpen:Function,onClose:Function)
+		{
+			this.tipComponent = component;
+			this.tipTarget = target;
+			this.htmlTipText = "";
+			this.tipTarget.addEventListener(MouseEvent.ROLL_OVER, openTip);
+			this.tipTarget.addEventListener(MouseEvent.ROLL_OUT, closeTip);
+			
+			this.onOpen = onOpen;
+			this.onClose = onClose;
+			
+		}
+		
+		/*public function BubbleTipTarget(target:UIComponent, htmlText:String, component:UIComponent = null, clickNotification:String = "")
 		{
 			this.tipComponent = component;
 			this.tipTarget = target;
@@ -35,14 +51,14 @@ package tipBubble
 				this.tipTarget.addEventListener(MouseEvent.ROLL_OVER, openTip);
 				this.tipTarget.addEventListener(MouseEvent.ROLL_OUT, closeTip);
 			}
-		}
+		}*/
 		
 		public function compOpen(event:MouseEvent = null):void
 		{
 			openTip();
 		}
 		
-		public function openTip(event:MouseEvent = null):void
+		/*public function openTip(event:MouseEvent = null):void
 		{
 			if(!this.tipIsOpen){
 				this.tipIsOpen = true;
@@ -57,8 +73,22 @@ package tipBubble
 				this.bubbleTip.textField.htmlText = this.htmlTipText;
 				this.tipTarget.addEventListener(Event.ENTER_FRAME, moveTip);
 			}
-		}
+		}*/
 		
+		public function openTip(event:MouseEvent = null):void
+		{
+			if(!this.tipIsOpen){
+				this.tipIsOpen = true;
+				this.bubbleTip = TipBubble(PopUpManager.createPopUp(this.tipTarget as DisplayObject, TipBubble, false));
+				this.bubbleTip.textField.visible = false;
+				this.bubbleTip.contentArea.addChild(this.tipComponent);
+				this.tipTarget.addEventListener(Event.ENTER_FRAME, moveTip);
+
+				//回调打开				
+				if (this.onOpen!=null)
+					this.onOpen();
+			}
+		}
 		public var doClose:Boolean = true;
 		
 		public function compClose(event:Event = null):void
@@ -68,6 +98,9 @@ package tipBubble
 			this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
 			PopUpManager.removePopUp(this.bubbleTip);
 			this.initPosition = true;
+			
+			if (this.onClose!=null)
+				this.onClose();
 		}
 		
 		public function closeTip(event:MouseEvent = null):void
@@ -112,11 +145,13 @@ package tipBubble
 			var mX2:Number = mainApp.mouseX;
 			var mY2:Number = mainApp.mouseY;
 			if(this.initPosition){
+				trace("move tip initpos")
 				this.initPosition = false;
 				this.bubbleTip.x = mX2;
 				this.bubbleTip.y = mY2;
 			}
-			if(this.tipComponent == null){
+			//修改
+			if(true){
 				this.bubbleTip.x = mX2;
 				this.bubbleTip.y = mY2;
 			}
