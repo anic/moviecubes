@@ -54,13 +54,17 @@ namespace MovieCube.RelationalDataAccess
             
             XmlDocument xmldoc = new XmlDocument();
             xmldoc.Load(response.GetResponseStream());
-
+            System.Console.WriteLine(xmldoc.InnerXml);
             //if (xmlstring != "")
             {
                 //xmldoc.LoadXml(xmlstring);
 
-                XmlNodeList nodeList = xmldoc.SelectNodes("feed/entry");
+                
                 XmlNode root = xmldoc.ChildNodes[1];
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmldoc.NameTable);
+                nsmgr.AddNamespace("aa", "http://www.w3.org/2005/Atom");
+                XmlNodeList nodeList = xmldoc.SelectNodes("//aa:entry", nsmgr);
+
 
                 foreach(XmlNode xn in root.ChildNodes)
                 {
