@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 using MovieCube.RelationalDataAccess;
+using System.IO;
+using SearchWeb;
 
 namespace MovieCube.SearchWeb
 {
@@ -15,6 +17,20 @@ namespace MovieCube.SearchWeb
         {
             CommonQuery.Instance = new CommonQuery(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo"),
                 System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo"));
+
+
+            //索引关键字
+            KeywordHelper.Instance = new KeywordHelper();
+            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starlist.txt")))
+            {
+                KeywordHelper.Instance.Index(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starlist.txt"),"STAR");
+            }
+
+            if (File.Exists(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movielist.txt")))
+            {
+                KeywordHelper.Instance.Index(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movielist.txt"),"MOVIE");
+            }
+
         }
 
         protected void Session_Start(object sender, EventArgs e)

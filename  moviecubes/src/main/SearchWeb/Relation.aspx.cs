@@ -22,9 +22,7 @@ namespace MovieCube.SearchWeb
 
             string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
             string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
-            //暂时使用假的Query
-            //IStarQuery starQuery = new FakeStarQuery();
-            //IMovieQuery movieQuery = new FakeMovieQuery();
+            
             IMovieQuery movieQuery = new MovieQuery(movieInfo);
             IStarQuery starQuery = new StarQuery(starInfo);
 
@@ -33,17 +31,9 @@ namespace MovieCube.SearchWeb
             List<Movie> movies;
             if (type != null && type == "loadKeys")
             {
-                List<QueryKey> result = new List<QueryKey>();
-                //FakeDb db = new FakeDb();
-                //foreach (Star s in db.Stars)
-                //    result.Add(new QueryKey(s.Name, "明星"));
-                //foreach(Movie m in db.Movies)
-                //    result.Add(new QueryKey(m.Name,"电影"));
- 
-
+                List<QueryKey> result = KeywordHelper.Instance.GetTipList(query);
                 Response.Write(JsonConvert.SerializeObject(result));
                 return;
-
             }
             else if (type != null && query != null)
             {
