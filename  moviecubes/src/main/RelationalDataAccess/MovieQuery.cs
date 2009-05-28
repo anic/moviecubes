@@ -137,6 +137,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(name);
             hits = indexSearcher.Search(query);
 
@@ -144,7 +147,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Int32.MaxValue);
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Definition.Max_Surround_Node_Num);
                 result.Add(movie);
             }
             return result;
@@ -157,6 +160,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(name);
             hits = indexSearcher.Search(query);
 
@@ -177,6 +183,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(keyword);
             hits = indexSearcher.Search(query);
 
@@ -184,7 +193,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Int32.MaxValue);
+                Movie movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Definition.Max_Surround_Node_Num);
                 result.Add(movie);
             }
             return result;
