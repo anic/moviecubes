@@ -11,8 +11,13 @@ namespace MovieCube.Common.Data
         [JsonProperty]
         public Movie Movie { get; set; }
 
+        private string role;
+
         [JsonProperty]
-        public string Role { get; set; }
+        public string Role { 
+            get{return role;}
+            set { role = value.Trim(); }
+        }
 
         public StarMovie()
         {
