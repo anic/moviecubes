@@ -89,10 +89,6 @@ namespace MovieCube.SearchWeb
                         movies = movieQuery.QueryMovieByName(query);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
-                    case "queryStarByMovie":
-                        stars = starQuery.QueryStarByMovie(query);
-                        Response.Write(JsonConvert.SerializeObject(stars));
-                        return;
                     default:
                         return;
                 }
