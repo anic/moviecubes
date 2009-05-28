@@ -3,7 +3,9 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{init();}" 
 	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
 	 xmlns:local="*"
-	 width="110" height="110" >	
+	 width="110" height="110"
+	 mouseOver="{this.btnLook.visible = true;this.btnSearch.visible = true;}"
+	mouseOut="{this.btnLook.visible = false;this.btnSearch.visible = false;}" >	
 
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,8 @@
         
     
 	<local:Circle id="circle"
-		  width="80" height="80"/>
+		  width="80" height="80" 
+		  />
 
 	<mx:Label id="txtName" text="{data.name}" width ="{this.width -10}" textAlign="left" styleName="text" fontSize="15" 
 		
@@ -68,11 +71,14 @@
 			private function onSelected():void
 			{
 				this.buttonGrow.play();
+
+				
 			}
 			
 			private function onNotSelected():void
 			{
 				this.buttonGrow.end();
+
 			}
 			
 			private function onDataUpdate():void
@@ -114,5 +120,7 @@
 
 		]]>
 	</mx:Script>
+	<mx:Button x="0" y="58" label="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn'),'_blank');}" visible="false"/>
+	<mx:Button x="56" y="58" label="查TA" id="btnSearch" click="{RelationGraph(Application.application).reSearch(data.name);}" visible="false"/>
 	
 </mx:Canvas>

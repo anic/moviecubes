@@ -99,8 +99,7 @@ package tipBubble
 			PopUpManager.removePopUp(this.bubbleTip);
 			this.initPosition = true;
 			
-			if (this.onClose!=null)
-				this.onClose();
+
 		}
 		
 		public function closeTip(event:MouseEvent = null):void
@@ -115,6 +114,9 @@ package tipBubble
 				PopUpManager.removePopUp(this.bubbleTip);
 				this.initPosition = true;
 			}
+			
+			if (this.onClose!=null)
+				this.onClose();
 		}
 		
 		public function clearExtra():void
@@ -125,6 +127,7 @@ package tipBubble
 				this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
 				PopUpManager.removePopUp(this.bubbleTip);
 				this.initPosition = true;
+				
 			}
 		}
 		
@@ -145,7 +148,6 @@ package tipBubble
 			var mX2:Number = mainApp.mouseX;
 			var mY2:Number = mainApp.mouseY;
 			if(this.initPosition){
-				trace("move tip initpos")
 				this.initPosition = false;
 				this.bubbleTip.x = mX2;
 				this.bubbleTip.y = mY2;
@@ -165,6 +167,9 @@ package tipBubble
 				this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
 				PopUpManager.removePopUp(this.bubbleTip);
 				this.tipIsOpen = false;
+				
+				if (this.onClose!=null)
+					this.onClose();
 			}
 		}
 	}

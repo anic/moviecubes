@@ -15,6 +15,7 @@
 	<fc:SpringGraph id="s" backgroundColor="#0" 
 		lineColor="#333388" left="0" right="0" top="105" bottom="0"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
+		edgeRenderer="{new EdgeRender()}"
 		 >
 	</fc:SpringGraph>
 	
@@ -198,11 +199,15 @@
 				else
 					addStar(result[0],null);
 				
-				
-				for(var i:int=1;i<result.length;++i)
+				if (result.length > 1)
 				{
-					createRecommend(result[i].Name);	
+					this.lblRecommend.visible = true;
+					if (result.length <= 5)
+						this.createBtnRecommend(result);
+					else
+						this.createListRecommend(result);
 				}
+
 			}
 		}
 		
@@ -211,33 +216,52 @@
 			items.empty();
 			resetRecommend();
 			if (txtSearch.text!="")
-				{
-					this.searchKey(txtSearch.text);
-					//this.loadStar(txtSearch.text);
-				}
+				this.searchKey(txtSearch.text);
 		}
 		
-		public function createRecommend(recommend:String):void
+		public function reSearch(key:String):void
 		{
-			this.lblRecommend.visible = true;
-			var btnRecommend:Button = new Button();
-			btnRecommend.label = recommend;
-			btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
-			this.recommendBox.addChild(btnRecommend);
+			this.txtSearch.text = key;
+			search();
+		}
+		
+		public function createBtnRecommend(result:Object):void
+		{
+			this.recommendBox.visible = true;
+			for(var i:int = 1;i<result.length;++i)
+			{
+				
+				var btnRecommend:Button = new Button();
+				btnRecommend.label = result[i].Name;
+				btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
+				this.recommendBox.addChild(btnRecommend);
+			}
+		}
+		
+		public function createListRecommend(result:Object):void
+		{
+			this.cbxMore.visible = true;
+			var dp:Array = new Array();
+			for(var i:int = 1;i<result.length;++i)
+			{
+				dp.push(result[i].Name);
+			}
+			cbxMore.dataProvider = dp;
 		}
 		
 		private function resetRecommend():void
 		{
 			this.recommendBox.removeAllChildren();
 			this.lblRecommend.visible = false;
+			this.cbxMore.visible = false;
+			this.cbxMore.dataProvider = null;
 		} 
 		
 		//查找推荐
 		private function searchRecommend(event:MouseEvent):void
 		{
 			var btn:Button = event.target as Button;
-			this.txtSearch.text = btn.label;
-			search(); 
+			this.reSearch(btn.label);
 		}
 		
 		
@@ -251,5 +275,7 @@
 	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
 	<mx:HBox width="100%" id="recommendBox" left="214" top="77" >
 	</mx:HBox>
+	<mx:ComboBox x="213" y="78" id="cbxMore" editable="false" change="{if (cbxMore.dataProvider!=null) this.reSearch(cbxMore.selectedLabel);}" ></mx:ComboBox>
+	
 	
 </mx:Application>
