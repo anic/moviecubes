@@ -14,12 +14,6 @@ namespace MovieCube.Common.Interface
         /// <returns></returns>
         List<Movie> QueryMovieByKeyword(string keyword);
 
-        /// <summary>
-        /// 通过演员名字搜索电影
-        /// </summary>
-        /// <param name="actorname"></param>
-        /// <returns></returns>
-        List<Movie> QueryMovieByActor(string actorname);
 
         /// <summary>
         /// 通过电影名字搜索电影
@@ -28,6 +22,22 @@ namespace MovieCube.Common.Interface
         /// <returns></returns>
         List<Movie> QueryMovieByName(string name);
 
+        /// <summary>
+        /// 根据电影名字搜索电影，获取从index开始的count个star
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        List<Movie> QueryMovieByName(string name, int index, int count);
 
+        /// <summary>
+        /// 根据关键词搜索电影，获取从index开始的count个star
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        List<Movie> QueryMovieByKeyword(string keyword, int index, int count);
     }
 }
