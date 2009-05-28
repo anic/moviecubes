@@ -38,7 +38,8 @@ namespace MovieCube.Common.Data
         {
             Alias = new List<string>();
             Movies = new List<StarMovie>();
-            
+
+            TotalMovieNum = 0;
             //ID = 0;
             //Name = "";
             //Area = "";
@@ -76,6 +77,12 @@ namespace MovieCube.Common.Data
         /// </summary>
         [JsonProperty]
         public List<StarMovie> Movies { get; set; }
+
+        /// <summary>
+        /// 总电影个数
+        /// </summary>
+        [JsonProperty]
+        public int TotalMovieNum { get; set; }
 
         /// <summary>
         /// 地区

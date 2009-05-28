@@ -40,6 +40,7 @@ namespace MovieCube.Common.Data
             Stars = new List<MovieStar>();
             Type = new List<string>();
 
+            TotalStarNum = 0;
             //ID = 0;
             //Time = "";
             //Name = "";
@@ -85,6 +86,11 @@ namespace MovieCube.Common.Data
         [JsonProperty]
         public List<MovieStar> Stars { get; set; }
 
+        /// <summary>
+        /// 总明星个数
+        /// </summary>
+        [JsonProperty]
+        public int TotalStarNum { get; set; }
 
         /// <summary>
         /// 类型
