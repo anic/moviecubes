@@ -60,9 +60,11 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoubanComment.cs" />
     <Compile Include="MovieQuery.cs" />
     <Compile Include="CommonQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
