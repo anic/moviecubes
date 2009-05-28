@@ -7,14 +7,14 @@
 				
 				var i:int = 0;
 				txtName.text = data.Name;
-				if (data.Rank ==0)
-					bxMovie.removeChild(bxRank);
+				if (data.Rank == 0)
+					{	try{bxMovie.removeChild(bxRank);}catch(e:Error){}}
 				else
 					txtRank.text = new String(data.Rank).substr(0,4);
 				
 				if(data.Alias==null || data.Alias.length == 0)
 					{	
-						bxMovie.removeChild(bxAlias);
+						try{bxMovie.removeChild(bxAlias);}catch(e:Error){}
 					}
 				else
 					{
@@ -36,8 +36,6 @@
 						{
 							if(i !=0)
 								txtStars.text += "\n";
-							else
-								txtStars.text += " ";
 							txtStars.text += data.Stars[i].Role+ " "+ data.Stars[i].Star.Name;
 																	
 						}

@@ -9,13 +9,14 @@
 				txtName.text = data.Name;
 				
 				if (data.Rank ==0)
-					bxStar.removeChild(bxRank);
+					{try{bxStar.removeChild(bxRank);}catch(e:Error){}}
 				else
 					txtRank.text = new String(data.Rank).substr(0,4);
 				
 				if(data.Alias==null || data.Alias.length == 0)
-					{	bxStar.removeChild(bxAlias);
-					}
+				{	
+					try{bxStar.removeChild(bxAlias);}catch(e:Error){}
+				}
 				else
 					{
 						for(i= 0;i<data.Alias.length;++i)
