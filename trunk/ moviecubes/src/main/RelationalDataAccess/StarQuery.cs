@@ -42,22 +42,12 @@ namespace MovieCube.RelationalDataAccess
 
                 //选取排名第一的Star进行扩展，扩展movie即可
                 Star extendedStar = resultStars[0];
-                //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
 
-                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
+                int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
+
+                for (int i = 0; i < num; i++)
                 {
-                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
-                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
-                }
-                else
-                {
-                    for (int i = 0; i < extendedStar.Movies.Count; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
+                    extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
                 }
             }
 
@@ -77,20 +67,14 @@ namespace MovieCube.RelationalDataAccess
                 Star extendedStar = resultStars[0];
                 //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
 
-                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
+                if (index >= extendedStar.Movies.Count)
+                    return null;
+
+                int num = Math.Min(count, extendedStar.Movies.Count - index);
+
+                for (int i = 0; i < num; i++)
                 {
-                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
-                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
-                }
-                else
-                {
-                    for (int i = 0; i < extendedStar.Movies.Count; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
+                    extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
                 }
             }
 
@@ -108,22 +92,12 @@ namespace MovieCube.RelationalDataAccess
 
                 //选取排名第一的Star进行扩展，扩展movie即可
                 Star extendedStar = resultStars[0];
-                //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
+                
+                int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
 
-                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
+                for (int i = 0; i < num; i++)
                 {
-                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
-                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
-                }
-                else
-                {
-                    for (int i = 0; i < extendedStar.Movies.Count; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
+                    extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
                 }
             }
 
@@ -143,20 +117,14 @@ namespace MovieCube.RelationalDataAccess
                 Star extendedStar = resultStars[0];
                 //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
 
-                if (Definition.Max_Surround_Node_Num < extendedStar.Movies.Count)
+                if (index >= extendedStar.Movies.Count)
+                    return null;
+
+                int num = Math.Min(count, extendedStar.Movies.Count - index);
+
+                for (int i = 0; i < num; i++)
                 {
-                    for (int i = 0; i < Definition.Max_Surround_Node_Num; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
-                    extendedStar.Movies.RemoveRange(Definition.Max_Surround_Node_Num, extendedStar.Movies.Count - Definition.Max_Surround_Node_Num - 1);
-                }
-                else
-                {
-                    for (int i = 0; i < extendedStar.Movies.Count; i++)
-                    {
-                        extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
-                    }
+                    extendedStar.Movies[i].Movie = CommonQuery.Instance.ExtendMovie(extendedStar.Movies[i].Movie, Definition.Max_Node_Layer - 1);
                 }
             }
 
@@ -180,7 +148,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Star star = ConvertLuceneDocumentToStar(hitDoc, 0, Int32.MaxValue);
+                Star star = ConvertLuceneDocumentToStar(hitDoc, 0, Definition.Max_Surround_Node_Num);
                 result.Add(star);
             }
             return result;
@@ -213,6 +181,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(starInfo);
             QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+
             query = queryParser.Parse(keyword);
             hits = indexSearcher.Search(query);
 
@@ -220,7 +191,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(i);
 
-                Star star = ConvertLuceneDocumentToStar(hitDoc, 0, Int32.MaxValue);
+                Star star = ConvertLuceneDocumentToStar(hitDoc, 0, Definition.Max_Surround_Node_Num);
                 result.Add(star);
             }
             return result;
@@ -233,6 +204,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(starInfo);
             QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+
             query = queryParser.Parse(keyword);
             hits = indexSearcher.Search(query);
 
@@ -253,6 +227,7 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(starInfo);
             QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
+            
             query = queryParser.Parse(id.ToString());
             hits = indexSearcher.Search(query);
 
