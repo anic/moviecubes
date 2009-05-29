@@ -206,6 +206,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(keyword);
             hits = indexSearcher.Search(query);
 
@@ -227,6 +230,7 @@ namespace MovieCube.RelationalDataAccess
             IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
             QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
             query = queryParser.Parse(id.ToString());
+            
             hits = indexSearcher.Search(query);
 
             if (hits.Length() > 0)
