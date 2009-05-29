@@ -10,7 +10,7 @@ namespace MovieCube.Common.Data
         public const int Max_Node_Layer = 2;
         
         //周围节点最大个数
-        public const int Max_Surround_Node_Num = 3;
+        public const int Max_Surround_Node_Num = 5;
 
         //获取电影的最大评论个数
         public const int Max_Comment_Num = 10;
