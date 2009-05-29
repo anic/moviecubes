@@ -47,11 +47,11 @@
 		{
 			switch(type)
 			{
-				case Role_Director: return 0xff0000;
-				case Role_Writer: return 0x0000ff;
+				case Role_Director: return 0xff7f00;
+				case Role_Writer: return 0xff007f;
 				case Role_Actor: 
 				default: 
-					return 0x00ff00;
+					return 0xffffff;
 			}
 		}
 		
