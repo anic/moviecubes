@@ -164,6 +164,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(starInfo);
             QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(name);
             hits = indexSearcher.Search(query);
 
