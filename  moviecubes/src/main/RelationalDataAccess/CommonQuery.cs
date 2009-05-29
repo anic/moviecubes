@@ -46,8 +46,6 @@ namespace MovieCube.RelationalDataAccess
                         MovieStar moviestar = movie.Stars[i];
                         moviestar.Star = ExtendStar(moviestar.Star, newLayer);
                     }
-                    if (num < movie.Stars.Count)
-                        movie.Stars.RemoveRange(num, movie.Stars.Count - num - 1);
                 }
                 return movie;
             }
@@ -70,13 +68,14 @@ namespace MovieCube.RelationalDataAccess
                 {
                     //扩展star的movie
                     int num = Math.Min(Definition.Max_Surround_Node_Num, star.Movies.Count);
-                    for (int i = 0; i < num; i++ )
+
+
+                    for (int i = 0; i < num; i++)
                     {
                         StarMovie starmovie = star.Movies[i];
                         starmovie.Movie = ExtendMovie(starmovie.Movie, newLayer);
                     }
-                    if (num < star.Movies.Count)
-                        star.Movies.RemoveRange(num, star.Movies.Count - num - 1);
+ 
                 }
                 return star;
             }

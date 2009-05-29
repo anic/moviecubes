@@ -141,6 +141,9 @@ namespace MovieCube.RelationalDataAccess
             Hits hits = null;
             IndexSearcher indexSearcher = new IndexSearcher(starInfo);
             QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+            
             query = queryParser.Parse(name);
             hits = indexSearcher.Search(query);
 
@@ -235,7 +238,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(0);
 
-                star = ConvertLuceneDocumentToStar(hitDoc, 0, Int32.MaxValue);
+                star = ConvertLuceneDocumentToStar(hitDoc, 0, Definition.Max_Surround_Node_Num);
             }
             return star;
         }
