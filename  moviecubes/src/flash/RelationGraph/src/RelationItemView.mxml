@@ -4,8 +4,8 @@
 	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
 	 xmlns:local="*"
 	 width="110" height="110"
-	 mouseOver="{this.btnLook.visible = true;this.btnSearch.visible = true;}"
-	mouseOut="{this.btnLook.visible = false;this.btnSearch.visible = false;}" >	
+	 mouseOver="{this.onSelected();}"
+	mouseOut="{this.onNotSelected();}"  >	
 
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
@@ -20,49 +20,38 @@
 	
 	
 
-   <mx:Glow id="buttonGrow" duration="3000" 
-        alphaFrom="1.0" alphaTo="0.0" 
+   <mx:Glow id="effectAdd" duration="3000" 
+        alphaFrom="1.0" alphaTo="1.0" 
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 
-        color="0x00FF00" target="{this.circle}"/>
+        color="{data.color}" target="{this.circle}"/>
         
     
-	<local:Circle id="circle"
-		  width="80" height="80" 
-		  />
+	<local:Circle id="circle" width="100%" height="100%" color="{data.color}"/>
 
-	<mx:Label id="txtName" text="{data.name}" width ="{this.width -10}" textAlign="left" styleName="text" fontSize="15" 
-		
+	<mx:Label id="txtName" text="{data.name}" textAlign="center" styleName="text" fontSize="15" 
 		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" color="#FFFFFF"
-		 x="10" y="19"/>
-	 
+		 height="32" width="100%" horizontalCenter="0" verticalCenter="0"/>
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.UIComponent;
 			import mx.containers.VBox;
 			import mx.controls.TextArea;
 			import mx.core.Application;
 			
-			
-			public function init():void
+						
+			private function init():void
 			{
-				this.buttonGrow.play();
+				this.effectAdd.play();
 				
-				//设置提示
-				//this.toolTip = name;
 				//设置合适的字体大小
 				if (data.name.length>=5)
 					txtName.setStyle("fontSize",14);
 					
-				if(data.isStar)
-					this.circle.color = 0xff0000;
-				else
-					this.circle.color = 0x00ff00;
-				
-				var offset:int = data.rank*10; 
-				this.circle.width -= offset;
-				this.circle.height -= offset; 
-				
+				var offset:int = data.rank*10;
+				this.circle.unscaledRadius = this.width/2 - 20 - offset;
+
 				(data as RelationItem).setOnUpdate(this.onDataUpdate);
 				onDataUpdate();
 				
@@ -70,15 +59,17 @@
 			
 			private function onSelected():void
 			{
-				this.buttonGrow.play();
-
+				
+				this.btnLook.visible = true;
+				this.btnSearch.visible = true;
 				
 			}
 			
 			private function onNotSelected():void
 			{
-				this.buttonGrow.end();
-
+			
+				this.btnLook.visible = false;
+				this.btnSearch.visible = false;
 			}
 			
 			private function onDataUpdate():void
@@ -120,7 +111,7 @@
 
 		]]>
 	</mx:Script>
-	<mx:Button x="0" y="58" label="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn'),'_blank');}" visible="false"/>
+	<mx:Button x="0" y="58" label="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn/search?q='+data.name),'_blank');}" visible="false"/>
 	<mx:Button x="56" y="58" label="查TA" id="btnSearch" click="{RelationGraph(Application.application).reSearch(data.name);}" visible="false"/>
 	
 </mx:Canvas>

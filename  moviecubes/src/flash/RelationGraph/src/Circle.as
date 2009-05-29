@@ -9,7 +9,6 @@
 
 package
 {
-	import mx.controls.Label;
 	import mx.core.UIComponent;
 
 	/** A UIComponent that is simply a colored circle.
@@ -30,13 +29,17 @@ package
 			invalidateDisplayList(); 
 		}
 		
-		public function set text(txtBox:Label):void
+		public function set unscaledRadius(r:int):void
 		{
-			
+			this.radius = r;	
 		}
 		
 		/** our current color setting. */
 		private var _color: int;
+		
+		private var radius:int;
+		
+		private var border:int = 2;
 		
 		/** redraws the component, using our current color, height, and width settings.
 		 *  This function is called whenever the flex framework decides it's time to redraw the component. */
@@ -45,11 +48,12 @@ package
 			// But instead, we'll use a gradient fill to get a simulated 3D effect.
 			// TODO: tweak the gradient fill settings to get a better looking gradient
 			graphics.clear();
-			this.graphics.beginFill(_color);
-			/*graphics.beginGradientFill(GradientType.LINEAR, [0xffffff, _color], [1, 1], [0, 127], 
+			graphics.beginFill(_color);
+			graphics.drawCircle(unscaledWidth / 2, unscaledHeight / 2, radius);
+			graphics.endFill();
 			
-				null, SpreadMethod.PAD, InterpolationMethod.RGB, 0.75);*/
-			graphics.drawCircle(unscaledWidth / 2, unscaledHeight / 2, unscaledHeight / 2);
+			graphics.beginFill(0x000000,0.5);
+			graphics.drawCircle(unscaledWidth / 2, unscaledHeight / 2, radius - border);
 			graphics.endFill();
 		}
 	}

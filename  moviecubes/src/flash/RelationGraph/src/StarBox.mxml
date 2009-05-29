@@ -23,7 +23,6 @@
 						{
 							if(i !=0)
 								txtAlias.text += ",";
-							
 							txtAlias.text += data.Alias[i];										
 						}
 					}

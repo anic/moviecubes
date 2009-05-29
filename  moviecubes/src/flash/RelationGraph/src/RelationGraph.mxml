@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc"
-	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" 
-	 >
-
-	
+	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" 	 >
 	<mx:Style>
 		.text {
 			color: #222222;
 			font-family: Verdana;
 		}
 	</mx:Style>
-	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="13" width="285" keyDown="{if (event.keyCode == 13) search();}" />
+	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="13" width="285" 
+		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
+		 />
 
 	<fc:SpringGraph id="s" backgroundColor="#0" 
 		lineColor="#333388" left="0" right="0" top="105" bottom="0"
@@ -25,6 +24,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.controls.LinkButton;
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
 		import com.adobe.serialization.json.JSON;  
@@ -37,13 +37,15 @@
 		private var items: Graph;
 		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
 		//private var serviceUrl:String = "/Relation.aspx";
+		
+		private var oldHintText:String = "";
 
 		public var tipMan:BubbleTipManager = new BubbleTipManager();
 		 
 		[Bindable]
 		private var keys:Array = null;
 
-		public function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
+		private function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
 			var newItem: RelationItem = new RelationItem(data,rank);
 			items.add(newItem);
 			if(linkTo != null)
@@ -52,15 +54,28 @@
 			return newItem;
 		}
 		
+		
+		private function tryLoadHint():void
+		{
+			if (txtSearch.text.length!=0 &&
+					(oldHintText.length == 0 || oldHintText.charAt(0) != txtSearch.text.charAt(0))
+					)
+				{	
+					loadKeys();
+					oldHintText = txtSearch.text;
+				}
+		}
+		
+		private function keyUp(event:KeyboardEvent):void
+		{
+			if (event.keyCode == 13) 
+				search();
+		}
+		
 	   private function init():void
 	   {
 	   		items = new Graph();
-		    
-		    //加载关键字
-		    //loadKeys();
-		    this.txtSearch.text ="葛优";
-		    this.search(); 
-		    //loadStar("葛优");
+		    this.reSearch("成龙");
 	   }
 	   
 	   private function loadKeys():void
@@ -69,6 +84,7 @@
 		    request.method = URLRequestMethod.POST;
 		    var data:URLVariables = new URLVariables();
 		    data.type = "loadKeys";
+		    data.query = txtSearch.text;
 		    request.data = data;
 		    var loader:URLLoader = new URLLoader();
 		    loader.load(request);
@@ -182,8 +198,11 @@
 		{
 			var loader:URLLoader = URLLoader(event.target);
 			keys = (JSON.decode(loader.data) as Array);
+			
+			var oldText:String = txtSearch.typedText;
 			txtSearch.dataProvider=keys;
 			txtSearch.labelField = "Key";
+			txtSearch.typedText = oldText;
 			this.help.text = "加载关键字成功";
 		}
 		
@@ -225,7 +244,7 @@
 			search();
 		}
 		
-		public function createBtnRecommend(result:Object):void
+		private function createBtnRecommend(result:Object):void
 		{
 			this.recommendBox.visible = true;
 			for(var i:int = 1;i<result.length;++i)
@@ -238,7 +257,7 @@
 			}
 		}
 		
-		public function createListRecommend(result:Object):void
+		private function createListRecommend(result:Object):void
 		{
 			this.cbxMore.visible = true;
 			var dp:Array = new Array();
@@ -253,8 +272,9 @@
 		{
 			this.recommendBox.removeAllChildren();
 			this.lblRecommend.visible = false;
-			this.cbxMore.visible = false;
 			this.cbxMore.dataProvider = null;
+			this.cbxMore.visible = false;
+			
 		} 
 		
 		//查找推荐
@@ -269,13 +289,14 @@
 
 		]]>
 	</mx:Script>
-	<mx:Button x="416" y="13" label="搜索" id="btnSearch" click="{search();}" 
+	<mx:Button x="492" y="13" label="搜索" id="btnSearch" click="{search();}" 
 		/>
 	<mx:HSlider id="rep" x="416" y="43" value="0.14" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
 	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
 	<mx:HBox width="100%" id="recommendBox" left="214" top="77" >
 	</mx:HBox>
 	<mx:ComboBox x="213" y="78" id="cbxMore" editable="false" change="{if (cbxMore.dataProvider!=null) this.reSearch(cbxMore.selectedLabel);}" ></mx:ComboBox>
+	<mx:ComboBox x="416" y="13" width="68" id="cbxSearchType"></mx:ComboBox>
 	
 	
 </mx:Application>

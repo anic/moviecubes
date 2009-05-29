@@ -25,10 +25,12 @@ package
 		[Bindable]				
 		public var isStar:Boolean;
 		
-		[Bindable]
 		public var rank:int;
 		
 		private var onUpdate:Function = null;
+		
+		[Bindable]
+		public var color:uint;
 		
 		public function RelationItem(data:Object,rank:int = 0) {
 			super(data.ID);
@@ -37,7 +39,18 @@ package
 			this.rank = rank;
 			this.isStar = data.ObjectType == "STAR";
 			this.data = data;
+			
+			if (this.isStar)
+			{
+				this.color = 0xff0000;
+			}
+			else
+			{
+				this.color = 0x0000ff;
+			}
 		}
+		
+		
 		
 		public function updateData(data:Object):void
 		{
