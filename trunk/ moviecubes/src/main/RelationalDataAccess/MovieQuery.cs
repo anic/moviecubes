@@ -233,7 +233,7 @@ namespace MovieCube.RelationalDataAccess
             {
                 Document hitDoc = hits.Doc(0);
 
-                movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Int32.MaxValue);
+                movie = ConvertLuceneDocumentToMovie(hitDoc, 0, Definition.Max_Surround_Node_Num);
             }
             return movie;
         }
