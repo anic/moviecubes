@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{addBlurFilter();}">
+	<mx:Fade target="{this.btnTip}" alphaFrom="1.0" alphaTo="0.0" id="effectFade" duration="1000" effectEnd="{this.onFinish();}" />
+	<mx:Button width="100%" height="100%" id="btnTip"  click="{onClick(event);}" styleName="tipButton" buttonMode="false"
+		label="{this.tiplabel}" 
+		/>
+	<mx:Style>
+		Button.tipButton
+	{
+		color: #222222;
+		fillAlphas: 1.0, 1.0;
+		fillColors: #FFBA00, #FFBA00;
+		fontSize: 10;
+		textAlign: left;
+	}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			private var _clickFunction:Function = null;
+			[Bindable]
+			private var tiplabel:String ="";
+			
+			public function set clickFunction(value:Function):void
+			{
+				this._clickFunction = value;
+			}
+			
+			public function setLabel(value:String):void
+			{
+				tiplabel = value;
+			}
+			
+			private function addBlurFilter():void {
+			
+			  var bf:BlurFilter = new BlurFilter(0,0,0);
+			
+			  var myFilters:Array = new Array();
+			
+			  myFilters.push(bf);
+			
+			  btnTip.filters = myFilters;
+			
+			}
+
+			public function onClick(event:MouseEvent):void
+			{
+				if (!this.visible)
+					return;	
+				
+				if (_clickFunction == null)
+					{
+						this.hideTip(0);
+					}
+				else
+					this._clickFunction(this);
+				
+			}
+		
+			public function showTip(tip:String,add:Boolean = false):void
+			{
+				this.visible = true;
+				this.btnTip.alpha = 1;
+				if (!add)
+					this.btnTip.label = tip;
+				else
+					this.btnTip.label += tip;
+					
+			} 
+		
+			public function hideTip(delay:int = 0):void
+			{
+				
+				if (!effectFade.isPlaying)			
+				{
+					effectFade.startDelay = delay;
+					effectFade.play();
+				}
+				else if (this.btnTip.alpha == 1) //还没开始 
+				{
+					effectFade.stop();
+					effectFade.startDelay = delay;
+					effectFade.play();	
+				}
+					
+			}
+			
+			private function onFinish():void
+			{
+				this.visible = false;
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

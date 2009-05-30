@@ -67,9 +67,9 @@
 					if (movie.Stars[i].Star.Name == star.Name)
 						roles.push(movie.Stars[i].Role);
 				}
-			}
-			return roles
-		}
+			} 
+			return roles; 
+		} 
 		
 		
 		

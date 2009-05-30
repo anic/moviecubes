@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="196" height="140" initialize="init()">
+
 	<mx:Script>
 		<![CDATA[
 			public function init():void
@@ -9,14 +10,12 @@
 				txtName.text = data.Name;
 				
 				if (data.Rank ==0)
-					{try{bxStar.removeChild(bxRank);}catch(e:Error){}}
+					bxRank.visible = false;
 				else
 					txtRank.text = new String(data.Rank).substr(0,4);
 				
 				if(data.Alias==null || data.Alias.length == 0)
-				{	
-					try{bxStar.removeChild(bxAlias);}catch(e:Error){}
-				}
+					bxAlias.visible = false;
 				else
 					{
 						for(i= 0;i<data.Alias.length;++i)
@@ -28,9 +27,7 @@
 					}
 					
 				if (data.Movies==null || data.Movies.length == 0)
-					{
-						txtMovies.text = "双击节点查看..."
-					}
+					txtMovies.text = "双击节点查看..."
 				else
 					{
 						for(i = 0;i<data.Movies.length;++i)
@@ -49,7 +46,7 @@
 			<mx:Text text="名称" width="50"/>
 			<mx:Text id="txtName" width="100%"/>
 		</mx:HBox>
-		<mx:HBox width="100%" id="bxAlias">
+		<mx:HBox width="100%" id="bxAlias"  includeInLayout="{bxAlias.visible}">
 			<mx:Text text="别名" width="50"/>
 			<mx:Text id="txtAlias" width="100%"/>
 		</mx:HBox>
@@ -57,7 +54,7 @@
 			<mx:Text text="参与电影" width="50"/>
 			<mx:Text id="txtMovies" width="100%"/>
 		</mx:HBox>
-		<mx:HBox width="100%" id="bxRank">
+		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
 			<mx:Text text="分数" width="50"/>
 			<mx:Text id="txtRank" width="100%"/>
 		</mx:HBox>

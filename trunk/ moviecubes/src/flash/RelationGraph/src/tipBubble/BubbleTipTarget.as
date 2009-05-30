@@ -29,6 +29,8 @@ package tipBubble
 			this.htmlTipText = "";
 			this.tipTarget.addEventListener(MouseEvent.ROLL_OVER, openTip);
 			this.tipTarget.addEventListener(MouseEvent.ROLL_OUT, closeTip);
+			//this.tipTarget.addEventListener(MouseEvent.MOUSE_OVER, openTip);
+			//this.tipTarget.addEventListener(MouseEvent.MOUSE_OUT, closeTip);
 			
 			this.onOpen = onOpen;
 			this.onClose = onClose;
@@ -91,22 +93,21 @@ package tipBubble
 		}
 		public var doClose:Boolean = true;
 		
-		public function compClose(event:Event = null):void
+		/*public function compClose(event:Event = null):void
 		{
 			this.bubbleTip.removeEventListener("closeBubble", compClose);
 			this.tipIsOpen = false;
 			this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
 			PopUpManager.removePopUp(this.bubbleTip);
 			this.initPosition = true;
-			
-
-		}
+		}*/
 		
 		public function closeTip(event:MouseEvent = null):void
 		{
 			var mX:Number = this.tipTarget.mouseX;
 			var mY:Number = this.tipTarget.mouseY;
 			var mousePoint:Point = new Point(mX, mY);
+			
 			var targetBounds:Rectangle = this.tipTarget.getBounds(this.tipTarget);
 			if(!(targetBounds.containsPoint(mousePoint)) && this.doClose){
 				this.tipIsOpen = false;
@@ -119,9 +120,10 @@ package tipBubble
 				this.onClose();
 		}
 		
-		public function clearExtra():void
+		/*public function clearExtra():void
 		{
-			if(this.tipComponent == null){
+			//if(this.tipComponent == null)
+			{
 				this.bubbleTip.removeEventListener("closeBubble", compClose);
 				this.tipIsOpen = false;
 				this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
@@ -129,7 +131,7 @@ package tipBubble
 				this.initPosition = true;
 				
 			}
-		}
+		}*/
 		
 		public var initPosition:Boolean = true;
 		
@@ -144,6 +146,7 @@ package tipBubble
 			}else{
 				this.openTip();
 			}
+			
 			var mainApp:DisplayObject = this.tipTarget.parentApplication as DisplayObject;
 			var mX2:Number = mainApp.mouseX;
 			var mY2:Number = mainApp.mouseY;
@@ -163,6 +166,8 @@ package tipBubble
 		{
 			this.tipTarget.removeEventListener(MouseEvent.ROLL_OVER, openTip);
 			this.tipTarget.removeEventListener(MouseEvent.ROLL_OUT, closeTip);
+			//this.tipTarget.removeEventListener(MouseEvent.MOUSE_OVER, openTip);
+			//this.tipTarget.removeEventListener(MouseEvent.MOUSE_OUT, closeTip);
 			if(this.tipIsOpen){
 				this.tipTarget.removeEventListener(Event.ENTER_FRAME, moveTip);
 				PopUpManager.removePopUp(this.bubbleTip);
