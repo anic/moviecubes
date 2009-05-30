@@ -32,7 +32,7 @@ namespace MovieCube.RelationalDataAccess
             Movie movie = (new MovieQuery(movieInfo)).GetMovieInfoByID(extendedMovie.ID);
 
             if (movie == null)
-                return null;
+                return extendedMovie;
             else
             {
                 int newLayer = layer - 1;
@@ -59,7 +59,7 @@ namespace MovieCube.RelationalDataAccess
             Star star = (new StarQuery(starInfo)).GetStarInfoByID(extendedStar.ID);
 
             if (star == null)
-                return null;
+                return extendedStar;
             else
             {
                 int newLayer = layer - 1;
