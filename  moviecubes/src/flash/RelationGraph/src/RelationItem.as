@@ -111,5 +111,26 @@ package
 		{
 			this.onUpdate = func;	
 		}
+		
+		public function getRelatedIds():Array
+		{
+			var result:Array = new Array();
+			var i:int = 0;
+			if (this.isStar)
+			{
+				for(i=0;i<data.Movies.length;++i)
+				{
+					result.push(data.Movies[i].Movie.ID);
+				}			
+			}
+			else
+			{
+				for(i=0;i<data.Stars.length;++i)
+				{
+					result.push(data.Stars[i].Star.ID);
+				}
+			}
+			return result;
+		}
 	}
 }

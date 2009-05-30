@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="110" height="110" initialize="{onInit();}"
+		 xmlns:local="*" alpha="0">
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Application;
+			
+			private var currentView:RelationItemView = null;
+			private var toolBtns:Array;
+			private function onInit():void
+			{
+				toolBtns = [btnLook,btnSearch,btnPre,btnNext,btnClose];	
+			}
+			
+			public function onSelected(itemView:RelationItemView):void
+			{
+				trace("onSelected");
+				currentView = itemView;
+				RelationGraph(Application.application).setToolPanelPosition(currentView.x,currentView.y);
+				this.setVisible2(true);
+					
+			}
+			
+			public function onItemRemove(item:RelationItem):void
+			{
+				if (currentView.data == item)
+					currentView = null;
+				this.setVisible2(false);						
+			}
+			
+			public function hide():void
+			{
+				currentView = null;
+				this.setVisible2(false);		
+			}
+			
+			
+			private function onSearch():void
+			{
+				if (currentView!=null)
+					currentView.searchTA(true);
+			}
+			
+			private function onLook():void
+			{
+				if (currentView!=null)
+				{
+					navigateToURL(new URLRequest('http://www.g.cn/search?q='+currentView.data.name),'_blank');		
+				}
+			}
+			
+			private function onClose():void
+			{
+				if (currentView!=null)
+					currentView.removeItem();
+			}
+			
+			public function setVisible2(value:Boolean):void
+			{
+				if (!value)
+				{
+					if (!this.allOut.isPlaying)
+					{
+						this.allOut.play();
+					}
+				}
+				else
+				{
+					if(this.allOut.isPlaying)
+						this.allOut.stop();
+					
+					this.alpha = 1.0;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Fade alphaFrom="1.0" alphaTo="0" id="allOut" duration="500" target="{this}" startDelay="100" />
+	<local:ToolButton x="52" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="10" width="30" height="30"/>
+	<local:ToolButton x="76" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="10"  width="30" height="30"/>
+	<local:ToolButton x="4" ImageIndex="0" toolTip="前一页" id="btnPre" bottom="10" width="30"  height="30"/>
+	<local:ToolButton x="28" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30"/>
+	<local:ToolButton x="76" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="70" width="30" height="30"/>
+</mx:Module>
