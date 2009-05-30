@@ -17,8 +17,8 @@ package tipBubble
 		public function createMyBubbleTip(target:UIComponent, component:UIComponent, onTipOpen:Function,onTipClose:Function):void
 		{
 			var tipTarg:BubbleTipTarget = new BubbleTipTarget(target, component,onTipOpen,onTipClose);
-			var mainApp:DisplayObject = target.parentApplication as DisplayObject;
-			mainApp.addEventListener(TipBubbleEvent.ROLL_OVER, clearExtraBubbles);
+			//var mainApp:DisplayObject = target.parentApplication as DisplayObject;
+			//mainApp.addEventListener(TipBubbleEvent.ROLL_OVER, clearExtraBubbles);
 			tipTargets.push(tipTarg);
 		}
 		
@@ -30,15 +30,16 @@ package tipBubble
 			tipTargets.push(tipTarg);
 		}*/
 		
-		public function clearExtraBubbles(event:TipBubbleEvent):void
+		/*public function clearExtraBubbles(event:TipBubbleEvent):void
 		{
 			for(var i:int = 0; i <= this.tipTargets.length-1; i++){
 				var tempTip:BubbleTipTarget = this.tipTargets[i] as BubbleTipTarget;
-				if(event.targetTipBubble != tempTip.bubbleTip && tempTip.tipIsOpen){
+				if(event.targetTipBubble != tempTip.bubbleTip
+				&& tempTip.tipIsOpen){
 					tempTip.clearExtra();
 				}
 			}
-		}
+		}*/
 		
 		public function removeBubbleTip(target:UIComponent):void
 		{

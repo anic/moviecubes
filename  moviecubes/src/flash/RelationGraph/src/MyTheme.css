@@ -1,0 +1,67 @@
+/* CSS file */
+
+Application
+{
+	backgroundColor:#fbf6e1;
+	borderSkin: ClassReference("assets.skins.ApplicationSkin");
+	background-repeat:repeat-x;
+	background-image: Embed(source='assets/images/application_bg.png');
+	/* fontFamily: "Lucida Grande"; */
+	
+	themeColor:#2e2821;
+	disabled-color: #656361;
+	font-sharpness: 100;
+	font-thickness: -100;
+}
+
+
+
+
+.mainButton
+{
+	upSkin:Embed(source='assets/images/button_up.png', scaleGridLeft=10, scaleGridRight=96, scaleGridTop=15, scaleGridBottom=16);
+	downSkin:Embed(source='assets/images/button_up.png', scaleGridLeft=10, scaleGridRight=96, scaleGridTop=15,scaleGridBottom=16);
+	overSkin:Embed(source='assets/images/button_over.png', scaleGridLeft=10, scaleGridRight=96, scaleGridTop=15,scaleGridBottom=16);
+	disabledSkin: Embed(source='assets/images/button_disabled.png', scaleGridLeft=10, scaleGridRight=96, scaleGridTop=15,scaleGridBottom=16);
+	color:#444444;
+	font-size: 11;
+}
+
+ComboBox
+{
+	upSkin:Embed(source='assets/images/comboBox_up.png', scaleGridLeft=10, scaleGridRight=82, scaleGridTop=19, scaleGridBottom=20);
+	downSkin:Embed(source='assets/images/comboBox_up.png', scaleGridLeft=10, scaleGridRight=82, scaleGridTop=19,scaleGridBottom=20);
+	overSkin:Embed(source='assets/images/comboBox_over.png', scaleGridLeft=10, scaleGridRight=82, scaleGridTop=19,scaleGridBottom=20);
+	disabledSkin: Embed(source='assets/images/comboBox_disabled.png', scaleGridLeft=10, scaleGridRight=82, scaleGridTop=19,scaleGridBottom=20);
+	padding-left: 10;
+	color:#444444;
+	dropdownStyleName: dropdownStyleName;
+}
+
+.dropdownStyleName
+{
+	background-color: #2b2a2a;
+	border-color: #2e2821;
+	selectionColor:#3e3d3d;
+	rollOverColor:#3e3d3d;
+	textRollOverColor:#ffffff;
+	textSelectedColor:#ffffff; 
+	color: #ffffff;
+	font-weight:normal;
+	dropShadowEnabled: true;
+}
+
+
+.buttonStyleName
+{
+	upSkin:Embed(source='assets/images/button_bar2_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	downSkin:Embed(source='assets/images/button_bar2_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	overSkin:Embed(source='assets/images/button_bar2_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedUpSkin:Embed(source='assets/images/button_bar2_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedOverSkin:Embed(source='assets/images/button_bar2_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedDownSkin:Embed(source='assets/images/button_bar2_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	font-weight: normal;
+	textRollOverColor:#111111;
+	color: #ffffff;
+	font-size:12; 
+}

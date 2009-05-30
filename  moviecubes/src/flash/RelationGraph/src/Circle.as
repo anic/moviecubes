@@ -9,8 +9,11 @@
 
 package
 {
+	import flash.display.DisplayObject;
+	import flash.geom.Rectangle;
+	
 	import mx.core.UIComponent;
-
+ 
 	/** A UIComponent that is simply a colored circle.
 	 * 
 	 * @author Mark Shepherd
@@ -32,6 +35,11 @@ package
 		public function set unscaledRadius(r:int):void
 		{
 			this.radius = r;	
+		}
+		
+		public function get unscaleRadius():int
+		{
+			return this.radius;
 		}
 		
 		/** our current color setting. */
@@ -56,5 +64,6 @@ package
 			graphics.drawCircle(unscaledWidth / 2, unscaledHeight / 2, radius - border);
 			graphics.endFill();
 		}
+
 	}
 }

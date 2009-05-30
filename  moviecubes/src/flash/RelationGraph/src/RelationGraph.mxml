@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fc="http://www.adobe.com/2006/fc"
-	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" 	 >
-	<mx:Style>
-		.text {
-			color: #222222;
-			font-family: Verdana;
-		}
-	</mx:Style>
-	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="13" width="285" 
+	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" 	  
+	xmlns:ns1="*"
+	 backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#000000, #FFFFFF]"
+	  >
+
+	<mx:Style source="MyTheme.css" /> 
+	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="57" width="285" 
 		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
 		 />
-
+	<mx:ComboBox x="416" y="57" width="77" id="cbxSearchType" />
+	<mx:Button x="501" y="56" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton"/>
+	
+		
+	
 	<fc:SpringGraph id="s" backgroundColor="#0" 
-		lineColor="#333388" left="0" right="0" top="105" bottom="0"
+		lineColor="#333388" left="0" right="0" top="146" bottom="0" width="100%"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
 		edgeRenderer="{new EdgeRender()}"
 		 >
+		
 	</fc:SpringGraph>
 	
-	<mx:Label x="123" y="77" text="你可能还在找" styleName="text" fontSize="13" id="lblRecommend"/>
-	<mx:Label x="10" y="10" text="Movie Cube" styleName="text" fontSize="15"/>
-	<mx:Label x="123" y="43" fontSize="10" styleName="text" id="help" width="285"/>
+	<mx:Label x="123" y="121" text="你可能还在找" styleName="text" fontSize="13" id="lblRecommend"/>
+	<mx:Label x="10" y="82" text="Movie Cube" styleName="text" fontSize="15"/>
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
-			import mx.controls.LinkButton;
+			import mx.core.UIComponent;
+			import mx.effects.Fade;
+		import mx.collections.ArrayCollection;
+		import mx.controls.LinkButton;
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
 		import com.adobe.serialization.json.JSON;  
 		import mx.controls.Alert;
@@ -37,13 +42,26 @@
 		private var items: Graph;
 		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
 		//private var serviceUrl:String = "/Relation.aspx";
-		
+		private var hideDelayTime:int = 5000;
 		private var oldHintText:String = "";
+		private var defaultMaxWidh:int = 500;
 
 		public var tipMan:BubbleTipManager = new BubbleTipManager();
 		 
 		[Bindable]
 		private var keys:Array = null;
+		
+		//记录了当前有多少个加载项
+		private var loadingCount:int = 0;
+		
+		private var funcArray:Array = [
+			searchKey,
+			loadStar,
+			loadMovie
+		];
+		
+
+		
 
 		private function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
 			var newItem: RelationItem = new RelationItem(data,rank);
@@ -72,79 +90,59 @@
 				search();
 		}
 		
+		private function query(type:String,queryData:String,listener:Function):void
+		{
+			setLoadingCount(true);
+			
+			var request:URLRequest = new URLRequest(serviceUrl);
+		    request.method = URLRequestMethod.POST;
+		    var data:URLVariables = new URLVariables();
+		    data.type = type;
+		    data.query = queryData;
+		    request.data = data;
+		    var loader:URLLoader = new URLLoader();
+		    loader.load(request);
+		    loader.addEventListener(Event.COMPLETE,listener);
+		    loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+		}
+		
 	   private function init():void
 	   {
 	   		items = new Graph();
+	   		
+	   		var types:Array = ["关键字","明星","电影"]; 
+			cbxSearchType.dataProvider = types;
 		    this.reSearch("成龙");
 	   }
 	   
 	   private function loadKeys():void
 	   {
-	   		var request:URLRequest = new URLRequest(serviceUrl);
-		    request.method = URLRequestMethod.POST;
-		    var data:URLVariables = new URLVariables();
-		    data.type = "loadKeys";
-		    data.query = txtSearch.text;
-		    request.data = data;
-		    var loader:URLLoader = new URLLoader();
-		    loader.load(request);
-		    loader.addEventListener(Event.COMPLETE,onLoadKeyComplete);
-		    loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+	   		this.query("loadKeys",txtSearch.text,onLoadKeyComplete);
 	   }
 	   
 	   public function searchKey(key:String):void
 	   {
-	   		var myLoader:URLLoader = new URLLoader();
-			var myRequest:URLRequest;
-	   		help.text = "加载 "+key+" 中...";
-	   		myRequest = new URLRequest(serviceUrl);
-		    myRequest.method = URLRequestMethod.POST;
-		    var data:URLVariables = new URLVariables();
-		    data.type = "queryByKey";
-		    data.query = key; 
-		    myRequest.data = data;
-		    myLoader.load(myRequest);
-		    myLoader.addEventListener(Event.COMPLETE,onSearchComplete);
-		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+	   		help.showTip("加载 "+key+" 中...");
+	   		this.query("queryByKey",key,onSearchComplete);
 	   }
 	   
 	   public function loadStar(name:String):void
 	   {
-	   		var myLoader:URLLoader = new URLLoader();
-			var myRequest:URLRequest;
-	   		help.text = "加载明星 "+name+" 中...";
-	   		myRequest = new URLRequest(serviceUrl);
-		    myRequest.method = URLRequestMethod.POST;
-		    var data:URLVariables = new URLVariables();
-		    data.type = "queryStarByName";
-		    data.query = name; 
-		    myRequest.data = data;
-		    myLoader.load(myRequest);
-		    myLoader.addEventListener(Event.COMPLETE,onSearchComplete);
-		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+	   		help.showTip("加载明星 "+name+" 中...");
+	   		this.query("queryStarByName",name,onSearchComplete);
 	   }
 	   
 	   public function loadMovie(name:String):void
 	   {
-	   		help.text = "加载电影 "+name+" 中...";
-	   		
-	   		var myLoader:URLLoader = new URLLoader();
-			var myRequest:URLRequest;
-	   		myRequest = new URLRequest(serviceUrl);
-		    myRequest.method = URLRequestMethod.POST;
-		    var data:URLVariables = new URLVariables();
-		    data.type = "queryMovieByStar";
-		    data.query = name; 
-		    myRequest.data = data;
-		    myLoader.load(myRequest);
-		    myLoader.addEventListener(Event.COMPLETE,onSearchComplete);
-		    myLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+	   		help.showTip("加载电影 "+name+" 中...");
+	   		this.query("queryMovieByStar",name,onSearchComplete);
 	   }
 	   
-	   private function addMovie(data:Object,item:RelationItem,rank:int = 0):void
+	   private function addObject(data:Object,item:RelationItem,rank:int = 0):void
 	   {
 	   		if(data == null)
 	   			return; 
+	   			
 			var id: String = data.ID;
 			var newItem:RelationItem = items.find(id) as RelationItem;
 			if (newItem == null)
@@ -156,46 +154,54 @@
 				if (item!=null)
 					items.link(newItem, item);
 			}
-				
-	   		for(var j:int = 0;j<data.Stars.length;++j)
+			
+			var j:int;
+			if (data.ObjectType == "MOVIE")
 			{
-				addStar(data.Stars[j].Star,newItem,j);
+		   		for(j=0;j<data.Stars.length;++j)
+				{
+					addObject(data.Stars[j].Star,newItem,j);
+				}
 			}
-	   }
-	   
-	   private function addStar(data:Object,item:RelationItem,rank:int = 0):void
-	   {
-	   		if(data == null)
-	   			return; 
-			var id: String = data.ID;
-			var newItem:RelationItem = items.find(id) as RelationItem;
-			if (newItem == null)
-				newItem = addItem(data, item,rank);
 			else
 			{
-				//更新数据，新查出来的数据比较全
-				newItem.updateData(data);
-				
-				if (item!=null)
-					items.link(newItem, item);
-			}
-				
-	   		for(var j:int = 0;j<data.Movies.length;++j)
-			{
-				addMovie(data.Movies[j].Movie,newItem,j);
+				for(j=0;j<data.Movies.length;++j)
+				{
+					addObject(data.Movies[j].Movie,newItem,j);
+				}
 			}
 	   }
-   
 
 	   private function errorHandler(e:IOErrorEvent):void
 	   {
-	   		this.help.text = "操作失败";		  		
+	   		setLoadingCount(false);	   			 
+	   		help.showTip("操作失败");		  		
 	   }
 	   
-
-		
+	   	private function setLoadingCount(add:Boolean):void
+	   	{
+	   		if (add)
+	   		{
+	   			if (loadingCount == 0)
+					this.cursorManager.setBusyCursor();
+				loadingCount ++;
+	   		}
+	   		else
+	   		{ 
+	   			loadingCount --;
+	   			if (loadingCount == 0)
+	   				{
+	   					this.cursorManager.removeBusyCursor();
+	   					help.hideTip(hideDelayTime);
+	   				}
+	   		}
+	   		
+	   	}
+	   		
 		private function onLoadKeyComplete(event:Event):void
 		{
+			setLoadingCount(false);
+			
 			var loader:URLLoader = URLLoader(event.target);
 			keys = (JSON.decode(loader.data) as Array);
 			
@@ -203,29 +209,25 @@
 			txtSearch.dataProvider=keys;
 			txtSearch.labelField = "Key";
 			txtSearch.typedText = oldText;
-			this.help.text = "加载关键字成功";
+			help.showTip("加载关键字成功");
+			
 		}
 		
 		private function onSearchComplete(event:Event):void
 		{
-			help.text += "完成";
+			
+			setLoadingCount(false);
+			help.showTip("完成");
+			
+			
 			var loader:URLLoader = URLLoader(event.target);
 			var result:Array = (JSON.decode(loader.data) as Array);
 			if (result!=null && result.length > 0)
 			{
-				if (result[0].ObjectType == "MOVIE")
-					addMovie(result[0],null);
-				else
-					addStar(result[0],null);
+				addObject(result[0],null);
 				
-				if (result.length > 1)
-				{
-					this.lblRecommend.visible = true;
-					if (result.length <= 5)
-						this.createBtnRecommend(result);
-					else
-						this.createListRecommend(result);
-				}
+				createRecommend(result);
+				
 
 			}
 		}
@@ -235,68 +237,100 @@
 			items.empty();
 			resetRecommend();
 			if (txtSearch.text!="")
-				this.searchKey(txtSearch.text);
+			{
+				funcArray[this.cbxSearchType.selectedIndex](txtSearch.text);
+			}
 		}
 		
-		public function reSearch(key:String):void
+		public function reSearch(key:String,type:String = "KEYWORD"):void
 		{
 			this.txtSearch.text = key;
+			switch(type)
+			{
+				case "STAR":
+					this.cbxSearchType.selectedIndex = 1;
+					break;
+				case "MOVIE":
+					this.cbxSearchType.selectedIndex = 2;
+					break;
+				case "KEYWORD":
+				default:
+					this.cbxSearchType.selectedIndex = 0;
+					break;
+			}
 			search();
 		}
 		
-		private function createBtnRecommend(result:Object):void
+		private function createRecommend(result:Object):void
 		{
-			this.recommendBox.visible = true;
-			for(var i:int = 1;i<result.length;++i)
+			if (result.length <= 1)
 			{
+				this.recommendBox.visible = false;
+				this.lblRecommend.visible = false;
+			}
+			else
+			{
+				this.recommendBox.visible = true;
+				this.lblRecommend.visible = true;
 				
-				var btnRecommend:Button = new Button();
-				btnRecommend.label = result[i].Name;
-				btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
-				this.recommendBox.addChild(btnRecommend);
+				var end:int = (result.length > 6)? 6:result.length -1;
+				this.recommendList.visible = (result.length >7);
+				var i:int;
+				for(i = 1;i<=end;++i)
+				{
+					var btnRecommend:TipButton = new TipButton();
+					btnRecommend.setLabel(result[i].Name);
+					btnRecommend.data = result[i];
+					btnRecommend.clickFunction = searchRecommend;
+					this.recommendBox.addChildAt(btnRecommend,0);
+				}
+				
+				if (this.recommendList.visible)
+				{
+					var dp:Array = new Array();
+					for(i = 7;i<result.length;++i)
+						dp.push(result[i].Name);
+					recommendList.dataProvider = dp;
+				}
+				
 			}
-		}
-		
-		private function createListRecommend(result:Object):void
-		{
-			this.cbxMore.visible = true;
-			var dp:Array = new Array();
-			for(var i:int = 1;i<result.length;++i)
-			{
-				dp.push(result[i].Name);
-			}
-			cbxMore.dataProvider = dp;
 		}
 		
 		private function resetRecommend():void
 		{
-			this.recommendBox.removeAllChildren();
+			var children:Array = this.recommendBox.getChildren();
+			for(var i:int = 0;i<children.length;++i)
+				if(children[i] is TipButton)
+				{
+					this.recommendBox.removeChild(children[i] as TipButton);
+				}
+				
 			this.lblRecommend.visible = false;
-			this.cbxMore.dataProvider = null;
-			this.cbxMore.visible = false;
+			this.recommendList.dataProvider = null;
+			this.recommendList.visible = false;
 			
 		} 
 		
 		//查找推荐
-		private function searchRecommend(event:MouseEvent):void
+		private function searchRecommend(target:TipButton):void
 		{
-			var btn:Button = event.target as Button;
-			this.reSearch(btn.label);
+			var aData:Object = target.data;
+			this.reSearch(aData.Name,aData.ObjectType);
 		}
-		
-		
-
 
 		]]>
-	</mx:Script>
-	<mx:Button x="492" y="13" label="搜索" id="btnSearch" click="{search();}" 
-		/>
-	<mx:HSlider id="rep" x="416" y="43" value="0.14" minimum="0.05" maximum="1.5" liveDragging="true" change="s.refresh();" width="101"/>
-	<mx:HSlider x="525" y="43" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="scaleFactor = event.currentTarget.value; s.refresh();" width="106"/>
-	<mx:HBox width="100%" id="recommendBox" left="214" top="77" >
-	</mx:HBox>
-	<mx:ComboBox x="213" y="78" id="cbxMore" editable="false" change="{if (cbxMore.dataProvider!=null) this.reSearch(cbxMore.selectedLabel);}" ></mx:ComboBox>
-	<mx:ComboBox x="416" y="13" width="68" id="cbxSearchType"></mx:ComboBox>
+	</mx:Script> 
 	
+	<ns1:MyHBox id="recommendBox" left="214" top="121" >
+		<mx:ComboBox id="recommendList" editable="false"
+			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
+			  includeInLayout="{this.recommendList.visible}"/>
+	</ns1:MyHBox>
+	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="469" y="87"/>
+	<mx:HSlider x="631" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
+	<mx:Label x="428" y="87" text="节点大小" color="#FFFFFF" styleName="text"/>
+	<mx:Label x="588" y="87" text="节点距离" color="#FFFFFF" styleName="text"/>
+	<ns1:TipButton x="123" y="87" width="285" id="help">
+	</ns1:TipButton>
 	
 </mx:Application>

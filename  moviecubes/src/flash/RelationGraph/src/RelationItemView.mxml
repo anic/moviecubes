@@ -18,7 +18,6 @@
 	////////////////////////////////////////////////////////////////////////////////
 	-->
 	
-	
 
    <mx:Glow id="effectAdd" duration="3000" 
         alphaFrom="1.0" alphaTo="1.0" 
@@ -29,9 +28,9 @@
     
 	<local:Circle id="circle" width="100%" height="100%" color="{data.color}"/>
 
-	<mx:Label id="txtName" text="{data.name}" textAlign="center" styleName="text" fontSize="15" 
+	<mx:Text id="txtName" text="{data.name}" textAlign="center" styleName="text" fontSize="15" 
 		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" color="#FFFFFF"
-		 height="32" width="100%" horizontalCenter="0" verticalCenter="0"/>
+		 height="32" width="100%" horizontalCenter="0" verticalCenter="0" mouseChildren="false"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -80,13 +79,13 @@
 				{
 					var starBox:StarBox = new StarBox();
 					starBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(this.circle,starBox,onSelected,onNotSelected); 
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(this,starBox,null,null);
 				}
 				else
 				{
 					var movieBox:MovieBox = new MovieBox();
 					movieBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(this.circle,movieBox,onSelected,onNotSelected);
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(this,movieBox,null,null);
 				}
 			}
 			
@@ -105,7 +104,6 @@
 				}
 				
 			}
-			
 			
 			
 
