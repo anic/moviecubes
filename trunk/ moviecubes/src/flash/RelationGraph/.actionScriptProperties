@@ -12,7 +12,7 @@
 <application path="RelationGraph.mxml"/>
 </applications>
 <modules>
-<module application="src/RelationGraph.mxml" destPath="StarBox.swf" optimize="true" sourcePath="src/StarBox.mxml"/>
+<module application="src/RelationGraph.mxml" destPath="ToolButton.swf" optimize="true" sourcePath="src/ToolButton.mxml"/>
 </modules>
 <buildCSSFiles/>
 </actionScriptProperties>

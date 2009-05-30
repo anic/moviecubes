@@ -83,6 +83,8 @@ package tipBubble
 				this.tipIsOpen = true;
 				this.bubbleTip = TipBubble(PopUpManager.createPopUp(this.tipTarget as DisplayObject, TipBubble, false));
 				this.bubbleTip.textField.visible = false;
+				this.bubbleTip.height = this.tipTarget.height + 20;
+				this.bubbleTip.width = this.tipTarget.width + 20;
 				this.bubbleTip.contentArea.addChild(this.tipComponent);
 				this.tipTarget.addEventListener(Event.ENTER_FRAME, moveTip);
 

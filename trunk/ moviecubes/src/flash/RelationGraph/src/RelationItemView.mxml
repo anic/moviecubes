@@ -4,8 +4,7 @@
 	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
 	 xmlns:local="*"
 	 width="110" height="110"
-	 mouseOver="{this.onSelected();}"
-	mouseOut="{this.onNotSelected();}"  >	
+   >	
 
 	<!--
 	////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +17,7 @@
 	////////////////////////////////////////////////////////////////////////////////
 	-->
 	
-
+	<mx:Style source="MyTheme.css" /> 
    <mx:Glow id="effectAdd" duration="3000" 
         alphaFrom="1.0" alphaTo="1.0" 
         blurXFrom="0.0" blurXTo="50.0" 
@@ -31,7 +30,8 @@
 	<mx:Text id="txtName" text="{data.name}" textAlign="center" styleName="text" fontSize="15" 
 		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" color="#FFFFFF"
 		 height="32" width="100%" horizontalCenter="0" verticalCenter="0" mouseChildren="false"/>
-	
+		
+		
 	<mx:Script>
 		<![CDATA[
 			import mx.core.UIComponent;
@@ -39,7 +39,6 @@
 			import mx.controls.TextArea;
 			import mx.core.Application;
 			
-						
 			private function init():void
 			{
 				this.effectAdd.play();
@@ -48,31 +47,32 @@
 				if (data.name.length>=5)
 					txtName.setStyle("fontSize",14);
 					
-				var offset:int = data.rank*10;
-				this.circle.unscaledRadius = this.width/2 - 20 - offset;
+								this.addEventListener(MouseEvent.ROLL_OVER,this.onSelected);
+				this.addEventListener(MouseEvent.ROLL_OUT,this.onNotSelected);
 
 				(data as RelationItem).setOnUpdate(this.onDataUpdate);
 				onDataUpdate();
 				
 			}
 			
-			private function onSelected():void
+			private function onSelected(event:MouseEvent):void
 			{
-				
-				this.btnLook.visible = true;
-				this.btnSearch.visible = true;
-				
+				this.btnLook.setVisible2(true);
+				this.btnSearch.setVisible2(true);
 			}
 			
-			private function onNotSelected():void
+			private function onNotSelected(event:MouseEvent):void
 			{
-			
-				this.btnLook.visible = false;
-				this.btnSearch.visible = false;
+				
+				this.btnLook.setVisible2(false);
+				this.btnSearch.setVisible2(false);
 			}
 			
 			private function onDataUpdate():void
 			{
+				var offset:int = data.rank*10;
+				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
+				
 				RelationGraph(Application.application).tipMan.removeBubbleTip(this.circle);
 				
 				if (data.isStar)
@@ -94,22 +94,24 @@
 			private var app: RelationGraph = RelationGraph(Application.application);
 			
 			public function doubleClick(event: Event): void {
+				searchTA(false);
+			}
+			
+			public function searchTA(clearGraph:Boolean):void
+			{
 				if (data.isStar)
 				{
-					RelationGraph(Application.application).loadStar(data.name);	
+					RelationGraph(Application.application).loadStar(data.name,clearGraph);	
 				}
 				else
 				{
-					RelationGraph(Application.application).loadMovie(data.name);
+					RelationGraph(Application.application).loadMovie(data.name,clearGraph);
 				}
-				
 			}
-			
-			
-
 		]]>
 	</mx:Script>
-	<mx:Button x="0" y="58" label="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn/search?q='+data.name),'_blank');}" visible="false"/>
-	<mx:Button x="56" y="58" label="查TA" id="btnSearch" click="{RelationGraph(Application.application).reSearch(data.name);}" visible="false"/>
+	<local:ToolButton ImgSrc="myimage/Document.png"  x="41" toolTip="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn/search?q='+data.name),'_blank');}" bottom="10" width="30" alpha="0"  height="30"/>
+	<local:ToolButton ImgSrc="myimage/ArrowRight.png" x="70" toolTip="查TA" id="btnSearch" click="{this.searchTA(true);}" bottom="10" fontSize="10" width="30" alpha="0" height="30"/>
+	
 	
 </mx:Canvas>
