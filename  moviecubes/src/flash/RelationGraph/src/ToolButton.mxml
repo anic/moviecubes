@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="30" height="30"
+	 mouseOver="{this.onMouseOver();}" mouseOut="{this.onMouseOut();}">
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var ImgSrc:String = "";
+			
+			public function onMouseOver():void
+			{
+				if (!this.fadeIn.isPlaying)
+				{
+					if (this.fadeOut.isPlaying)
+						this.fadeOut.stop();
+					
+					this.fadeIn.alphaFrom = this.btn.alpha;
+					this.fadeIn.play();
+				}
+			}
+			
+			public function onMouseOut():void
+			{
+				if (!this.fadeOut.isPlaying)
+				{
+					if (this.fadeIn.isPlaying)
+						this.fadeIn.stop();
+					this.fadeOut.alphaFrom = this.btn.alpha;
+					this.fadeOut.play();
+				}
+			}
+			
+			public function setVisible2(value:Boolean):void
+			{
+				if (!value)
+				{
+					if (!this.allOut.isPlaying)
+					{
+						this.allOut.play();
+					}
+				}
+				else
+				{
+					if(this.allOut.isPlaying)
+						this.allOut.stop();
+					
+					this.alpha = 1.0;
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:Fade alphaFrom="1.0" alphaTo="0" id="allOut" duration="500" target="{this}" startDelay="100" />
+	<mx:Fade alphaFrom="0" alphaTo="1.0" id="fadeIn" duration="500" target="{this.btn}"/>
+	<mx:Fade alphaFrom="1.0" alphaTo="0" id="fadeOut" duration="300" target="{this.btn}"/>
+	<mx:Button x="0" y="0" width="29" height="29"  click="{this.dispatchEvent(event);}" alpha="0" id="btn"/>
+	<mx:Image source="{ImgSrc}" x="2" y="2" width="25" height="25"/>
+</mx:Module>

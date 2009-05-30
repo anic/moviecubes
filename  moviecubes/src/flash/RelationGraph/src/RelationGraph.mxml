@@ -8,22 +8,22 @@
 	<mx:Style source="MyTheme.css" /> 
 	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="57" width="285" 
 		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
-		 />
-	<mx:ComboBox x="416" y="57" width="77" id="cbxSearchType" />
-	<mx:Button x="501" y="56" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton"/>
+		  fontSize="14"/>
+	<mx:ComboBox x="416" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
+	<mx:Button x="539" y="57" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton" fontSize="14"/>
 	
 		
 	
-	<fc:SpringGraph id="s" backgroundColor="#0" 
-		lineColor="#333388" left="0" right="0" top="146" bottom="0" width="100%"
+	<fc:SpringGraph id="s" 
+		lineColor="#333388" left="0" right="0" top="164" bottom="0"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
-		edgeRenderer="{new EdgeRender()}"
-		 >
+		edgeRenderer="{new EdgeRender()}" 
+ 		/>
 		
-	</fc:SpringGraph>
 	
-	<mx:Label x="123" y="121" text="你可能还在找" styleName="text" fontSize="13" id="lblRecommend"/>
-	<mx:Label x="10" y="82" text="Movie Cube" styleName="text" fontSize="15"/>
+	
+	<mx:Label x="123" y="122"  id="lblRecommend" styleName="text"/>
+	<mx:Label x="10" y="44" text="Movie Cube" styleName="text" fontSize="15"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -59,8 +59,6 @@
 			loadStar,
 			loadMovie
 		];
-		
-
 		
 
 		private function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
@@ -126,15 +124,28 @@
 	   		this.query("queryByKey",key,onSearchComplete);
 	   }
 	   
-	   public function loadStar(name:String):void
+	   public function loadStar(name:String,clearGraph:Boolean = true):void
 	   {
 	   		help.showTip("加载明星 "+name+" 中...");
+	   		if (clearGraph)
+	   		{
+	   			items.empty();
+	   			this.txtSearch.text = name;
+	   			this.cbxSearchType.selectedIndex = 1;
+	   		}
+	   			
 	   		this.query("queryStarByName",name,onSearchComplete);
 	   }
 	   
-	   public function loadMovie(name:String):void
+	   public function loadMovie(name:String,clearGraph:Boolean = true):void
 	   {
 	   		help.showTip("加载电影 "+name+" 中...");
+	   		if (clearGraph)
+   			{
+   				items.empty();
+   				this.txtSearch.text = name;
+   				this.cbxSearchType.selectedIndex = 2;
+   			}
 	   		this.query("queryMovieByStar",name,onSearchComplete);
 	   }
 	   
@@ -149,7 +160,7 @@
 				newItem = addItem(data, item,rank);
 			else{
 				//更新数据，新查出来的数据比较全
-				newItem.updateData(data);
+				newItem.updateData(data,rank);
 				
 				if (item!=null)
 					items.link(newItem, item);
@@ -160,14 +171,14 @@
 			{
 		   		for(j=0;j<data.Stars.length;++j)
 				{
-					addObject(data.Stars[j].Star,newItem,j);
+					addObject(data.Stars[j].Star,newItem,rank + j + 1);
 				}
 			}
 			else
 			{
 				for(j=0;j<data.Movies.length;++j)
 				{
-					addObject(data.Movies[j].Movie,newItem,j);
+					addObject(data.Movies[j].Movie,newItem,rank + j + 1);
 				}
 			}
 	   }
@@ -218,24 +229,30 @@
 			
 			setLoadingCount(false);
 			help.showTip("完成");
-			
+			resetRecommend();
 			
 			var loader:URLLoader = URLLoader(event.target);
 			var result:Array = (JSON.decode(loader.data) as Array);
 			if (result!=null && result.length > 0)
 			{
-				addObject(result[0],null);
-				
+				if(!items.hasNodes
+				 || items.hasNode(result[0].ID))
+				{
+					addObject(result[0],null,0);
+				}
+				else
+				{
+					addObject(result[0],null,0);
+					help.showTip("第一个结果不对",true);
+				}
+						
 				createRecommend(result);
-				
-
 			}
 		}
 		
 		public function search():void
 		{
 			items.empty();
-			resetRecommend();
 			if (txtSearch.text!="")
 			{
 				funcArray[this.cbxSearchType.selectedIndex](txtSearch.text);
@@ -270,6 +287,7 @@
 			}
 			else
 			{
+				this.lblRecommend.text = "相关查找 共"+(result.length - 1)+"个";
 				this.recommendBox.visible = true;
 				this.lblRecommend.visible = true;
 				
@@ -278,10 +296,15 @@
 				var i:int;
 				for(i = 1;i<=end;++i)
 				{
-					var btnRecommend:TipButton = new TipButton();
-					btnRecommend.setLabel(result[i].Name);
+					var btnRecommend:Button = new Button();
+					if(result[i].ObjectType == "MOVIE")
+						btnRecommend.styleName = "movieButton";
+					else
+						btnRecommend.styleName = "starButton";
+						
+					btnRecommend.label = result[i].Name;
 					btnRecommend.data = result[i];
-					btnRecommend.clickFunction = searchRecommend;
+					btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
 					this.recommendBox.addChildAt(btnRecommend,0);
 				}
 				
@@ -300,9 +323,9 @@
 		{
 			var children:Array = this.recommendBox.getChildren();
 			for(var i:int = 0;i<children.length;++i)
-				if(children[i] is TipButton)
+				if(children[i] != this.recommendList)
 				{
-					this.recommendBox.removeChild(children[i] as TipButton);
+					this.recommendBox.removeChild(children[i] as UIComponent);
 				}
 				
 			this.lblRecommend.visible = false;
@@ -312,24 +335,24 @@
 		} 
 		
 		//查找推荐
-		private function searchRecommend(target:TipButton):void
+		private function searchRecommend(event:MouseEvent):void
 		{
-			var aData:Object = target.data;
+			var aData:Object = (event.target as Button).data;
 			this.reSearch(aData.Name,aData.ObjectType);
 		}
 
 		]]>
 	</mx:Script> 
 	
-	<ns1:MyHBox id="recommendBox" left="214" top="121" >
-		<mx:ComboBox id="recommendList" editable="false"
+	<mx:HBox id="recommendBox" left="248" top="116" >
+		<mx:ComboBox id="recommendList"
 			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
-			  includeInLayout="{this.recommendList.visible}"/>
-	</ns1:MyHBox>
-	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="469" y="87"/>
-	<mx:HSlider x="631" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
-	<mx:Label x="428" y="87" text="节点大小" color="#FFFFFF" styleName="text"/>
-	<mx:Label x="588" y="87" text="节点距离" color="#FFFFFF" styleName="text"/>
+			  includeInLayout="{this.recommendList.visible}" fontSize="12" height="36" textAlign="center"/>
+	</mx:HBox>
+	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="481" y="87"/>
+	<mx:HSlider x="653" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
+	<mx:Label x="588" y="87" text="节点大小" styleName="text"/>
+	<mx:Label x="416" y="87" text="节点距离" styleName="text"/>
 	<ns1:TipButton x="123" y="87" width="285" id="help">
 	</ns1:TipButton>
 	

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="196" height="140" initialize="init()">
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="init()">
+	<mx:Style source="MyTheme.css" />
 	<mx:Script>
 		<![CDATA[
 			public function init():void

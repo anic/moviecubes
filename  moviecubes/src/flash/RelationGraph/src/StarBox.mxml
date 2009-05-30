@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="196" height="140" initialize="init()">
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="init()">
 
 	<mx:Script>
 		<![CDATA[
@@ -43,7 +43,7 @@
 	</mx:Script>
 	<mx:VBox x="0" y="0" height="100%" width="100%" id="bxStar">
 		<mx:HBox width="100%" id="bxName">
-			<mx:Text text="名称" width="50"/>
+			<mx:Text text="姓名" width="50"/>
 			<mx:Text id="txtName" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxAlias"  includeInLayout="{bxAlias.visible}">
@@ -51,7 +51,7 @@
 			<mx:Text id="txtAlias" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxMovies">
-			<mx:Text text="参与电影" width="50"/>
+			<mx:Text text="电影" width="50"/>
 			<mx:Text id="txtMovies" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
