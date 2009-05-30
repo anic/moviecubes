@@ -12,7 +12,7 @@
     <div align="center" style="height: 600px; width:100%">
         <embed id="RelationGraph" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" allowscriptaccess="sameDomain" name="RelationGraph" bgcolor="#869ca7" quality="high"
          src="flash/RelationGraph.swf"
-         height="100%"
+         height="100%" 
          width="100%"/>
          <div style="font-family: 宋体; font-size: small">联系我们|使用帮助</div>
     </div>
