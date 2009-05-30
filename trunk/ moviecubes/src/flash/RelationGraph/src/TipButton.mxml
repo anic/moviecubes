@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{addBlurFilter();}">
 	<mx:Fade target="{this.btnTip}" alphaFrom="1.0" alphaTo="0.0" id="effectFade" duration="1000" effectEnd="{this.onFinish();}" />
-	<mx:Button width="100%" height="100%" id="btnTip"  click="{onClick(event);}" styleName="tipButton" buttonMode="false"
-		label="{this.tiplabel}" 
-		/>
+	<mx:Button width="100%" height="100%" id="btnTip"  click="{onClick(event);}" buttonMode="false"
+		label="{this.tiplabel}"  styleName="tipButton"/>
 	<mx:Style source="MyTheme.css"/>
 		
 	

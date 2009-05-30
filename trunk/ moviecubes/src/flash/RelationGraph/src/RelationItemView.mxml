@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="{init();}" 
 	 scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}"
 	 xmlns:local="*"
@@ -22,7 +21,8 @@
         alphaFrom="1.0" alphaTo="1.0" 
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 
-        color="{data.color}" target="{this.circle}"/>
+        target="{this.circle}"
+        color="{data.color}"/>
         
     
 	<local:Circle id="circle" width="100%" height="100%" color="{data.color}"/>
@@ -39,40 +39,29 @@
 			import mx.controls.TextArea;
 			import mx.core.Application;
 			
+			
 			private function init():void
 			{
-				this.effectAdd.play();
+					
 				
 				//设置合适的字体大小
 				if (data.name.length>=5)
 					txtName.setStyle("fontSize",14);
 					
-								this.addEventListener(MouseEvent.ROLL_OVER,this.onSelected);
-				this.addEventListener(MouseEvent.ROLL_OUT,this.onNotSelected);
-
+				this.addEventListener(MouseEvent.ROLL_OVER,this.onSelected);
 				(data as RelationItem).setOnUpdate(this.onDataUpdate);
 				onDataUpdate();
-				
 			}
 			
 			private function onSelected(event:MouseEvent):void
 			{
-				this.btnLook.setVisible2(true);
-				this.btnSearch.setVisible2(true);
-			}
-			
-			private function onNotSelected(event:MouseEvent):void
-			{
-				
-				this.btnLook.setVisible2(false);
-				this.btnSearch.setVisible2(false);
+				RelationGraph(Application.application).toolPanel.onSelected(this);
 			}
 			
 			private function onDataUpdate():void
 			{
 				var offset:int = data.rank*10;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
-				
 				RelationGraph(Application.application).tipMan.removeBubbleTip(this.circle);
 				
 				if (data.isStar)
@@ -87,6 +76,8 @@
 					movieBox.data = data.data;
 					RelationGraph(Application.application).tipMan.createMyBubbleTip(this,movieBox,null,null);
 				}
+				
+				this.effectAdd.play();
 			}
 			
 			
@@ -108,10 +99,13 @@
 					RelationGraph(Application.application).loadMovie(data.name,clearGraph);
 				}
 			}
+			
+			public function removeItem():void
+			{
+				RelationGraph(Application.application).removeItem(this.data as RelationItem);
+			}
 		]]>
 	</mx:Script>
-	<local:ToolButton ImgSrc="myimage/Document.png"  x="41" toolTip="看TA" id="btnLook" click="{navigateToURL(new URLRequest('http://www.g.cn/search?q='+data.name),'_blank');}" bottom="10" width="30" alpha="0"  height="30"/>
-	<local:ToolButton ImgSrc="myimage/ArrowRight.png" x="70" toolTip="查TA" id="btnSearch" click="{this.searchTA(true);}" bottom="10" fontSize="10" width="30" alpha="0" height="30"/>
 	
 	
 </mx:Canvas>

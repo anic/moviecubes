@@ -62,17 +62,17 @@ SpringGraph
 	backgroundColor:#000000;
 }
 
-Button.tipButton
+.tipButton
 	{
 		color: #222222;
 		fillAlphas: 1.0, 1.0;
-		fillColors: #FFBA00, #FFBA00;
+		fillColors: #0084FF, #0084FF;
 		fontSize: 12pt;
 		textAlign: left;
 		
 	}
 	
-Button.movieButton
+.movieButton
 {
 	color: #222222;
 	fillAlphas: 1.0, 1.0;
@@ -82,7 +82,7 @@ Button.movieButton
 	icon:Embed(source='myimage/icon1.png');
 }
 
-Button.starButton
+.starButton
 	{
 		color: #222222;
 		fillAlphas: 1.0, 1.0;
