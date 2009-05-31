@@ -19,6 +19,8 @@ namespace MovieCube.SearchWeb
         {
             string type = System.Web.HttpContext.Current.Request.Form["type"];
             string query = System.Web.HttpContext.Current.Request.Form["query"];
+            string start = System.Web.HttpContext.Current.Request.Form["start"];
+            string count = System.Web.HttpContext.Current.Request.Form["count"];
 
             string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
             string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
@@ -38,7 +40,7 @@ namespace MovieCube.SearchWeb
             else if (type != null && query != null)
             {
                 switch (type)
-                {
+                { 
                     case "queryByKey":
                         //先通过名称查找电影
                         movies = movieQuery.QueryMovieByName(query);
@@ -76,16 +78,45 @@ namespace MovieCube.SearchWeb
                         return;
 
                     case "queryStarByName":
-                        stars = starQuery.QueryStarByName(query);
-                        Response.Write(JsonConvert.SerializeObject(stars));
+                        if (start == null || start == "")
+                        {
+                            stars = starQuery.QueryStarByName(query);
+                            Response.Write(JsonConvert.SerializeObject(stars));
+                        }
+                        else
+                        {
+                            try
+                            {
+                                stars = starQuery.QueryStarByName(query,Convert.ToInt32(start), Convert.ToInt32(count));
+                                Response.Write(JsonConvert.SerializeObject(stars));
+                            }
+                            catch
+                            {
+                                Response.Write("[]");
+                            }
+                        }
                         return;
                     case "queryMovieByStar":
                         movies = movieQuery.QueryMovieByKeyword(query);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
                     case "queryMovieByName":
-                        movies = movieQuery.QueryMovieByName(query);
-                        Response.Write(JsonConvert.SerializeObject(movies));
+                        if (start == null || start == "")
+                        {
+                            movies = movieQuery.QueryMovieByName(query);
+                            Response.Write(JsonConvert.SerializeObject(movies));
+                        }
+                        else
+                        {
+                            try
+                            {
+                                movies = movieQuery.QueryMovieByName(query,Convert.ToInt32(start),Convert.ToInt32(count));
+                                Response.Write(JsonConvert.SerializeObject(movies));
+                            }
+                            catch {
+                                Response.Write("[]");
+                            }
+                        }
                         return;
                     default:
                         return;
