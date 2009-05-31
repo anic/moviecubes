@@ -23,8 +23,11 @@
 			public function onItemRemove(item:RelationItem):void
 			{
 				if (currentView.data == item)
-					currentView = null;
-				this.setVisible2(false);						
+					{
+						currentView = null;
+						this.setVisible2(false);
+					}
+										
 			}
 			
 			public function hide():void
@@ -83,14 +86,12 @@
 					var item:RelationItem = (currentView.data as RelationItem);
 					if(next)
 					{
-						item.nextStart = item.start + countPerPage;
+						var total:int = item.isStar? item.data.TotalMovieNum:item.data.TotalStarNum;
+						item.nextStart = item.start + countPerPage < total? item.start+countPerPage:item.start;
 					}	
 					else 
 					{
-						if (item.start - countPerPage<0)
-							item.nextStart = 0;
-						else
-							item.nextStart = item.start - countPerPage;
+						item.nextStart = item.start - countPerPage>=0? item.start - countPerPage:0;
 					}
 					
 					if (item.isStar)
