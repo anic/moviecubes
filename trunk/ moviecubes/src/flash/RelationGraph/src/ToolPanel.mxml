@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="110" height="110" initialize="{onInit();}"
-		 xmlns:local="*" alpha="0">
+		 xmlns:local="*" alpha="0" >
 	<mx:Script>
 		<![CDATA[
 			import mx.core.Application;
@@ -14,7 +14,6 @@
 			
 			public function onSelected(itemView:RelationItemView):void
 			{
-				trace("onSelected");
 				currentView = itemView;
 				RelationGraph(Application.application).setToolPanelPosition(currentView.x,currentView.y);
 				this.setVisible2(true);
@@ -69,7 +68,40 @@
 					if(this.allOut.isPlaying)
 						this.allOut.stop();
 					
+					this.btnPre.visible = (this.currentView!=null && this.currentView.data.rank == 0);
+					this.btnNext.visible = (this.currentView!=null && this.currentView.data.rank == 0);
+							
 					this.alpha = 1.0;
+				}
+			}
+			
+			private function onSearchNextPage(next:Boolean):void
+			{
+				var countPerPage:int = 5;
+				if (this.currentView!=null)
+				{
+					var item:RelationItem = (currentView.data as RelationItem);
+					if(next)
+					{
+						item.nextStart = item.start + countPerPage;
+					}	
+					else 
+					{
+						if (item.start - countPerPage<0)
+							item.nextStart = 0;
+						else
+							item.nextStart = item.start - countPerPage;
+					}
+					
+					if (item.isStar)
+					{
+						RelationGraph(Application.application).queryPage("queryStarByName",item.name,item.nextStart,countPerPage);
+					}
+					else
+					{
+						RelationGraph(Application.application).queryPage("queryMovieByName",item.name,item.nextStart,countPerPage);
+					}
+						
 				}
 			}
 			
@@ -78,7 +110,7 @@
 	<mx:Fade alphaFrom="1.0" alphaTo="0" id="allOut" duration="500" target="{this}" startDelay="100" />
 	<local:ToolButton x="52" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="10" width="30" height="30"/>
 	<local:ToolButton x="76" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="10"  width="30" height="30"/>
-	<local:ToolButton x="4" ImageIndex="0" toolTip="前一页" id="btnPre" bottom="10" width="30"  height="30"/>
-	<local:ToolButton x="28" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30"/>
+	<local:ToolButton x="4" ImageIndex="0" toolTip="前一页" id="btnPre" bottom="10" width="30"  height="30" click="{onSearchNextPage(false);}"/>
+	<local:ToolButton x="28" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30" click="{onSearchNextPage(true);}"/>
 	<local:ToolButton x="76" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="70" width="30" height="30"/>
 </mx:Module>

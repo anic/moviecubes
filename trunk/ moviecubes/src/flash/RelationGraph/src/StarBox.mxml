@@ -3,9 +3,12 @@
 
 	<mx:Script>
 		<![CDATA[
-			public function init():void
+			private var started:Boolean = false;
+			private function init():void
 			{
-				
+				if (started)
+					return;
+					
 				var i:int = 0;
 				txtName.text = data.Name;
 				
@@ -30,6 +33,7 @@
 					txtMovies.text = "双击节点查看..."
 				else
 					{
+						titleMovie.text += "("+data.TotalMovieNum+")";
 						for(i = 0;i<data.Movies.length;++i)
 						{
 							if(i !=0)
@@ -38,6 +42,9 @@
 							txtMovies.text += data.Movies[i].Movie.Name;										
 						}
 					}
+				
+					started = true;
+			
 			}
 		]]>
 	</mx:Script>
@@ -51,12 +58,13 @@
 			<mx:Text id="txtAlias" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxMovies">
-			<mx:Text text="电影" width="50"/>
+			<mx:Text text="电影" width="50" id="titleMovie"/>
 			<mx:Text id="txtMovies" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
 			<mx:Text text="分数" width="50"/>
 			<mx:Text id="txtRank" width="100%"/>
 		</mx:HBox>
+
 	</mx:VBox>
 </mx:Module>
