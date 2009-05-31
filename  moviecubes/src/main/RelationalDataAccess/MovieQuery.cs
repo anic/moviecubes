@@ -29,9 +29,9 @@ namespace MovieCube.RelationalDataAccess
 
         #region IMovieQuery 成员
 
-        public List<Movie> QueryMovieByKeyword(string keyword)
+        public List<Movie> QueryMovieByName(string name)
         {
-            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword);
+            List<Movie> resultMovies = GetMovieInfoByName(name);
 
             if (resultMovies.Count > 0)
             {
@@ -52,35 +52,9 @@ namespace MovieCube.RelationalDataAccess
             return resultMovies;
         }
 
-        public List<Movie> QueryMovieByKeyword(string keyword, int index, int count)
+        public List<Movie> QueryMovieByKeyword(string keyword)
         {
-            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword, index, count);
-
-            if (resultMovies.Count > 0)
-            {
-                //resultMovies根据rank、time等排序
-                resultMovies.Sort();
-
-                //选取排名第一的movie进行扩展，扩展star即可
-                Movie extendedMovie = resultMovies[0];
-
-                if (index >= extendedMovie.Stars.Count)
-                    return null;
-
-                int num = Math.Min(count, extendedMovie.Stars.Count - index);
-
-                for (int i = 0; i < num; i++)
-                {
-                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
-                }
-            }
-
-            return resultMovies;
-        }
-
-        public List<Movie> QueryMovieByName(string name)
-        {
-            List<Movie> resultMovies = GetMovieInfoByName(name);
+            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword);
 
             if (resultMovies.Count > 0)
             {
@@ -113,15 +87,116 @@ namespace MovieCube.RelationalDataAccess
                 //选取排名第一的movie进行扩展，扩展star即可
                 Movie extendedMovie = resultMovies[0];
 
-                if (index >= extendedMovie.Stars.Count)
-                    return null;
-
-
-                int num = Math.Min(count, extendedMovie.Stars.Count - index);
+                int num = Math.Min(count, extendedMovie.Stars.Count);
 
                 for (int i = 0; i < num; i++)
                 {
                     extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
+                }
+            }
+
+            return resultMovies;
+        }
+
+        public List<Movie> QueryMovieByKeyword(string keyword, int index, int count)
+        {
+            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword, index, count);
+
+            if (resultMovies.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
+
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+
+                int num = Math.Min(count, extendedMovie.Stars.Count);
+
+                for (int i = 0; i < num; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, Definition.Max_Node_Layer - 1);
+                }
+            }
+
+            return resultMovies;
+        }
+
+        public List<Movie> QueryMovieByID(int id, int layer, int[] index, int[] count)
+        {
+            if (layer < 1)
+                return null;
+
+            List<Movie> resultMovies = new List<Movie>();
+            Movie addMovie = GetMovieInfoByID(id, index[0], count[0]);
+
+            if(addMovie != null)
+                resultMovies.Add(addMovie);
+
+            if (resultMovies.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
+
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+
+                int num = Math.Min(count[0], extendedMovie.Stars.Count);
+
+                for (int i = 0; i < num; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, layer - 1, index, count);
+                }
+            }
+
+            return resultMovies;
+        }
+
+        public List<Movie> QueryMovieByName(string name, int layer, int[] index, int[] count)
+        {
+            if (layer < 1)
+                return null;
+
+            List<Movie> resultMovies = GetMovieInfoByName(name, index[0], count[0]);
+
+            if (resultMovies.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
+
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+
+                int num = Math.Min(count[0], extendedMovie.Stars.Count);
+
+                for (int i = 0; i < num; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, layer - 1, index, count);
+                }
+            }
+
+            return resultMovies;
+        }
+
+        public List<Movie> QueryMovieByKeyword(string keyword, int layer, int[] index, int[] count)
+        {
+            if (layer < 1)
+                return null;
+
+            List<Movie> resultMovies = GetMovieInfoByKeyword(keyword, index[0], count[0]);
+
+            if (resultMovies.Count > 0)
+            {
+                //resultMovies根据rank、time等排序
+                resultMovies.Sort();
+
+                //选取排名第一的movie进行扩展，扩展star即可
+                Movie extendedMovie = resultMovies[0];
+
+                int num = Math.Min(count[0], extendedMovie.Stars.Count);
+
+                for (int i = 0; i < num; i++)
+                {
+                    extendedMovie.Stars[i].Star = CommonQuery.Instance.ExtendStar(extendedMovie.Stars[i].Star, layer - 1, index, count);
                 }
             }
 
@@ -242,6 +317,26 @@ namespace MovieCube.RelationalDataAccess
             return movie;
         }
 
+        public Movie GetMovieInfoByID(int id, int index, int count)
+        {
+            Movie movie = null;
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher(movieInfo);
+            QueryParser queryParser = new QueryParser("ID", new StandardAnalyzer());
+            query = queryParser.Parse(id.ToString());
+
+            hits = indexSearcher.Search(query);
+
+            if (hits.Length() > 0)
+            {
+                Document hitDoc = hits.Doc(0);
+
+                movie = ConvertLuceneDocumentToMovie(hitDoc, index, count);
+            }
+            return movie;
+        }
+
         private static Movie ConvertLuceneDocumentToMovie(Document doc, int index, int count)
         {
             Movie result = new Movie();
@@ -265,6 +360,9 @@ namespace MovieCube.RelationalDataAccess
             {
                 int totalCount = starIDs.Length;
 
+                if (starIDs[starIDs.Length - 1].Trim() == "")
+                    totalCount -= 1;
+
                 //设置该电影的明星总数
                 result.TotalStarNum = totalCount;
 
@@ -273,6 +371,8 @@ namespace MovieCube.RelationalDataAccess
                     index = 0;
 
                 int loopCount = Math.Min(count, totalCount - index);
+
+                loopCount += index;
 
                 for (int i = index; i < loopCount; i++)
                 {
@@ -285,10 +385,6 @@ namespace MovieCube.RelationalDataAccess
                         result.AddStar(addStar, starRoles[i]);
                     }
                 }
-            }
-            else
-            {
-                throw new Exception("format error");
             }
  
             return result;
