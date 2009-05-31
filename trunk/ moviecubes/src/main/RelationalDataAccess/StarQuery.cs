@@ -106,7 +106,7 @@ namespace MovieCube.RelationalDataAccess
 
         public List<Star> QueryStarByName(string name, int index, int count)
         {
-            List<Star> resultStars = GetStarInfoByName(name);
+            List<Star> resultStars = GetStarInfoByName(name, index, count);
 
             if (resultStars.Count > 0)
             {
@@ -117,8 +117,8 @@ namespace MovieCube.RelationalDataAccess
                 Star extendedStar = resultStars[0];
                 //int num = Math.Min(extendedStar.Movies.Count, Definition.Max_Surround_Node_Num);
 
-                if (index >= extendedStar.Movies.Count)
-                    return null;
+                //if (index >= extendedStar.)
+                //    return null;
 
                 int num = Math.Min(count, extendedStar.Movies.Count - index);
 
@@ -264,6 +264,11 @@ namespace MovieCube.RelationalDataAccess
 
             int totalCount = Math.Min(movieIDs.Length, movieRoles.Length);
 
+
+            if (movieIDs[movieIDs.Length - 1] == "")
+                totalCount = totalCount - 1;
+
+
             result.TotalMovieNum = totalCount;
 
             if (index > totalCount)
@@ -271,7 +276,7 @@ namespace MovieCube.RelationalDataAccess
 
             int loopCount = Math.Min(count, totalCount - index);
 
-            for (int i = index; i < loopCount; i++)
+            for (int i = index; i < index + loopCount; i++)
             {
                 movieIDs[i] = movieIDs[i].Trim();
                 if (movieIDs[i] != "")
