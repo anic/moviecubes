@@ -39,5 +39,9 @@ namespace MovieCube.Common.Interface
         /// <param name="count"></param>
         /// <returns></returns>
         List<Movie> QueryMovieByKeyword(string keyword, int index, int count);
+
+        List<Movie> QueryMovieByID(int id, int layer, int[] index, int[] count);
+        List<Movie> QueryMovieByName(string name, int layer, int[] index, int[] count);
+        List<Movie> QueryMovieByKeyword(string keyword, int layer, int[] index, int[] count);
     }
 }
