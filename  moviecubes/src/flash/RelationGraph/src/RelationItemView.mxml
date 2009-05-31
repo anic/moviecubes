@@ -62,19 +62,21 @@
 			{
 				var offset:int = data.rank*10;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
-				RelationGraph(Application.application).tipMan.removeBubbleTip(this.circle);
+				
+				var target:UIComponent = this;
+				RelationGraph(Application.application).tipMan.removeBubbleTip(target);
 				
 				if (data.isStar)
 				{
 					var starBox:StarBox = new StarBox();
 					starBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(this,starBox,null,null);
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,starBox,null,null);
 				}
 				else
 				{
 					var movieBox:MovieBox = new MovieBox();
 					movieBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(this,movieBox,null,null);
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,movieBox,null,null);
 				}
 				
 				this.effectAdd.play();

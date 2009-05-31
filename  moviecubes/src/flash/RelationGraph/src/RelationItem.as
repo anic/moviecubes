@@ -30,6 +30,12 @@ package
 		private var onUpdate:Function = null;
 		
 		[Bindable]
+		public var start:int;
+		
+		[Bindable]
+		public var nextStart:int = 0;
+		
+		[Bindable]
 		public var color:uint;
 		
 		public function RelationItem(data:Object,rank:int = 0) {
@@ -39,6 +45,7 @@ package
 			this.rank = rank;
 			this.isStar = data.ObjectType == "STAR";
 			this.data = data;
+			this.start = 0;
 			updateColor();
 		}
 		
@@ -61,47 +68,123 @@ package
 			}
 		}
 		
+		private function updateMovies(newData:Object):Boolean
+		{
+			var result:Boolean = false;
+			for(var i:int = 0;i<newData.Movies.length;++i)
+			{
+				if(!hasMovie(newData.Movies[i].Movie.ID))
+				{
+					(this.data.Movies as Array).push(newData.Movies[i]);
+					result = true;
+				}
+			}
+			return result;
+		}
+		
+		private function updateStars(newData:Object):Boolean
+		{
+			var result:Boolean = false;
+			for(var i:int = 0;i<newData.Stars.length;++i)
+			{
+				if(!hasStar(newData.Stars[i].Star.ID))
+				{
+					(this.data.Stars as Array).push(newData.Stars[i]);
+					result = true;
+				}
+			}
+			return result;
+		}
+		
+		private function updateAlias(newData:Object):Boolean
+		{
+			var result:Boolean = false;
+			for(var i:int = 0;i<newData.Alias.length;++i)
+			{
+				if(!hasAlias(newData.Alias[i]))
+				{
+					(this.data.Alias as Array).push(newData.Alias[i]);
+					result = true;
+				}
+			}
+			return result;
+		}
 		
 		
-		public function updateData(data:Object,rank:int):void
+		private function hasMovie(id:String):Boolean
+		{
+			for(var i:int = 0;i<data.Movies.length;++i)
+			{
+				if (this.data.Movies[i].Movie.ID == id)
+					return true;
+			}
+			return false;
+		}
+		
+		private function hasAlias(role:String):Boolean
+		{
+			for(var i:int = 0;i<this.data.Alias.length;++i)
+			{
+				if (this.data.Alias[i] == role)
+					return true;
+			}
+			return false;
+		}
+		
+		
+		private function hasStar(id:String):Boolean
+		{
+			for(var i:int = 0;i<data.Stars.length;++i)
+			{
+				if (this.data.Stars[i].Star.ID == id)
+					return true;
+			}
+			return false;
+		}
+		
+		public function updateData(data:Object,rank:int,start:int):void
 		{
 			var updated:Boolean = false;
 			if (data.ObjectType == "STAR")
 			{
-				if (data.Movies.length > this.data.Movies.length)
-				{
+				updated = updateMovies(data);
+				
+				if (this.data.TotalMovieNum < data.TotalMovieNum)
+				{	
+					this.data.TotalMovieNum = data.TotalMovieNum;
 					updated = true;
-					this.data.Movies = data.Movies;
 				}
 				
-				if (data.Alias.length > this.data.Alias.length)
-				{
-					updated = true;
-					this.data.Alias = data.Alias;
-				}	
 			}
 			else
 			{
-				if (data.Stars.length > this.data.Stars.length)
-				{
-					updated = true;
-					this.data.Stars = data.Stars;
-				}
+				updated = updateStars(data);
 				
-				if (data.Alias.length > this.data.Alias.length)
+				if (this.data.TotalStarNum < data.TotalStarNum)
 				{
+					this.data.TotalStarNum = data.TotalStarNum;
 					updated = true;
-					this.data.Alias = data.Alias;
-				}	
+				}
 			}
 			
+			if (updateAlias(data))
+				updated = true;
+			
+			
 			if (this.rank > rank)
-				{
-					this.rank = rank;
-					updateColor();
-					updated = true;
-				}
-								
+			{
+				this.rank = rank;
+				updateColor();
+				updated = true;
+			}
+			
+			if (this.start!=start || this.nextStart!= start)
+			{
+				this.start = start;
+				this.nextStart = start;
+				updated = true;
+			}
+			
 							
 			if (updated && this.onUpdate!=null )
 				this.onUpdate();

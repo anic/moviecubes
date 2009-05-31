@@ -3,9 +3,12 @@
 	<mx:Style source="MyTheme.css" />
 	<mx:Script>
 		<![CDATA[
-			public function init():void
+			private var started:Boolean = false;
+			private function init():void
 			{
-				
+				if (started)
+					return;
+					
 				var i:int = 0;
 				txtName.text = data.Name;
 				
@@ -30,6 +33,7 @@
 					txtStars.text = "双击节点查看..."
 				else
 				{
+					titleStar.text += "("+data.TotalStarNum+")";
 					for(i = 0;i<data.Stars.length;++i)
 					{
 						if(i !=0)
@@ -38,7 +42,7 @@
 																
 					}
 				}
-		
+				started = true;
 			}
 		]]>
 	</mx:Script>
@@ -52,7 +56,7 @@
 			<mx:Text id="txtAlias" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxStars">
-			<mx:Text text="明星" width="50"/>
+			<mx:Text text="明星" width="50" id="titleStar"/>
 			<mx:Text id="txtStars" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">

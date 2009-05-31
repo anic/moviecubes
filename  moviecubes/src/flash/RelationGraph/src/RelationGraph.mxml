@@ -108,13 +108,34 @@
 		    loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 		}
 		
+		
+		public function queryPage(type:String,queryData:String,start:int,count:int):void
+		{
+			setLoadingCount(true);
+			
+			var request:URLRequest = new URLRequest(serviceUrl);
+		    request.method = URLRequestMethod.POST;
+		    var data:URLVariables = new URLVariables();
+		    data.type = type;
+		    data.query = queryData;
+		    data.start = start;
+		    data.count = count;
+		    request.data = data;
+		    var loader:URLLoader = new URLLoader();
+		    loader.load(request);
+		    
+		    loader.addEventListener(Event.COMPLETE,onSearchComplete);
+		    loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+		    
+		}
+		
 	   private function init():void
 	   {
 	   		items = new Graph();
 	   		
 	   		var types:Array = ["关键字","明星","电影"]; 
 			cbxSearchType.dataProvider = types;
-		    this.reSearch("成龙");
+		    this.reSearch("周华健");
 	   }
 	   
 	   private function loadKeys():void
@@ -155,38 +176,53 @@
 	   		this.query("queryMovieByStar",name,onSearchComplete);
 	   }
 	   
-	   private function addObject(data:Object,item:RelationItem,rank:int = 0):void
+	   private function updateObject(data:Object,item:RelationItem,rank:int,start:int):void
 	   {
-	   		if(data == null)
-	   			return; 
-	   			
-			var id: String = data.ID;
-			var newItem:RelationItem = items.find(id) as RelationItem;
-			if (newItem == null)
-				newItem = addItem(data, item,rank);
-			else{
-				//更新数据，新查出来的数据比较全
-				newItem.updateData(data,rank);
-				
-				if (item!=null)
-					items.link(newItem, item);
-			}
+	   		if (data == null)
+	   			return;
+	   		//更新数据，新查出来的数据比较全
+			item.updateData(data,rank,start);
 			
-			var j:int;
+			visitRelated(data,item,rank);
+	   }
+	   
+	   private function visitRelated(data:Object,newItem:RelationItem,rank:int):void
+	   {
+	   		var j:int;
+			var tempItem:RelationItem = null;
 			if (data.ObjectType == "MOVIE")
 			{
 		   		for(j=0;j<data.Stars.length;++j)
 				{
-					addObject(data.Stars[j].Star,newItem,rank + j + 1);
+					tempItem = items.find(data.Stars[j].Star.ID as String) as RelationItem;
+					if (tempItem == null)
+						addObject(data.Stars[j].Star,newItem,rank + j + 1);
+					else
+						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.nextStart);
 				}
 			}
 			else
 			{
 				for(j=0;j<data.Movies.length;++j)
 				{
-					addObject(data.Movies[j].Movie,newItem,rank + j + 1);
+					tempItem = items.find(data.Movies[j].Movie.ID as String) as RelationItem;
+					if (tempItem == null)
+						addObject(data.Movies[j].Movie,newItem,rank + j + 1);
+					else
+						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.nextStart);
 				}
 			}
+	   }
+	   
+	   private function addObject(data:Object,item:RelationItem,rank:int):void
+	   {
+	   		if(data == null)
+	   			return; 
+	   			
+			var id: String = data.ID;
+			var newItem:RelationItem = addItem(data, item,rank);
+			visitRelated(data,newItem,rank);
+			
 	   }
 
 	   private function errorHandler(e:IOErrorEvent):void
@@ -232,7 +268,6 @@
 		
 		private function onSearchComplete(event:Event):void
 		{
-			
 			setLoadingCount(false);
 			help.showTip("完成");
 			resetRecommend();
@@ -241,10 +276,10 @@
 			var result:Array = (JSON.decode(loader.data) as Array);
 			if (result!=null && result.length > 0)
 			{
-				if(!items.hasNodes
-				 || items.hasNode(result[0].ID))
+				var item:RelationItem = items.find(result[0].ID) as RelationItem;
+				if(item!=null)
 				{
-					addObject(result[0],null,0);
+					updateObject(result[0],item,0,item.nextStart);
 				}
 				else
 				{
@@ -368,6 +403,8 @@
 			toolPanel.x = x + s.x;
 			toolPanel.y = y + s.y;
 		}
+		
+		
 
 		]]>
 	</mx:Script> 
