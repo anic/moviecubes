@@ -9,14 +9,9 @@
 
 package
 {
-	import com.adobe.flex.extras.controls.springgraph.Item;
-
-	/**
-	 * Represents a single Amazon item. When created, it uses the amazon web service
-	 * to find out its title, icon, and similar products.
-	 * 
-	 * @author Mark Shepherd
-	 */
+	import com.adobe.flex.extras.controls.springgraph.Graph;
+	import com.adobe.flex.extras.controls.springgraph.Item;	
+	
 	public class RelationItem extends Item
 	{
 		[Bindable]
@@ -38,6 +33,12 @@ package
 		[Bindable]
 		public var color:uint;
 		
+		//是否可以移动
+		override public function okToMove():Boolean
+		{
+			return (this.rank != 0);
+		}
+		
 		public function RelationItem(data:Object,rank:int = 0) {
 			super(data.ID);
 			
@@ -49,6 +50,7 @@ package
 			updateColor();
 		}
 		
+		//更新颜色
 		private function updateColor():void
 		{
 			if (this.rank == 0)
@@ -68,12 +70,13 @@ package
 			}
 		}
 		
+		//更新电影
 		private function updateMovies(newData:Object):Boolean
 		{
 			var result:Boolean = false;
 			for(var i:int = 0;i<newData.Movies.length;++i)
 			{
-				if(!hasMovie(newData.Movies[i].Movie.ID))
+				if(!hasMovie(newData.Movies[i].Movie.ID,newData.Movies[i].Role))
 				{
 					(this.data.Movies as Array).push(newData.Movies[i]);
 					result = true;
@@ -82,12 +85,13 @@ package
 			return result;
 		}
 		
+		//更新明星
 		private function updateStars(newData:Object):Boolean
 		{
 			var result:Boolean = false;
 			for(var i:int = 0;i<newData.Stars.length;++i)
 			{
-				if(!hasStar(newData.Stars[i].Star.ID))
+				if(!hasStar(newData.Stars[i].Star.ID,newData.Stars[i].Role))
 				{
 					(this.data.Stars as Array).push(newData.Stars[i]);
 					result = true;
@@ -96,6 +100,7 @@ package
 			return result;
 		}
 		
+		//更新别名
 		private function updateAlias(newData:Object):Boolean
 		{
 			var result:Boolean = false;
@@ -110,17 +115,19 @@ package
 			return result;
 		}
 		
-		
-		private function hasMovie(id:String):Boolean
+		//是否有某个角色的电影
+		private function hasMovie(id:String,role:String):Boolean
 		{
 			for(var i:int = 0;i<data.Movies.length;++i)
 			{
-				if (this.data.Movies[i].Movie.ID == id)
+				if (this.data.Movies[i].Movie.ID == id
+				&& this.data.Movies[i].Role == role)
 					return true;
 			}
 			return false;
 		}
 		
+		//是否有别名
 		private function hasAlias(role:String):Boolean
 		{
 			for(var i:int = 0;i<this.data.Alias.length;++i)
@@ -131,17 +138,19 @@ package
 			return false;
 		}
 		
-		
-		private function hasStar(id:String):Boolean
+		//是否有某个角色的明星
+		private function hasStar(id:String,role:String):Boolean
 		{
 			for(var i:int = 0;i<data.Stars.length;++i)
 			{
-				if (this.data.Stars[i].Star.ID == id)
+				if (this.data.Stars[i].Star.ID == id
+				&& this.data.Stars[i].Role == role)
 					return true;
 			}
 			return false;
 		}
 		
+		//更新数据
 		public function updateData(data:Object,rank:int,start:int):void
 		{
 			var updated:Boolean = false;
@@ -170,7 +179,7 @@ package
 			if (updateAlias(data))
 				updated = true;
 			
-			
+			//更新排名，这个排名不是rank，是关联度
 			if (this.rank > rank)
 			{
 				this.rank = rank;
@@ -190,11 +199,23 @@ package
 				this.onUpdate();
 		}
 		
+		//设置更新回调函数
 		public function setOnUpdate(func:Function):void
 		{
 			this.onUpdate = func;	
 		}
 		
+		public function getRelatedIdsFromGraph(g:Graph):Array
+		{
+			var result:Array = new Array();
+			for(var id:String in g.neighbors(this.id))
+			{
+				result.push(id);
+			}
+			return result;
+		}
+		
+		//获得关联项的ID
 		public function getRelatedIds():Array
 		{
 			var result:Array = new Array();
@@ -214,6 +235,33 @@ package
 				}
 			}
 			return result;
+		}
+		
+		public function canBeRemoved(g:Graph,fromItem:RelationItem,removedArray:Array):Boolean
+		{
+			if(this.rank == 0)
+				return false;
+			
+			if (g.numLinks(this) == 1)
+			{
+				removedArray.push(this);
+				return true;
+			}
+			
+			var relatedIds:Array = this.getRelatedIdsFromGraph(g);//this.getRelatedIds();
+			
+			for(var i:int = 0;i<relatedIds.length;++i)
+			{
+				if (relatedIds[i] == fromItem.id)
+					continue;
+				
+				var relatedItem:RelationItem = g.find(relatedIds[i]) as RelationItem;
+				if(relatedItem!=null && !relatedItem.canBeRemoved(g,this,removedArray))
+					return false;
+			}
+			
+			removedArray.push(this);
+			return true;
 		}
 	}
 }

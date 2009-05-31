@@ -30,9 +30,9 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.flex.extras.controls.springgraph.Item;
-			import mx.core.UIComponent;
-			import mx.effects.Fade;
+		import com.adobe.flex.extras.controls.springgraph.Item;
+		import mx.core.UIComponent;
+		import mx.effects.Fade;
 		import mx.collections.ArrayCollection;
 		import mx.controls.LinkButton;
 		import com.adobe.flex.extras.controls.springgraph.Graph;	
@@ -181,8 +181,26 @@
 	   		if (data == null)
 	   			return;
 	   		//更新数据，新查出来的数据比较全
-			item.updateData(data,rank,start);
-			
+	   		var needRemove:Boolean =  (item.start != start);
+	   		var related:Array = item.getRelatedIds();
+	   		item.updateData(data,rank,start);
+	   		var removedArray:Array;
+	   		if (needRemove)
+	   		{
+	   			for(var i:int = 0;i<related.length;++i)
+				{
+					var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
+					removedArray = [relatedItem];
+					if (relatedItem!= null && relatedItem.canBeRemoved(items,item,removedArray))
+					{
+						for(var j:int = 0;j<removedArray.length;++j)
+						{
+							this.toolPanel.onItemRemove(removedArray[j]);
+							items.remove(removedArray[j]);
+						}
+					}
+				} 			
+	   		}
 			visitRelated(data,item,rank);
 	   }
 	   
@@ -198,7 +216,7 @@
 					if (tempItem == null)
 						addObject(data.Stars[j].Star,newItem,rank + j + 1);
 					else
-						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.nextStart);
+						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.start);
 				}
 			}
 			else
@@ -209,7 +227,7 @@
 					if (tempItem == null)
 						addObject(data.Movies[j].Movie,newItem,rank + j + 1);
 					else
-						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.nextStart);
+						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.start);
 				}
 			}
 	   }
@@ -280,11 +298,12 @@
 				if(item!=null)
 				{
 					updateObject(result[0],item,0,item.nextStart);
+					
 				}
 				else
 				{
 					addObject(result[0],null,0);
-					help.showTip("第一个结果不对",true);
+					//help.showTip("第一个结果不对",true);
 				}
 						
 				createRecommend(result);
@@ -385,17 +404,24 @@
 		
 		public function removeItem(item:RelationItem):void
 		{
+			
 			this.toolPanel.onItemRemove(item);
-			this.items.remove(item);
-			var related:Array = item.getRelatedIds();
-			for(var i:int = 0;i<related.length;++i)
+			
+			var related:Array = item.getRelatedIdsFromGraph(items);
+			var removedArray:Array;
+   			for(var i:int = 0;i<related.length;++i)
 			{
-				var node:Item = items.find(related[i]);
-				if (node!=null && items.numLinks(node)==0)
+				var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
+				removedArray = [relatedItem];
+				if (relatedItem!= null && relatedItem.canBeRemoved(items,item,removedArray))
 				{
-					items.remove(node);
+					for(var j:int = 0;j<removedArray.length;++j)
+					{
+						items.remove(removedArray[j]);
+					}
 				}
 			}
+			this.items.remove(item);
 		}
 		
 		public function setToolPanelPosition(x:int,y:int):void
@@ -403,6 +429,7 @@
 			toolPanel.x = x + s.x;
 			toolPanel.y = y + s.y;
 		}
+		
 		
 		
 
