@@ -28,5 +28,12 @@ namespace MovieCube.Common.Interface
         /// <param name="count"></param>
         /// <returns></returns>
         List<Star> QueryStarByName(string name, int index, int count);
+
+
+        List<Star> QueryStarByID(int id, int layer, int[] index, int[] count);
+
+        List<Star> QueryStarByName(string name, int layer, int[] index, int[] count);
+
+        List<Star> QueryStarByKeyword(string keyword, int layer, int[] index, int[] count);
     }
 }
