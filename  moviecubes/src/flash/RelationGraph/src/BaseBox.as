@@ -56,10 +56,11 @@ package
 			else
 			{
 				txtContent.text = "";
-				var pages:int = relationItem.getPagesCount(RelationGraph(Application.application).CountPerPage);
+				
+				var countPerPage:int = RelationGraph(Application.application).CountPerPage;
+				var pages:int = relationItem.getPagesCount(countPerPage);
 				var start:int = 0;
 				var end:int = relationItem.DataLength-1;
-				var countPerPage:int = RelationGraph(Application.application).CountPerPage;
 				
 				if (pages!=0)
 				{
@@ -76,7 +77,10 @@ package
 				if (pages>1 && relationItem.rank == 0)
 					txtContent.text += cur+"/"+pages+"页，共"+relationItem.TotalNum;
 				else
-					txtContent.text += "共"+relationItem.TotalNum;
+				{
+					if (relationItem.TotalNum > countPerPage)
+						txtContent.text += "共"+relationItem.TotalNum;
+				}
 			}
 		}
 		
