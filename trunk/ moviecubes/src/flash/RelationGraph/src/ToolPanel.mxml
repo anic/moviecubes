@@ -8,7 +8,8 @@
 			
 			private var currentView:RelationItemView = null;
 			private var toolBtns:Array;
-			public var countPerPage:int = 5;
+			
+			//每页显示个数
 			
 			private function onInit():void
 			{
@@ -97,7 +98,7 @@
 			
 			private function onSearchNextPage(next:Boolean):void
 			{
-				
+				var countPerPage:int = RelationGraph(Application.application).CountPerPage;
 				if (this.currentView!=null)
 				{
 					var item:RelationItem = (currentView.data as RelationItem);
@@ -134,7 +135,8 @@
 							dataObject.Movies = dataArray;
 						else
 							dataObject.Stars = dataArray;
-						RelationGraph(Application.application).visitRelated(dataObject,item,item.rank);
+							
+						RelationGraph(Application.application).visitRelated(dataObject,item,item.rank,0);
 						item.view.onDataUpdate();
 						RelationGraph(Application.application).showPageTip(item);
 						

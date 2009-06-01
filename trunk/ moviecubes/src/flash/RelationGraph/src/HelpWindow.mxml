@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400"  height="300" xmlns:ns1="*"
+	creationComplete="centerWindow()" title="帮助"  close="closeWindow()" color="0xffffff">
+	<mx:Style>
+		.text
+		{
+			color:#ffffff;
+			fontSize:13pt;
+		}
+		
+		.bgGridStyle
+		{
+			backgroundColor:#BCBCBC;
+		}
+		
+		.controlBarToogleBar
+{
+	buttonStyleName: controlBarButtonStyleName;
+	firstButtonStyleName: controlBarfirstButtonStyleName;
+	lastButtonStyleName: controlBarlastButtonStyleName;
+	verticalGap: 0;
+	horizontalGap: 0;
+	buttonHeight: 27;
+	
+}
+.controlBarButtonStyleName
+{
+	upSkin:Embed(source='assets/images/button_bar_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	downSkin:Embed(source='assets/images/button_bar_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	overSkin:Embed(source='assets/images/button_bar_over.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedUpSkin:Embed(source='assets/images/button_bar_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedOverSkin:Embed(source='assets/images/button_bar_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedDownSkin:Embed(source='assets/images/button_bar_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	font-weight: normal;
+	textRollOverColor:#111111;
+	color: #ffffff;
+	font-size:12;
+}
+.controlBarfirstButtonStyleName
+{
+	upSkin:Embed(source='assets/images/firstButton_up.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	downSkin:Embed(source='assets/images/firstButton_up.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	overSkin:Embed(source='assets/images/firstButton_over.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	selectedUpSkin:Embed(source='assets/images/firstButton_selected.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	selectedOverSkin:Embed(source='assets/images/firstButton_selected.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	selectedDownSkin:Embed(source='assets/images/firstButton_selected.png', scaleGridLeft=10, scaleGridRight=11, scaleGridTop=11,scaleGridBottom=12);
+	font-weight: normal;
+	textRollOverColor:#111111;
+	color: #ffffff;
+	font-size:12;
+}
+.controlBarlastButtonStyleName
+{
+	upSkin:Embed(source='assets/images/lastButton_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	downSkin:Embed(source='assets/images/lastButton_up.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	overSkin:Embed(source='assets/images/lastButton_over.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedUpSkin:Embed(source='assets/images/lastButton_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedOverSkin:Embed(source='assets/images/lastButton_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	selectedDownSkin:Embed(source='assets/images/lastButton_selected.png', scaleGridLeft=5, scaleGridRight=6, scaleGridTop=11,scaleGridBottom=12);
+	font-weight: normal;
+	textRollOverColor:#111111;
+	color: #ffffff;
+	font-size:12;
+}
+	</mx:Style>		
+	<mx:Glow duration="3000" alphaFrom="1.0" alphaTo="1.0" blurXFrom="0.0" blurXTo="50.0" blurYFrom="0.0" blurYTo="50.0" 
+        target="{this.c0}" id="grow0" />
+    <mx:Glow duration="3000" alphaFrom="1.0" alphaTo="1.0" blurXFrom="0.0" blurXTo="50.0" blurYFrom="0.0" blurYTo="50.0" 
+        target="{this.c1}" id="grow1" />
+    <mx:Glow duration="3000" alphaFrom="1.0" alphaTo="1.0" blurXFrom="0.0" blurXTo="50.0" blurYFrom="0.0" blurYTo="50.0" 
+        target="{this.c2}" id="grow2" />
+		<mx:ViewStack id="viewStack" x="0" y="0" width="100%" height="100%">
+		<mx:Canvas label="标志" width="100%" height="100%">
+			<mx:Grid x="10" y="10" width="100%" height="100%">
+				<mx:GridRow width="100%" height="100%">
+					<mx:GridItem width="100%" height="100%">
+						<ns1:Circle id="c0" width="30" height="30" color="0xff0000" unscaledRadius="10"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="明星节点" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="粉线" styleName="text" color="#FF007F"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="表示编剧" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
+						<mx:Image source="@Embed('myimage/Cancel.png')" width="30" height="30"/>
+					</mx:GridItem>
+					
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="删除当前节点" styleName="text"/>
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%" height="100%">
+					<mx:GridItem width="100%" height="100%">
+						<ns1:Circle id="c1" width="30" height="30" color="0x0000ff" unscaledRadius="10"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="电影节点" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="白线" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="表示主演" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
+						<mx:Image source="@Embed('myimage/ArrowDownRight.png')" width="30" height="30"/>
+					</mx:GridItem>	
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="在页面中查看" styleName="text"/>
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%" height="100%">
+					<mx:GridItem width="100%" height="100%">
+						<ns1:Circle id="c2" width="30" height="30" color="0xFEC107" unscaledRadius="10"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="展开的节点" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%"  styleName="bgGridStyle">
+						<mx:Image source="@Embed('myimage/ArrowLeft.png')" width="30" height="30"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="显示上一页" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
+						<mx:Image source="@Embed('myimage/ZoomIn.png')" width="30" height="30"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="重新查看" styleName="text" height="23"/>
+					</mx:GridItem>
+				</mx:GridRow>
+				<mx:GridRow width="100%" height="100%">
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="橙线" styleName="text" color="#FF7F00"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="表示导演" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
+						<mx:Image source="@Embed('myimage/ArrowRight.png')" width="30" height="30"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%">
+						<mx:Text text="显示下一页" styleName="text"/>
+					</mx:GridItem>
+					<mx:GridItem width="100%" height="100%"/>
+					<mx:GridItem width="100%" height="100%"/>
+				</mx:GridRow>
+				
+			</mx:Grid>
+			</mx:Canvas>
+			<mx:Canvas label="操作" width="100%" >
+				<mx:VBox  width="100%" height="100%">
+					<mx:Text text="在搜索栏输入关键字，选择搜索类型" styleName="text"/>
+					<mx:Text text="双击节点，展开更多内容" styleName="text"/>
+					<mx:Text text="在节点上，点击“上一页”和“下一页”按钮进行翻页" styleName="text"/>
+					<mx:Text text="在节点上，点击“看TA”转到页面浏览" styleName="text"/>
+					<mx:Text text="在节点上，点击“查TA”，以该节点重新开始搜索" styleName="text"/>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="关于" width="100%" height="100%">
+				<mx:Label x="10" y="10" text="影立方搜索引擎开发人员" width="100%" height="34" styleName="text"/>
+				<mx:Label x="0" y="52" text="计研1班：王玮 刘璋 程曜安" width="100%" height="34" styleName="text" textAlign="center"/>
+				<mx:Label y="94" text="2009年6月1日" width="100%" height="34" styleName="text" textAlign="right" right="20"/>
+			</mx:Canvas>			
+		</mx:ViewStack>
+		<mx:ControlBar>
+			<mx:ToggleButtonBar styleName="controlBarToogleBar" dataProvider="{viewStack}"/>
+			<mx:Spacer width="100%"/>
+			<mx:Button label="隐藏" width="76" click="{this.visible = false}"/>
+		</mx:ControlBar>
+		<mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+            
+            public function centerWindow():void
+            {
+            	
+            	grow0.color = c0.color;
+            	grow0.play();
+            	
+            	grow1.color = c1.color;
+            	grow1.play();
+            	
+            	grow2.color = c2.color;
+            	grow2.play();
+            }
+            
+            public function closeWindow():void
+            {
+            	//PopUpManager.removePopUp(this);
+            	this.visible = false;
+            }
+            
+       ]]>
+       
+	</mx:Script>	
+</mx:TitleWindow>

@@ -16,11 +16,10 @@
    			search();
    			}" 
    		styleName="mainButton" fontSize="14"/>
-	
 			
 	
 	<fc:SpringGraph id="s" 
-		lineColor="#333388" left="0" right="0" top="164" bottom="0"
+		lineColor="#333388" left="0" right="0" top="161" bottom="0"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
 		edgeRenderer="{new EdgeRender()}" 
  		>
@@ -31,7 +30,7 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.messaging.AbstractConsumer;
+		import mx.messaging.AbstractConsumer;
 		import com.adobe.flex.extras.controls.springgraph.Item;
 		import mx.core.UIComponent;
 		import mx.effects.Fade;
@@ -41,9 +40,19 @@
 		import com.adobe.serialization.json.JSON;  
 		import mx.controls.Alert;
 		import tipBubble.*;
+		import mx.collections.*;
+		import mx.managers.PopUpManager;
 				
 		[Bindable]
 		public var scaleFactor: Number = 1.0;
+		
+		[Bindable]
+		private var countPerPage:int = 5;
+		
+		public function get CountPerPage():int
+		{
+			return countPerPage;
+		} 
 		
 		private var items: Graph;
 		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
@@ -51,9 +60,14 @@
 		private var hideDelayTime:int = 5000;
 		private var oldHintText:String = "";
 		private var defaultMaxWidh:int = 500;
+		
+		[Bindable]
+		private var defaultNodeLimit:int = 20;
 
 		public var tipMan:BubbleTipManager = new BubbleTipManager();
-		 
+		
+		private var helpWindow:HelpWindow;
+		
 		[Bindable]
 		private var keys:Array = null;
 		
@@ -65,6 +79,8 @@
 			loadStar,
 			loadMovie
 		];
+		
+
 
 		private function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
 			var newItem: RelationItem = new RelationItem(data,rank);
@@ -106,6 +122,9 @@
 		    var data:URLVariables = new URLVariables();
 		    data.type = type;
 		    data.query = queryData;
+		    data.nodeCount = items.nodeCount;
+		    data.start = 0;
+		    data.count = this.countPerPage;
 		    request.data = data;
 		    var loader:URLLoader = new URLLoader();
 		    loader.load(request);
@@ -125,6 +144,7 @@
 		    data.query = queryData;
 		    data.start = start;
 		    data.count = count;
+		    data.nodeCount = items.nodeCount;
 		    request.data = data;
 		    var loader:URLLoader = new URLLoader();
 		    loader.load(request);
@@ -137,7 +157,10 @@
 	   private function init():void
 	   {
 	   		items = new Graph();
-	   		
+   			helpWindow = PopUpManager.createPopUp(this,HelpWindow,false) as HelpWindow;
+   			helpWindow.visible = false;
+   			helpWindow.x = 0;
+   			helpWindow.y = 146;
 	   		var types:Array = ["关键字","明星","电影"]; 
 			cbxSearchType.dataProvider = types;
 		    this.reSearch("周华健");
@@ -259,7 +282,7 @@
 			}	
 	   }
 	   
-	   private function updateObject(data:Object,item:RelationItem,rank:int,start:int):void
+	   private function updateObject(data:Object,item:RelationItem,rank:int,start:int,level:int):void
 	   {
 	   		if (data == null)
 	   			return;
@@ -276,15 +299,18 @@
 	   		}
 	   		
 	   		//更新邻居节点
-			visitRelated(data,item,rank);
+			visitRelated(data,item,rank,level);
 			if (isNewPage)
 			{
 				showPageTip(item);	
 			}
 	   }
 	   
-	   public function visitRelated(data:Object,newItem:RelationItem,rank:int):void
+	   public function visitRelated(data:Object,newItem:RelationItem,rank:int,level:int):void
 	   {
+	   		if (items.nodeCount > defaultNodeLimit && level > 0)
+	   			return; 
+	   		
 	   		var j:int;
 			var tempItem:RelationItem = null;
 			if (data.ObjectType == "MOVIE")
@@ -293,9 +319,9 @@
 				{
 					tempItem = items.find(data.Stars[j].Star.ID as String) as RelationItem;
 					if (tempItem == null)
-						addObject(data.Stars[j].Star,newItem,rank + j + 1);
+						addObject(data.Stars[j].Star,newItem,rank + j + 1,level+1);
 					else
-						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.start);
+						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.start,level+1);
 				}
 			}
 			else
@@ -304,21 +330,21 @@
 				{
 					tempItem = items.find(data.Movies[j].Movie.ID as String) as RelationItem;
 					if (tempItem == null)
-						addObject(data.Movies[j].Movie,newItem,rank + j + 1);
+						addObject(data.Movies[j].Movie,newItem,rank + j + 1,level+1);
 					else
-						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.start);
+						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.start,level+1);
 				}
 			}
 	   }
 	   
-	   private function addObject(data:Object,item:RelationItem,rank:int):void
+	   private function addObject(data:Object,item:RelationItem,rank:int,level:int):void
 	   {
 	   		if(data == null)
 	   			return; 
 	   			
 			var id: String = data.ID;
 			var newItem:RelationItem = addItem(data, item,rank);
-			visitRelated(data,newItem,rank);
+			visitRelated(data,newItem,rank,level);
 			
 	   }
 
@@ -376,11 +402,11 @@
 				var item:RelationItem = items.find(result[0].ID) as RelationItem;
 				if(item!=null)
 				{
-					updateObject(result[0],item,0,item.nextStart);
+					updateObject(result[0],item,0,item.nextStart,0);
 				}
 				else
 				{
-					addObject(result[0],null,0);
+					addObject(result[0],null,0,0);
 					//help.showTip("第一个结果不对",true);
 				}
 						
@@ -498,9 +524,15 @@
 			toolPanel.y = y + s.y;
 		}
 		
-		public function get CountPerPage():int
+		private function onScaleChanged():void
 		{
-			return this.toolPanel.countPerPage;
+			RelationGraph(Application.application).scaleFactor = hsScale.value; 
+			s.refresh();
+		}
+		
+		private function onDistanceChanged():void
+		{
+			s.refresh();
 		}
 		
 
@@ -512,12 +544,28 @@
 			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
 			  includeInLayout="{this.recommendList.visible}" fontSize="12" height="36" textAlign="center"/>
 	</mx:HBox>
-	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="606" y="87"/>
-	<mx:HSlider x="778" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
-	<mx:Label x="713" y="87" text="节点大小" styleName="text"/>
-	<mx:Label x="541" y="87" text="节点距离" styleName="text"/>
 	<ns1:TipButton x="248" y="87" width="285" id="help">
 	</ns1:TipButton>
 	<mx:Image x="11" y="18" source="@Embed('myimage/Logo.png')"/>
+	<mx:HBox width="100%" height="30">
+		<mx:Spacer width="100%"/>
+		<mx:LinkButton label="设置" id="btnSetting">
+			<mx:click>{pnlSetting.visible = !pnlSetting.visible;}</mx:click>
+		</mx:LinkButton>
+		<mx:LinkButton label="帮助" id="btnHelp">
+			<mx:click>{helpWindow.visible = !helpWindow.visible;}</mx:click>
+		</mx:LinkButton>
+	</mx:HBox>
+	<mx:Panel width="100%" height="129" layout="absolute" x="0" y="154" id="pnlSetting" title="显示设置" includeInLayout="{pnlSetting.visible}">
+		<mx:HBox x="0" y="10" width="100%" height="30">
+			<mx:Label text="节点距离" styleName="text"/>
+			<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="{onDistanceChanged();}" width="101" height="21"/>
+			<mx:Label text="节点大小" styleName="text"/>
+			<mx:HSlider id="hsScale" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
+			<mx:Label text="显示节点上限" styleName="text"/>
+			<mx:HSlider id="hsMaxNodeCount" minimum="10" maximum="100" liveDragging="true" width="101" change="{this.defaultNodeLimit = hsMaxNodeCount.value;}" value="{this.defaultNodeLimit}" snapInterval="1"/>
+			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
+		</mx:HBox>
+	</mx:Panel>
 	
 </mx:Application>

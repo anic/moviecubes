@@ -32,6 +32,11 @@ package
 			invalidateDisplayList(); 
 		}
 		
+		public function get color():int
+		{
+			return _color;
+		}
+		
 		public function set unscaledRadius(r:int):void
 		{
 			this.radius = r;	

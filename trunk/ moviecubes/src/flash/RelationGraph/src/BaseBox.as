@@ -49,7 +49,7 @@ package
 			}
 		}
 		
-		protected function setRelationContent(txtContent:Text):void
+		protected function setRelationContent(txtContent:Text,txtPage:Text):void
 		{
 			if (relationItem.DataLength == 0)
 				txtContent.text = "双击节点查看..."
@@ -71,15 +71,17 @@ package
 				txtContent.text = "";
 				for(var i:int = start;i<=end;++i)
 				{
-					txtContent.text += relationItem.getRole(i)+ " "+ relationItem.getData(i).Name+"\n";										
+					txtContent.text += (i+1)+" "+relationItem.getRole(i)+ " "+ relationItem.getData(i).Name+"\n";										
 				}
 				
 				if (pages>1 && relationItem.rank == 0)
-					txtContent.text += cur+"/"+pages+"页，共"+relationItem.TotalNum;
+					txtPage.text = cur+"/"+pages+"页，共"+relationItem.TotalNum+"项相关";
 				else
 				{
 					if (relationItem.TotalNum > countPerPage)
-						txtContent.text += "共"+relationItem.TotalNum;
+						txtPage.text = "共"+relationItem.TotalNum+"项相关";
+					else
+						txtPage.text ="";
 				}
 			}
 		}
