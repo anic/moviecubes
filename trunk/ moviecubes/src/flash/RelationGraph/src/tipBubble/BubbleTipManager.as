@@ -1,6 +1,7 @@
 package tipBubble
 {
 	import mx.core.UIComponent;
+	import mx.events.FlexEvent;
 	
 	public class BubbleTipManager
 	{
@@ -17,6 +18,7 @@ package tipBubble
 			var tipTarg:BubbleTipTarget = new BubbleTipTarget(target, component,onTipOpen,onTipClose);
 			//var mainApp:DisplayObject = target.parentApplication as DisplayObject;
 			//mainApp.addEventListener(TipBubbleEvent.ROLL_OVER, clearExtraBubbles);
+			
 			tipTargets.push(tipTarg);
 		}
 		

@@ -74,6 +74,7 @@
 				}
 				else
 				{
+					
 					(bubbleTip.tipComponent as BaseBox).fillData();
 				}
 				
@@ -92,11 +93,11 @@
 			{
 				if (data.isStar)
 				{
-					RelationGraph(Application.application).loadStar(data.name,clearGraph);	
+					RelationGraph(Application.application).loadStarById(data.data.ID,data.name,clearGraph);	
 				}
 				else
 				{
-					RelationGraph(Application.application).loadMovie(data.name,clearGraph);
+					RelationGraph(Application.application).loadMovieById(data.data.ID,data.name,clearGraph);
 				}
 			}
 			
@@ -108,7 +109,7 @@
 			public function showPage(page:int):void
 			{
 				var tip:PageTip = new PageTip();
-				tip.data = page;
+				tip.data = page + 1;
 				var r:int = this.circle.unscaledRadius > this.txtName.height? this.circle.unscaledRadius:this.txtName.height;
 				tip.x = this.width / 2 - r;
 				tip.y = this.height/2 - r;
