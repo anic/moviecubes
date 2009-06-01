@@ -19,7 +19,7 @@ http://ciia.cs.tsinghua.edu.cn/gtCarrera/ 我觉得这个做的挺不错的T_T
 
 LOGO						done，土
 
-图示说明
+图示说明				done
 
 分页的tipBubble				done
 	在节点上标识一下		done
@@ -37,9 +37,8 @@ LOGO						done，土
 
 
 A 类似分页的展开，是否有借口					部分分页功能
-	显示第几页
-	页更新算法，如何保证次序
-	显示第几页
+	显示第几页									在tipBubble
+	页更新算法，如何保证次序					done
 	
 B 2个或者多个关键字搜索
 	只高亮了第一个结果					？
