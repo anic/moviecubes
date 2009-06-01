@@ -46,8 +46,8 @@
 			}
 		]]> 
 	</mx:Script>
-	<mx:Fade alphaFrom="0" alphaTo="1.0" id="fadeIn" duration="500" target="{this.btn}"/>
-	<mx:Fade alphaFrom="1.0" alphaTo="0" id="fadeOut" duration="300" target="{this.btn}"/>
+	<mx:Fade alphaFrom="0" alphaTo="1.0" id="fadeIn" duration="300" target="{this.btn}"/>
+	<mx:Fade alphaFrom="1.0" alphaTo="0" id="fadeOut" duration="200" target="{this.btn}"/>
 	<mx:Button x="0" y="0" width="29" height="29"  click="{this.dispatchEvent(event);}" alpha="0" id="btn"/>
 	<mx:Image  x="2" y="2" width="25" height="25" id="image0" source="@Embed('myimage/ArrowLeft.png')" visible="false"/>
 	<mx:Image  x="2" y="2" width="25" height="25" id="image1" source="@Embed('myimage/ArrowRight.png')" visible="false"/>

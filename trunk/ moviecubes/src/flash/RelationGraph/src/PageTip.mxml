@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="25" height="25" >
+	<mx:Image  x="0" y="0" width="25" height="25" id="image3" source="@Embed('myimage/Document.png')" visible="true"/>
+	<mx:Text width="25" textAlign="center" horizontalCenter="0" verticalCenter="0" text="{data}"/>
+	<mx:Fade alphaFrom="1.0"  alphaTo="0" target="{this}" duration="1000" startDelay="7000" id="effectFade" >
+		
+	</mx:Fade>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.EffectEvent;
+			public function show():void
+			{
+				if (!effectFade.isPlaying)
+				{
+					effectFade.addEventListener(EffectEvent.EFFECT_END,hide);
+					effectFade.play();
+				}
+			}
+			
+			private function hide(event:EffectEvent):void
+			{
+				if (this.parent!=null);
+					this.parent.removeChild(this);
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Module>

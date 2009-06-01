@@ -7,6 +7,8 @@
 			
 			private var currentView:RelationItemView = null;
 			private var toolBtns:Array;
+			public var countPerPage:int = 5;
+			
 			private function onInit():void
 			{
 				toolBtns = [btnLook,btnSearch,btnPre,btnNext,btnClose];	
@@ -80,7 +82,7 @@
 			
 			private function onSearchNextPage(next:Boolean):void
 			{
-				var countPerPage:int = 5;
+				
 				if (this.currentView!=null)
 				{
 					var item:RelationItem = (currentView.data as RelationItem);

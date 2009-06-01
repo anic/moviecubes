@@ -6,11 +6,11 @@
 	  >
 
 	<mx:Style source="MyTheme.css" /> 
-	<fc:AutoComplete id="txtSearch"  labelField="name" x="123" y="57" width="285" 
+	<fc:AutoComplete id="txtSearch"  labelField="name" x="248" y="57" width="285" 
 		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
 		  fontSize="14"/>
-	<mx:ComboBox x="416" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
-	<mx:Button x="539" y="57" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton" fontSize="14"/>
+	<mx:ComboBox x="541" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
+	<mx:Button x="664" y="57" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton" fontSize="14"/>
 	
 			
 	
@@ -18,15 +18,11 @@
 		lineColor="#333388" left="0" right="0" top="164" bottom="0"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
 		edgeRenderer="{new EdgeRender()}" 
- 		/>
+ 		>
+	</fc:SpringGraph>
 		
-	<ns1:ToolPanel x="19" y="34" id="toolPanel"/>
-	
-		
-	
-	
-	<mx:Label x="123" y="122"  id="lblRecommend" styleName="text"/>
-	<mx:Label x="10" y="44" text="Movie Cube" styleName="text" fontSize="15"/>
+	<ns1:ToolPanel x="-101" y="175" id="toolPanel"/>
+	<mx:Label x="248" y="122"  id="lblRecommend" styleName="text"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -63,7 +59,6 @@
 			loadStar,
 			loadMovie
 		];
-		
 
 		private function addItem(data:Object, linkTo: RelationItem,rank:int): RelationItem {
 			var newItem: RelationItem = new RelationItem(data,rank);
@@ -181,12 +176,15 @@
 	   		if (data == null)
 	   			return;
 	   		//更新数据，新查出来的数据比较全
-	   		var needRemove:Boolean =  (item.start != start);
+	   		var isNewPage:Boolean =  (item.start != start);
+	   		
+	   		//不用有graph的，因为是删除旧的页使用的，而不是其他与其关联的
 	   		var related:Array = item.getRelatedIds();
 	   		item.updateData(data,rank,start);
 	   		var removedArray:Array;
-	   		if (needRemove)
+	   		if (isNewPage)
 	   		{
+	   			//尝试删除旧的页
 	   			for(var i:int = 0;i<related.length;++i)
 				{
 					var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
@@ -199,9 +197,21 @@
 							items.remove(removedArray[j]);
 						}
 					}
-				} 			
+				}
 	   		}
 			visitRelated(data,item,rank);
+			if (isNewPage)
+			{
+				var start:int = item.start;
+				var len:int = (item.start + this.CountPerPage < item.TotalNum)? CountPerPage: item.TotalNum - item.start;
+				for(i=0;i<len;++i)
+				{
+					var id:String = item.getData(i+start).ID;
+					var newItem:RelationItem = items.find(id) as RelationItem;
+					if (newItem!=null)
+						newItem.view.showPage(i+start);
+				}	
+			}
 	   }
 	   
 	   private function visitRelated(data:Object,newItem:RelationItem,rank:int):void
@@ -298,7 +308,6 @@
 				if(item!=null)
 				{
 					updateObject(result[0],item,0,item.nextStart);
-					
 				}
 				else
 				{
@@ -430,7 +439,10 @@
 			toolPanel.y = y + s.y;
 		}
 		
-		
+		public function get CountPerPage():int
+		{
+			return this.toolPanel.countPerPage;
+		}
 		
 
 		]]>
@@ -441,11 +453,12 @@
 			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
 			  includeInLayout="{this.recommendList.visible}" fontSize="12" height="36" textAlign="center"/>
 	</mx:HBox>
-	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="481" y="87"/>
-	<mx:HSlider x="653" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
-	<mx:Label x="588" y="87" text="节点大小" styleName="text"/>
-	<mx:Label x="416" y="87" text="节点距离" styleName="text"/>
-	<ns1:TipButton x="123" y="87" width="285" id="help">
+	<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="s.refresh();" width="101" height="21" x="606" y="87"/>
+	<mx:HSlider x="778" y="87" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="RelationGraph(Application.application).scaleFactor = event.currentTarget.value; s.refresh();" width="101"/>
+	<mx:Label x="713" y="87" text="节点大小" styleName="text"/>
+	<mx:Label x="541" y="87" text="节点距离" styleName="text"/>
+	<ns1:TipButton x="248" y="87" width="285" id="help">
 	</ns1:TipButton>
+	<mx:Image x="11" y="18" source="@Embed('myimage/Logo.png')"/>
 	
 </mx:Application>

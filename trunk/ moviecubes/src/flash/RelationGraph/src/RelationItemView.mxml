@@ -30,26 +30,27 @@
 	<mx:Text id="txtName" text="{data.name}" textAlign="center" styleName="text" fontSize="15" 
 		scaleX="{app.scaleFactor}" scaleY="{app.scaleFactor}" color="#FFFFFF"
 		 height="32" width="100%" horizontalCenter="0" verticalCenter="0" mouseChildren="false"/>
-		
+	
 		
 	<mx:Script>
 		<![CDATA[
+			import mx.messaging.AbstractConsumer;
 			import mx.core.UIComponent;
 			import mx.containers.VBox;
 			import mx.controls.TextArea;
 			import mx.core.Application;
-			
+			import tipBubble.BubbleTipTarget;
 			
 			private function init():void
 			{
-					
+				//绑定视图
+				(data as RelationItem).view = this;
 				
 				//设置合适的字体大小
 				if (data.name.length>=5)
 					txtName.setStyle("fontSize",14);
 					
 				this.addEventListener(MouseEvent.ROLL_OVER,this.onSelected);
-				(data as RelationItem).setOnUpdate(this.onDataUpdate);
 				onDataUpdate();
 			}
 			
@@ -58,25 +59,41 @@
 				RelationGraph(Application.application).toolPanel.onSelected(this);
 			}
 			
-			private function onDataUpdate():void
+			public function onDataUpdate():void
 			{
 				var offset:int = data.rank*10;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
 				
 				var target:UIComponent = this;
-				RelationGraph(Application.application).tipMan.removeBubbleTip(target);
-				
-				if (data.isStar)
+				//RelationGraph(Application.application).tipMan.removeBubbleTip(target);
+				var bubbleTip:BubbleTipTarget = RelationGraph(Application.application).tipMan.getBubbleTip(target);
+				if (bubbleTip==null)
 				{
-					var starBox:StarBox = new StarBox();
-					starBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,starBox,null,null);
+					if (data.isStar)
+					{
+						var starBox:StarBox = new StarBox();
+						starBox.data = data.data;
+						starBox.relationItem = data as RelationItem;
+						RelationGraph(Application.application).tipMan.createMyBubbleTip(target,starBox,null,null);
+					}
+					else
+					{
+						var movieBox:MovieBox = new MovieBox();
+						movieBox.data = data.data;
+						movieBox.relationItem = data as RelationItem;
+						RelationGraph(Application.application).tipMan.createMyBubbleTip(target,movieBox,null,null);
+					}
 				}
 				else
 				{
-					var movieBox:MovieBox = new MovieBox();
-					movieBox.data = data.data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,movieBox,null,null);
+					if (data.isStar)
+					{
+						(bubbleTip.tipComponent as StarBox).reinit();
+					}
+					else
+					{
+						(bubbleTip.tipComponent as MovieBox).reinit();
+					}
 				}
 				
 				this.effectAdd.play();
@@ -105,6 +122,18 @@
 			public function removeItem():void
 			{
 				RelationGraph(Application.application).removeItem(this.data as RelationItem);
+			}
+			
+			public function showPage(page:int):void
+			{
+				var tip:PageTip = new PageTip();
+				tip.data = page;
+				var r:int = this.circle.unscaledRadius > this.txtName.height? this.circle.unscaledRadius:this.txtName.height;
+				tip.x = this.width / 2 - r;
+				tip.y = this.height/2 - r;
+				this.addChild(tip);
+				tip.show();
+				
 			}
 		]]>
 	</mx:Script>

@@ -10,7 +10,9 @@
 package
 {
 	import com.adobe.flex.extras.controls.springgraph.Graph;
-	import com.adobe.flex.extras.controls.springgraph.Item;	
+	import com.adobe.flex.extras.controls.springgraph.Item;
+	
+	import flash.events.IEventDispatcher;	
 	
 	public class RelationItem extends Item
 	{
@@ -22,7 +24,7 @@ package
 		
 		public var rank:int;
 		
-		private var onUpdate:Function = null;
+		
 		
 		[Bindable]
 		public var start:int;
@@ -32,6 +34,9 @@ package
 		
 		[Bindable]
 		public var color:uint;
+		
+		
+		public var view:RelationItemView = null;
 		
 		//是否可以移动
 		override public function okToMove():Boolean
@@ -195,16 +200,10 @@ package
 			}
 			
 							
-			if (updated && this.onUpdate!=null )
-				this.onUpdate();
+			if (updated && this.view!=null)
+				view.onDataUpdate();
 		}
-		
-		//设置更新回调函数
-		public function setOnUpdate(func:Function):void
-		{
-			this.onUpdate = func;	
-		}
-		
+
 		public function getRelatedIdsFromGraph(g:Graph):Array
 		{
 			var result:Array = new Array();
@@ -262,6 +261,50 @@ package
 			
 			removedArray.push(this);
 			return true;
+		}
+		
+		public function get TotalNum():int
+		{
+			if (this.isStar)
+				return data.TotalMovieNum;
+			else
+				return data.TotalStarNum;
+		}
+		
+		public function getPagesCount(countPerPage:int):int
+		{
+			var total:int = this.TotalNum;
+			return (total%countPerPage != 0)? total/countPerPage + 1:  total/countPerPage;
+		}
+		
+		public function getCurrentPage(countPerPage:int):int
+		{
+			return this.start/countPerPage + 1;
+		}
+		
+		public function get DataLength():int
+		{
+			if (this.isStar)
+				return data.Movies.length;
+			else
+				return data.Stars.length;
+				
+		}
+		
+		public function getData(i:int):Object
+		{
+			if (this.isStar)
+				return data.Movies[i].Movie;
+			else
+				return data.Stars[i].Star;
+		}
+		
+		public function getRole(i:int):String
+		{
+			if (this.isStar)
+				return data.Movies[i].Role;
+			else
+				return data.Stars[i].Role;
 		}
 	}
 }
