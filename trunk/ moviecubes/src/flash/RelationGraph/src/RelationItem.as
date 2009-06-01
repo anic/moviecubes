@@ -10,9 +10,7 @@
 package
 {
 	import com.adobe.flex.extras.controls.springgraph.Graph;
-	import com.adobe.flex.extras.controls.springgraph.Item;
-	
-	import flash.events.IEventDispatcher;	
+	import com.adobe.flex.extras.controls.springgraph.Item;	
 	
 	public class RelationItem extends Item
 	{
@@ -35,13 +33,17 @@ package
 		[Bindable]
 		public var color:uint;
 		
+		public var onSelected:Boolean = false;
 		
 		public var view:RelationItemView = null;
 		
 		//是否可以移动
 		override public function okToMove():Boolean
 		{
-			return (this.rank != 0);
+			if (this.rank == 0)
+				return false;
+			else
+				return !onSelected;
 		}
 		
 		public function RelationItem(data:Object,rank:int = 0) {

@@ -16,7 +16,13 @@
 			
 			public function onSelected(itemView:RelationItemView):void
 			{
+				if (currentView!=null && currentView!=itemView)
+				{
+					(currentView.data as RelationItem).onSelected = false;
+				}
 				currentView = itemView;
+				(currentView.data as RelationItem).onSelected = true;
+				
 				RelationGraph(Application.application).setToolPanelPosition(currentView.x,currentView.y);
 				this.setVisible2(true);
 					
@@ -26,6 +32,10 @@
 			{
 				if (currentView.data == item)
 					{
+						if (currentView!=null)
+						{
+							(currentView.data as RelationItem).onSelected = false;
+						}
 						currentView = null;
 						this.setVisible2(false);
 					}
@@ -34,6 +44,10 @@
 			
 			public function hide():void
 			{
+				if (currentView!=null)
+				{
+					(currentView.data as RelationItem).onSelected = false;
+				}
 				currentView = null;
 				this.setVisible2(false);		
 			}
@@ -117,5 +131,5 @@
 	<local:ToolButton x="36" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30" click="{onSearchNextPage(true);}"/>
 	<local:ToolButton x="56" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="10" width="30" height="30"/>
 	<local:ToolButton x="76" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="10"  width="30" height="30"/>
-	<local:ToolButton x="76" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="70" width="30" height="30"/>
+	<local:ToolButton x="76" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="30" width="30" height="30"/>
 </mx:Module>
