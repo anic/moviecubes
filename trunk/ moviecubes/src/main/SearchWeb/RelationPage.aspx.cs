@@ -15,26 +15,6 @@ namespace MovieCube.SearchWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            AjaxPro.Utility.RegisterTypeForAjax(typeof(MovieCube.SearchWeb.RelationPage));
         }
-
-        //[AjaxPro.AjaxMethod]
-        //public string GetMovieByName(string name)
-        //{
-        //    MovieQuery query = new MovieQuery();
-        //    List<Movie> movies = query.QueryMovieByName(name);
-        //    string result = JsonConvert.SerializeObject(movies);
-        //    return result;
-        //}
-
-        //[AjaxPro.AjaxMethod]
-        //public string GetStarByName(string name)
-        //{
-        //    StarQuery query = new StarQuery();
-        //    List<Star> stars = query.QueryStarByName("高圆圆");
-        //    string result = JsonConvert.SerializeObject(stars);
-        //    return result;
-
-        //}
     }
 }
