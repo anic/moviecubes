@@ -61,7 +61,7 @@
 			
 			public function onDataUpdate():void
 			{
-				var offset:int = data.rank*10;
+				var offset:int = data.rank*5;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
 				
 				var target:UIComponent = this;
@@ -112,7 +112,7 @@
 				tip.data = page + 1;
 				var r:int = this.circle.unscaledRadius > this.txtName.height? this.circle.unscaledRadius:this.txtName.height;
 				tip.x = this.width / 2 - r;
-				tip.y = this.height/2 - r;
+				tip.y = this.height/2 - r - 5;
 				this.addChild(tip);
 				tip.show();
 				

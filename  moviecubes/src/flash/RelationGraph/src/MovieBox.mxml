@@ -7,7 +7,7 @@
 			{
 				super.setName(txtName);
 				super.setAlias(txtAlias,bxAlias);
-				super.setRelationContent(txtStars);
+				super.setRelationContent(txtStars,txtPage);
 				super.setRank(txtRank,bxRank);
 			}			
 		]]>
@@ -21,13 +21,15 @@
 			<mx:Text text="别名" width="50"/>
 			<mx:Text id="txtAlias" width="100%"/>
 		</mx:HBox>
-		<mx:HBox width="100%" id="bxStars">
-			<mx:Text text="明星" width="50" id="titleStar"/>
-			<mx:Text id="txtStars" width="100%"/>
-		</mx:HBox>
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
 			<mx:Text text="分数" width="50"/>
 			<mx:Text id="txtRank" width="100%"/>
 		</mx:HBox>
+		<mx:HBox width="100%" id="bxStars">
+			<mx:Text text="明星" width="50" id="titleStar"/>
+			<mx:Text id="txtStars" width="100%"/>
+		</mx:HBox>
+		<mx:Spacer height="100%"/>
+		<mx:Text width="100%" id="txtPage"/>
 	</mx:VBox>
 </BaseBox>

@@ -83,13 +83,47 @@ SpringGraph
 }
 
 .starButton
-	{
-		color: #222222;
-		fillAlphas: 1.0, 1.0;
-		fillColors: #FFBA00, #FFBA00;
-		fontSize: 12pt;
-		textAlign: left;
-		icon:Embed(source='myimage/StarIcon.png');
-	}
+{
+	color: #222222;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #FFBA00, #FFBA00;
+	fontSize: 12pt;
+	textAlign: left;
+	icon:Embed(source='myimage/StarIcon.png');
+}
 	
-	
+LinkButton
+{
+	color: #ffffff;
+	roll-over-color: #555555;
+	textRollOverColor:#eeeeee;
+}
+
+Panel, Alert, TitleWindow
+{
+	background-color: #3e3e3e;
+	border-color: #22201e;
+	color:#ffffff;
+	header-height:60;
+	border-alpha: 1;
+	corner-radius: 10;
+	dropShadowStyleName: panelDropShadow;
+	border-skin: ClassReference("assets.skins.SmartPanelSkin");
+	dropShadowEnabled: false;
+	title-style-name: headerStyle;
+	headerSkin: ClassReference("assets.skins.HeaderSkin");
+}
+
+.panelDropShadow
+{
+	distance:5;
+	size:28;
+	alpha:0.7;
+}
+.headerStyle
+{
+	text-align:center;
+	font-size: 15;
+	fontFamily:"Century Gothic";
+	border-skin: Embed(source='assets/images/header_bg.png', scaleGridLeft=20, scaleGridRight=200, scaleGridTop=40,scaleGridBottom=42);
+}
