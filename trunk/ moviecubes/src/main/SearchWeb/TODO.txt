@@ -1,6 +1,28 @@
-﻿LOGO
+﻿getId需要用getByKeyword的相关
+
+问题：搜索“明明 ”-电影 结果
+
+
+刚发现说错了，layer是指当前节点往外扩展的层数，不包括当前节点。新接口调用方法如下：
+int layer = 2;
+int[] index = new int[] { 0, 0 };
+int[] count = new int[] { 5, 3 };
+
+mq.QueryMovieByName("南京！南京！", layer, index, count);
+movie和star都有3个：by id，name，keyword的
+简单测试过，有问题及时联系~
+ps：尽量统一调用的方法，比如都用新的这个，旧的那些回头就删了~
+http://ciia.cs.tsinghua.edu.cn/gtCarrera/ 我觉得这个做的挺不错的T_T
+对了，dx给了我一个手机号，说如果要申请公网ip可以找这个人：张奇勇，13810677757
+
+
+
+LOGO						done，土
 
 图示说明
+
+分页的tipBubble				done
+	在节点上标识一下		done
 
 1 问题
 搜索金城武 明星 getStarByName							修改为getStarById

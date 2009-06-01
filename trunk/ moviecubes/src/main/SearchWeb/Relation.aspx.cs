@@ -24,7 +24,7 @@ namespace MovieCube.SearchWeb
 
             string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
             string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
-            
+
             IMovieQuery movieQuery = new MovieQuery(movieInfo);
             IStarQuery starQuery = new StarQuery(starInfo);
 
@@ -40,7 +40,7 @@ namespace MovieCube.SearchWeb
             else if (type != null && query != null)
             {
                 switch (type)
-                { 
+                {
                     case "queryByKey":
                         //先通过名称查找电影
                         movies = movieQuery.QueryMovieByName(query);
@@ -77,53 +77,62 @@ namespace MovieCube.SearchWeb
                         Response.Write("[]");
                         return;
 
-                    case "queryStarByName":
-                        if (start == null || start == "")
+                    case "queryStarByKeyword":
+                        stars = starQuery.QueryStarByKeyword(query);
+                        Response.Write(JsonConvert.SerializeObject(stars));
+                        return;
+                    case "queryStarById":
+                        try
                         {
-                            stars = starQuery.QueryStarByName(query);
-                            Response.Write(JsonConvert.SerializeObject(stars));
-                        }
-                        else
-                        {
-                            try
+                            if (start == null || start == "")
                             {
-                                stars = starQuery.QueryStarByName(query,Convert.ToInt32(start), Convert.ToInt32(count));
+                                stars = starQuery.QueryStarByID(Convert.ToInt32(query), 2, new int[] { 0, 0 }, new int[] { 5, 3 });
                                 Response.Write(JsonConvert.SerializeObject(stars));
                             }
-                            catch
+                            else
                             {
-                                Response.Write("[]");
+                                stars = starQuery.QueryStarByID(Convert.ToInt32(query), 2, new int[] { Convert.ToInt32(start), 0 }, new int[] { Convert.ToInt32(count), 3 });
+                                Response.Write(JsonConvert.SerializeObject(stars));
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                            Response.Write("[]");
+                        }
                         return;
-                    case "queryMovieByStar":
+                    case "queryMovieByKeyword":
                         movies = movieQuery.QueryMovieByKeyword(query);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
-                    case "queryMovieByName":
-                        if (start == null || start == "")
+                    case "queryMovieById":
+                        try
                         {
-                            movies = movieQuery.QueryMovieByName(query);
-                            Response.Write(JsonConvert.SerializeObject(movies));
-                        }
-                        else
-                        {
-                            try
+                            if (start == null || start == "")
                             {
-                                movies = movieQuery.QueryMovieByName(query,Convert.ToInt32(start),Convert.ToInt32(count));
+                                movies = movieQuery.QueryMovieByID(Convert.ToInt32(query), 2, new int[] { 0, 0 }, new int[] { 5, 3 });
                                 Response.Write(JsonConvert.SerializeObject(movies));
                             }
-                            catch {
-                                Response.Write("[]");
+                            else
+                            {
+                                movies = movieQuery.QueryMovieByID(Convert.ToInt32(query), 2, new int[] { Convert.ToInt32(start), 0 }, new int[] { Convert.ToInt32(count), 3 });
+                                Response.Write(JsonConvert.SerializeObject(movies));
                             }
+                        }
+                        catch(Exception ex)
+                        {
+                            throw ex;
+                            Response.Write("[]");
                         }
                         return;
                     default:
+                        throw new Exception("未支持类型");
+                        Response.Write("[]");
                         return;
                 }
 
             }
-            
+
         }
 
     }
