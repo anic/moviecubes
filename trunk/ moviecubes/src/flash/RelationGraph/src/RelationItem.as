@@ -306,5 +306,15 @@ package
 			else
 				return data.Stars[i].Role;
 		}
+		
+		public function getArray():Array
+		{
+			if (this.isStar)
+				return data.Movies;
+			else
+				return data.Stars;
+		}
+		
+		
 	}
 }

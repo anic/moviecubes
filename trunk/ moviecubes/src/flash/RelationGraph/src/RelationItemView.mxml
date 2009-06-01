@@ -65,35 +65,16 @@
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
 				
 				var target:UIComponent = this;
-				//RelationGraph(Application.application).tipMan.removeBubbleTip(target);
 				var bubbleTip:BubbleTipTarget = RelationGraph(Application.application).tipMan.getBubbleTip(target);
 				if (bubbleTip==null)
 				{
-					if (data.isStar)
-					{
-						var starBox:StarBox = new StarBox();
-						starBox.data = data.data;
-						starBox.relationItem = data as RelationItem;
-						RelationGraph(Application.application).tipMan.createMyBubbleTip(target,starBox,null,null);
-					}
-					else
-					{
-						var movieBox:MovieBox = new MovieBox();
-						movieBox.data = data.data;
-						movieBox.relationItem = data as RelationItem;
-						RelationGraph(Application.application).tipMan.createMyBubbleTip(target,movieBox,null,null);
-					}
+					var box:BaseBox = (data.isStar)? new StarBox():new MovieBox();
+					box.data = data;
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,box,null,null);
 				}
 				else
 				{
-					if (data.isStar)
-					{
-						(bubbleTip.tipComponent as StarBox).reinit();
-					}
-					else
-					{
-						(bubbleTip.tipComponent as MovieBox).reinit();
-					}
+					(bubbleTip.tipComponent as BaseBox).fillData();
 				}
 				
 				this.effectAdd.play();
