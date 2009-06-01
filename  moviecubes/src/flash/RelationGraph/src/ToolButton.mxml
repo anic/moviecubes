@@ -52,6 +52,6 @@
 	<mx:Image  x="2" y="2" width="25" height="25" id="image0" source="@Embed('myimage/ArrowLeft.png')" visible="false"/>
 	<mx:Image  x="2" y="2" width="25" height="25" id="image1" source="@Embed('myimage/ArrowRight.png')" visible="false"/>
 	<mx:Image  x="2" y="2" width="25" height="25" id="image2" source="@Embed('myimage/Cancel.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image3" source="@Embed('myimage/Document.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image4" source="@Embed('myimage/Exclamation.png')" visible="false"/>
+	<mx:Image  x="2" y="2" width="25" height="25" id="image3" source="@Embed('myimage/ArrowDownRight.png')" visible="false"/>
+	<mx:Image  x="2" y="2" width="25" height="25" id="image4" source="@Embed('myimage/ZoomIn.png')" visible="false"/>
 </mx:Module>
