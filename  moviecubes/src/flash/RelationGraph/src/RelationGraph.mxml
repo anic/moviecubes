@@ -10,7 +10,12 @@
 		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
 		  fontSize="14"/>
 	<mx:ComboBox x="541" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
-	<mx:Button x="664" y="57" label="搜索" id="btnSearch" click="{search();}" styleName="mainButton" fontSize="14"/>
+	<mx:Button x="664" y="57" label="搜索" id="btnSearch" click="{
+			items.empty();
+   			this.toolPanel.hide();
+   			search();
+   			}" 
+   		styleName="mainButton" fontSize="14"/>
 	
 			
 	
@@ -26,6 +31,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.messaging.AbstractConsumer;
 		import com.adobe.flex.extras.controls.springgraph.Item;
 		import mx.core.UIComponent;
 		import mx.effects.Fade;
@@ -83,8 +89,12 @@
 		
 		private function keyUp(event:KeyboardEvent):void
 		{
-			if (event.keyCode == 13) 
-				search();
+			if (event.keyCode == 13)
+			{
+				items.empty();
+   				this.toolPanel.hide();
+   			 	search();
+			}
 		}
 		
 		private function query(type:String,queryData:String,listener:Function):void
@@ -144,31 +154,109 @@
 	   		this.query("queryByKey",key,onSearchComplete);
 	   }
 	   
-	   public function loadStar(name:String,clearGraph:Boolean = true):void
+	   public function loadStar(name:String,clearGraph:Boolean = false):void
 	   {
 	   		help.showTip("加载明星 "+name+" 中...");
 	   		if (clearGraph)
-	   		{
-	   			items.empty();
-	   			this.toolPanel.hide();
-	   			this.txtSearch.text = name;
-	   			this.cbxSearchType.selectedIndex = 1;
-	   		}
-	   			
-	   		this.query("queryStarByName",name,onSearchComplete);
+   				this.clearGraph(name,"STAR");
+	   		this.query("queryStarByKeyword",name,onSearchComplete);
 	   }
 	   
-	   public function loadMovie(name:String,clearGraph:Boolean = true):void
+	   public function loadStarById(id:String,name:String,clearGraph:Boolean):void
+	   {
+	   		help.showTip("加载明星 "+name+" 中...");
+	   		if (clearGraph)
+   				this.clearGraph(name,"STAR");
+   				
+	   		this.query("queryStarById",id,onSearchComplete);
+	   }
+	   
+	   public function loadMovieById(id:String,name:String,clearGraph:Boolean):void
 	   {
 	   		help.showTip("加载电影 "+name+" 中...");
 	   		if (clearGraph)
-   			{
-   				items.empty();
-   				this.toolPanel.hide();
-   				this.txtSearch.text = name;
-   				this.cbxSearchType.selectedIndex = 2;
-   			}
-	   		this.query("queryMovieByStar",name,onSearchComplete);
+   				this.clearGraph(name,"MOVIE");
+	   		this.query("queryMovieById",id,onSearchComplete);
+	   }
+	   
+	   public function loadMovie(name:String,clearGraph:Boolean = false):void
+	   {
+	   		help.showTip("加载电影 "+name+" 中...");
+	   		if (clearGraph)
+   				this.clearGraph(name,"MOVIE");
+	   		this.query("queryMovieByKeyword",name,onSearchComplete);
+	   }
+	   
+	   private function clearGraph(txt:String,type:String):void
+	   {
+	   		items.empty();
+   			this.toolPanel.hide();
+   			this.txtSearch.text = txt;
+   			
+   			switch(type)
+			{
+				case "STAR":
+					this.cbxSearchType.selectedIndex = 1;
+					break;
+				case "MOVIE":
+					this.cbxSearchType.selectedIndex = 2;
+					break;
+				case "KEYWORD":
+				default:
+					this.cbxSearchType.selectedIndex = 0;
+					break;
+			}
+	   }
+	   
+	   public function removeOldPage(related:Array,item:RelationItem):void
+	   {
+   			var removedArray:Array;
+   			//尝试删除旧的页
+   			for(var i:int = 0;i<related.length;++i)
+			{
+				var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
+				removedArray = [relatedItem];
+				if (relatedItem!= null && relatedItem.rank!=0)
+				{
+					this.toolPanel.onItemRemove(relatedItem);
+					items.remove(relatedItem);
+					/*relatedItem.canBeRemoved(items,item,removedArray);
+					for(var j:int = 0;j<removedArray.length;++j)
+					{
+						this.toolPanel.onItemRemove(removedArray[j]);
+						items.remove(removedArray[j]);
+					}*/
+					
+				}
+			}
+			removedSoloItem();
+	   }
+	   
+	   public function removedSoloItem():void
+	   {
+	   		var removedArray:Array = new Array();
+	   		for(var id:String in items.nodes)
+	   		{
+	   			var item:RelationItem = items.find(id) as RelationItem;
+	   			if (item!=null && item.rank!=0 && items.numLinks(item) == 0)
+	   				removedArray.push(item);
+	   		}
+	   		
+	   		for(var i:int = 0;i<removedArray.length;++i)
+	   			items.remove(removedArray[i]);
+	   }
+	   
+	   public function showPageTip(item:RelationItem):void
+	   {
+   			var start:int = item.start;
+			var len:int = (item.start + this.CountPerPage < item.TotalNum)? CountPerPage: item.TotalNum - item.start;
+			for(var i:int=0;i<len;++i)
+			{
+				var id:String = item.getData(i+start).ID;
+				var newItem:RelationItem = items.find(id) as RelationItem;
+				if (newItem!=null)
+					newItem.view.showPage(i+start);
+			}	
 	   }
 	   
 	   private function updateObject(data:Object,item:RelationItem,rank:int,start:int):void
@@ -181,40 +269,21 @@
 	   		//不用有graph的，因为是删除旧的页使用的，而不是其他与其关联的
 	   		var related:Array = item.getRelatedIds();
 	   		item.updateData(data,rank,start);
-	   		var removedArray:Array;
+	   		
 	   		if (isNewPage)
 	   		{
-	   			//尝试删除旧的页
-	   			for(var i:int = 0;i<related.length;++i)
-				{
-					var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
-					removedArray = [relatedItem];
-					if (relatedItem!= null && relatedItem.canBeRemoved(items,item,removedArray))
-					{
-						for(var j:int = 0;j<removedArray.length;++j)
-						{
-							this.toolPanel.onItemRemove(removedArray[j]);
-							items.remove(removedArray[j]);
-						}
-					}
-				}
+				removeOldPage(related,item);
 	   		}
+	   		
+	   		//更新邻居节点
 			visitRelated(data,item,rank);
 			if (isNewPage)
 			{
-				var start:int = item.start;
-				var len:int = (item.start + this.CountPerPage < item.TotalNum)? CountPerPage: item.TotalNum - item.start;
-				for(i=0;i<len;++i)
-				{
-					var id:String = item.getData(i+start).ID;
-					var newItem:RelationItem = items.find(id) as RelationItem;
-					if (newItem!=null)
-						newItem.view.showPage(i+start);
-				}	
+				showPageTip(item);	
 			}
 	   }
 	   
-	   private function visitRelated(data:Object,newItem:RelationItem,rank:int):void
+	   public function visitRelated(data:Object,newItem:RelationItem,rank:int):void
 	   {
 	   		var j:int;
 			var tempItem:RelationItem = null;
@@ -319,10 +388,9 @@
 			}
 		}
 		
-		public function search():void
+		private function search():void
 		{
-			items.empty();
-			this.toolPanel.hide();
+			
 			if (txtSearch.text!="")
 			{
 				funcArray[this.cbxSearchType.selectedIndex](txtSearch.text);
@@ -331,20 +399,7 @@
 		
 		public function reSearch(key:String,type:String = "KEYWORD"):void
 		{
-			this.txtSearch.text = key;
-			switch(type)
-			{
-				case "STAR":
-					this.cbxSearchType.selectedIndex = 1;
-					break;
-				case "MOVIE":
-					this.cbxSearchType.selectedIndex = 2;
-					break;
-				case "KEYWORD":
-				default:
-					this.cbxSearchType.selectedIndex = 0;
-					break;
-			}
+			this.clearGraph(key,type);
 			search();
 		}
 		
@@ -408,14 +463,17 @@
 		private function searchRecommend(event:MouseEvent):void
 		{
 			var aData:Object = (event.target as Button).data;
-			this.reSearch(aData.Name,aData.ObjectType);
+			//this.reSearch(aData.Name,aData.ObjectType);
+			if (aData.ObjectType == "STAR")
+				this.loadStarById(aData.ID,aData.Name,true);
+			else
+				this.loadMovieById(aData.ID,aData.Name,true);
 		} 
 		
 		public function removeItem(item:RelationItem):void
 		{
 			
 			this.toolPanel.onItemRemove(item);
-			
 			var related:Array = item.getRelatedIdsFromGraph(items);
 			var removedArray:Array;
    			for(var i:int = 0;i<related.length;++i)
@@ -431,6 +489,7 @@
 				}
 			}
 			this.items.remove(item);
+			removedSoloItem();
 		}
 		
 		public function setToolPanelPosition(x:int,y:int):void

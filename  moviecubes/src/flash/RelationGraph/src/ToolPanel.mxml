@@ -3,6 +3,7 @@
 		 xmlns:local="*" alpha="0" >
 	<mx:Script>
 		<![CDATA[
+			import mx.messaging.AbstractConsumer;
 			import mx.core.Application;
 			
 			private var currentView:RelationItemView = null;
@@ -102,7 +103,7 @@
 					var item:RelationItem = (currentView.data as RelationItem);
 					if(next)
 					{
-						var total:int = item.isStar? item.data.TotalMovieNum:item.data.TotalStarNum;
+						var total:int = item.TotalNum;
 						item.nextStart = item.start + countPerPage < total? item.start+countPerPage:item.start;
 					}	
 					else 
@@ -110,13 +111,40 @@
 						item.nextStart = item.start - countPerPage>=0? item.start - countPerPage:0;
 					}
 					
-					if (item.isStar)
+					//无需翻页
+					if (item.nextStart == item.start)
 					{
-						RelationGraph(Application.application).queryPage("queryStarByName",item.name,item.nextStart,countPerPage);
+						return;
+					}
+					
+					if (item.nextStart < item.DataLength)
+					{
+						//不需要访问网络
+						item.start = item.nextStart;
+						var ids:Array = item.getRelatedIds();
+						RelationGraph(Application.application).removeOldPage(ids,item);
+						var dataArray:Array = new Array();
+						var dataObject:Object = new Object();
+						var len:int = item.getCurrentPageCount(countPerPage);
+						for(var i:int = 0;i<len;++i)
+							dataArray.push(item.getArray()[i+item.start]);
+						
+						dataObject.ObjectType = item.data.ObjectType;
+						if (item.isStar)
+							dataObject.Movies = dataArray;
+						else
+							dataObject.Stars = dataArray;
+						RelationGraph(Application.application).visitRelated(dataObject,item,item.rank);
+						item.view.onDataUpdate();
+						RelationGraph(Application.application).showPageTip(item);
+						
 					}
 					else
 					{
-						RelationGraph(Application.application).queryPage("queryMovieByName",item.name,item.nextStart,countPerPage);
+						if (item.isStar)
+							RelationGraph(Application.application).queryPage("queryStarById",item.data.ID,item.nextStart,countPerPage);
+						else
+							RelationGraph(Application.application).queryPage("queryMovieById",item.data.ID,item.nextStart,countPerPage);
 					}
 						
 				}

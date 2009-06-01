@@ -251,6 +251,7 @@ package
 			
 			var relatedIds:Array = this.getRelatedIdsFromGraph(g);//this.getRelatedIds();
 			
+			var result: Boolean = false;
 			for(var i:int = 0;i<relatedIds.length;++i)
 			{
 				if (relatedIds[i] == fromItem.id)
@@ -260,9 +261,8 @@ package
 				if(relatedItem!=null && !relatedItem.canBeRemoved(g,this,removedArray))
 					return false;
 			}
-			
 			removedArray.push(this);
-			return true;
+			return result;
 		}
 		
 		public function get TotalNum():int
@@ -282,6 +282,12 @@ package
 		public function getCurrentPage(countPerPage:int):int
 		{
 			return this.start/countPerPage + 1;
+		}
+		
+		public function getCurrentPageCount(countPerPage:int):int
+		{
+			var total:int = this.TotalNum;
+			return (start + countPerPage < total)? countPerPage: total - start;
 		}
 		
 		public function get DataLength():int
