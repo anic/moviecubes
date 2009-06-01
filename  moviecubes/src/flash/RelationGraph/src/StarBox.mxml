@@ -1,77 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="init()">
+<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="fillData()">
 
 	<mx:Script>
 		<![CDATA[
-			import mx.core.Application;
-		
-			private var started:Boolean = false;
-			
-			public var relationItem:RelationItem = null;
-			
-			public function reinit():void
+			override public function fillData():void
 			{
-				started = false;
-				init();
-			}
-			
-			
-			private function init():void
-			{
-				if (started)
-					return;
-					
-				var i:int = 0;
-				txtName.text = data.Name;
-				
-				if (data.Rank ==0)
-					bxRank.visible = false;
-				else
-					txtRank.text = new String(data.Rank).substr(0,4);
-				
-				if(data.Alias==null || data.Alias.length == 0)
-					bxAlias.visible = false;
-				else
-					{
-						txtAlias.text = "";
-						for(i= 0;i<data.Alias.length;++i)
-						{
-							if(i !=0)
-								txtAlias.text += ",";
-							txtAlias.text += data.Alias[i];										
-						}
-					}
-					
-				if (data.Movies==null || data.Movies.length == 0)
-					txtMovies.text = "双击节点查看..."
-				else
-					{
-						txtMovies.text = "";
-						var pages:int = relationItem.getPagesCount(RelationGraph(Application.application).CountPerPage);
-						var start:int = 0;
-						var end:int = data.Movies.length-1;
-						var countPerPage:int = RelationGraph(Application.application).CountPerPage;
-						
-						
-						if (pages!=0)
-						{
-							var cur:int = relationItem.getCurrentPage(countPerPage);
-							if (pages>1)
-								txtMovies.text = cur+"/"+pages+"页，共"+relationItem.TotalNum+"\n";
-							else
-								txtMovies.text = "共"+relationItem.TotalNum+"\n";
-							start = relationItem.start;
-							end = start + countPerPage -1 < end? start + countPerPage -1 :end;
-						}
-						for(i = start;i<=end;++i)
-						{
-							if(i !=start )
-								txtMovies.text += "\n";
-							txtMovies.text += data.Movies[i].Movie.Name;										
-						}
-					}
-					started = true;
-			
+				super.setName(txtName);
+				super.setAlias(txtAlias,bxAlias);
+				super.setRelationContent(txtMovies);
+				super.setRank(txtRank,bxRank);
 			}
 		]]>
 	</mx:Script>
@@ -94,4 +31,4 @@
 		</mx:HBox>
 
 	</mx:VBox>
-</mx:Module>
+</BaseBox>

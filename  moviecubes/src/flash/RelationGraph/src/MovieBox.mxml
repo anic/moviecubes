@@ -1,78 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="init()">
+<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="220" initialize="fillData()">
 	<mx:Style source="MyTheme.css" />
 	<mx:Script>
 		<![CDATA[
-			import mx.core.Application;
-		
-			private var started:Boolean = false;
-			
-			public var relationItem:RelationItem = null;
-			
-			public function reinit():void
+			override public function fillData():void
 			{
-				started = false;
-				init();
-			}
-			
-			private function init():void
-			{
-				if (started)
-					return;
-					
-				var i:int = 0;
-				txtName.text = data.Name;
-				
-				if (data.Rank == 0)
-					bxRank.visible = false;	
-				else
-					txtRank.text = new String(data.Rank).substr(0,4);
-				
-				if(data.Alias==null || data.Alias.length == 0)
-					bxAlias.visible = false;
-				else
-				{
-					txtAlias.text = "";
-					for(i= 0;i<data.Alias.length;++i)
-					{
-						if(i !=0)
-							txtAlias.text += ",";
-						txtAlias.text += data.Alias[i];										
-					}
-				}
-					
-				if (data.Stars==null || data.Stars.length == 0)
-					txtStars.text = "双击节点查看..."
-				else
-				{
-					txtStars.text = "";
-					var pages:int = relationItem.getPagesCount(RelationGraph(Application.application).CountPerPage);
-					var start:int = 0;
-					var end:int = data.Stars.length-1;
-					var countPerPage:int = RelationGraph(Application.application).CountPerPage;
-					
-					if (pages!=0)
-					{
-						var cur:int = relationItem.getCurrentPage(countPerPage);
-						if (pages>1)
-							txtStars.text = cur+"/"+pages+"页，共"+relationItem.TotalNum+"\n";
-						else
-							txtStars.text = "共"+relationItem.TotalNum+"\n";
-							
-						start = relationItem.start;
-						end = start + countPerPage -1 < end? start + countPerPage -1 :end;
-					}
-					for(i = start;i<=end;++i)
-					{
-						if(i !=start )
-							txtStars.text += "\n";
-						txtStars.text += data.Stars[i].Role+ " "+ data.Stars[i].Star.Name;										
-					}
-					
-
-				}
-				started = true;
-			}
+				super.setName(txtName);
+				super.setAlias(txtAlias,bxAlias);
+				super.setRelationContent(txtStars);
+				super.setRank(txtRank,bxRank);
+			}			
 		]]>
 	</mx:Script>
 	<mx:VBox x="0" y="0" height="100%" width="100%" id="bxMovie">
@@ -93,4 +30,4 @@
 			<mx:Text id="txtRank" width="100%"/>
 		</mx:HBox>
 	</mx:VBox>
-</mx:Module>
+</BaseBox>

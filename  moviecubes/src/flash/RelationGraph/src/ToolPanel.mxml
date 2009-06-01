@@ -111,9 +111,11 @@
 		]]>
 	</mx:Script>
 	<mx:Fade alphaFrom="1.0" alphaTo="0" id="allOut" duration="500" target="{this}" startDelay="100" />
-	<local:ToolButton x="52" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="10" width="30" height="30"/>
+	
+	
+	<local:ToolButton x="16"  ImageIndex="0" toolTip="前一页" id="btnPre" bottom="10" width="30"  height="30" click="{onSearchNextPage(false);}"/>
+	<local:ToolButton x="36" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30" click="{onSearchNextPage(true);}"/>
+	<local:ToolButton x="56" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="10" width="30" height="30"/>
 	<local:ToolButton x="76" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="10"  width="30" height="30"/>
-	<local:ToolButton x="4" ImageIndex="0" toolTip="前一页" id="btnPre" bottom="10" width="30"  height="30" click="{onSearchNextPage(false);}"/>
-	<local:ToolButton x="28" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="10"  width="30" height="30" click="{onSearchNextPage(true);}"/>
 	<local:ToolButton x="76" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="70" width="30" height="30"/>
 </mx:Module>
