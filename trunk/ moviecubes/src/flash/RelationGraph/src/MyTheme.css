@@ -79,7 +79,7 @@ SpringGraph
 	fillColors: #FFBA00, #FFBA00;
 	fontSize: 12pt;
 	textAlign: left;
-	icon:Embed(source='myimage/icon1.png');
+	icon:Embed(source='myimage/MovieIcon.png');
 }
 
 .starButton
@@ -89,7 +89,7 @@ SpringGraph
 		fillColors: #FFBA00, #FFBA00;
 		fontSize: 12pt;
 		textAlign: left;
-		icon:Embed(source='myimage/icon2.png');
+		icon:Embed(source='myimage/StarIcon.png');
 	}
 	
 	
