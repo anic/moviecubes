@@ -3,7 +3,18 @@
 	<mx:Style source="MyTheme.css" />
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Application;
+		
 			private var started:Boolean = false;
+			
+			public var relationItem:RelationItem = null;
+			
+			public function reinit():void
+			{
+				started = false;
+				init();
+			}
+			
 			private function init():void
 			{
 				if (started)
@@ -21,6 +32,7 @@
 					bxAlias.visible = false;
 				else
 				{
+					txtAlias.text = "";
 					for(i= 0;i<data.Alias.length;++i)
 					{
 						if(i !=0)
@@ -33,14 +45,31 @@
 					txtStars.text = "双击节点查看..."
 				else
 				{
-					titleStar.text += "("+data.TotalStarNum+")";
-					for(i = 0;i<data.Stars.length;++i)
+					txtStars.text = "";
+					var pages:int = relationItem.getPagesCount(RelationGraph(Application.application).CountPerPage);
+					var start:int = 0;
+					var end:int = data.Stars.length-1;
+					var countPerPage:int = RelationGraph(Application.application).CountPerPage;
+					
+					if (pages!=0)
 					{
-						if(i !=0)
-							txtStars.text += "\n";
-						txtStars.text += data.Stars[i].Role+ " "+ data.Stars[i].Star.Name;
-																
+						var cur:int = relationItem.getCurrentPage(countPerPage);
+						if (pages>1)
+							txtStars.text = cur+"/"+pages+"页，共"+relationItem.TotalNum+"\n";
+						else
+							txtStars.text = "共"+relationItem.TotalNum+"\n";
+							
+						start = relationItem.start;
+						end = start + countPerPage -1 < end? start + countPerPage -1 :end;
 					}
+					for(i = start;i<=end;++i)
+					{
+						if(i !=start )
+							txtStars.text += "\n";
+						txtStars.text += data.Stars[i].Role+ " "+ data.Stars[i].Star.Name;										
+					}
+					
+
 				}
 				started = true;
 			}

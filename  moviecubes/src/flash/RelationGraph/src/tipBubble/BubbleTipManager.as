@@ -1,7 +1,5 @@
 package tipBubble
 {
-	import flash.display.DisplayObject;
-	
 	import mx.core.UIComponent;
 	
 	public class BubbleTipManager
@@ -20,6 +18,16 @@ package tipBubble
 			//var mainApp:DisplayObject = target.parentApplication as DisplayObject;
 			//mainApp.addEventListener(TipBubbleEvent.ROLL_OVER, clearExtraBubbles);
 			tipTargets.push(tipTarg);
+		}
+		
+		public function getBubbleTip(target:UIComponent):BubbleTipTarget
+		{
+			for(var i:int = 0; i <= this.tipTargets.length-1; i++){
+				var currentTipTarg:BubbleTipTarget = this.tipTargets[i] as BubbleTipTarget;
+				if(target == currentTipTarg.tipTarget)
+					return currentTipTarg;
+			}
+			return null;
 		}
 		
 		/*public function createBubbleTip(target:UIComponent, htmlTipText:String, component:UIComponent = null, clickNotification:String = ""):void

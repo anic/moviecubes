@@ -12,8 +12,9 @@
 <application path="RelationGraph.mxml"/>
 </applications>
 <modules>
-<module application="src/RelationGraph.mxml" destPath="ToolButton.swf" optimize="true" sourcePath="src/ToolButton.mxml"/>
 <module application="src/RelationGraph.mxml" destPath="ToolPanel.swf" optimize="true" sourcePath="src/ToolPanel.mxml"/>
+<module application="src/RelationGraph.mxml" destPath="PageTip.swf" optimize="true" sourcePath="src/PageTip.mxml"/>
+<module application="src/RelationGraph.mxml" destPath="ToolButton.swf" optimize="true" sourcePath="src/ToolButton.mxml"/>
 </modules>
 <buildCSSFiles/>
 </actionScriptProperties>

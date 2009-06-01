@@ -37,7 +37,7 @@ package
 			this.radius = r;	
 		}
 		
-		public function get unscaleRadius():int
+		public function get unscaledRadius():int
 		{
 			return this.radius;
 		}
