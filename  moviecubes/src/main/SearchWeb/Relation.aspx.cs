@@ -15,7 +15,6 @@ namespace MovieCube.SearchWeb
 {
     public partial class Relation : System.Web.UI.Page
     {
-
         protected const int NODE_LIMIT1 = 35;
         
         protected void Page_Load(object sender, EventArgs e)
@@ -91,6 +90,7 @@ namespace MovieCube.SearchWeb
                     case "queryStarById":
                         BuildLayer(nodeCount, start, count, out indices, out counts, out layer);
                         stars = starQuery.QueryStarByID(Convert.ToInt32(query), 2, indices, counts);
+                        GetRelatedStar(stars);
                         Response.Write(JsonConvert.SerializeObject(stars));
                         return;
                     case "queryMovieByKeyword":
@@ -100,6 +100,7 @@ namespace MovieCube.SearchWeb
                     case "queryMovieById":
                         BuildLayer(nodeCount,start,count,out indices,out counts,out layer);
                         movies = movieQuery.QueryMovieByID(Convert.ToInt32(query), 2, indices, counts);
+                        GetRelatedMovie(movies);
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
                     default:
@@ -110,6 +111,44 @@ namespace MovieCube.SearchWeb
 
             }
 
+        }
+
+        private void GetRelatedMovie(List<Movie> result)
+        {
+            //只有返回为一个的时候才找相关
+            if (result.Count == 1)
+            {
+                string name = result[0].Name;
+                int id = result[0].ID;
+                string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
+
+                IMovieQuery movieQuery = new MovieQuery(movieInfo);
+                List<Movie> related = movieQuery.QueryMovieByKeyword(name);
+                foreach (Movie m in related)
+                {
+                    if (m.ID != id)
+                        result.Add(m);
+                }
+            }
+            
+        }
+
+        private void GetRelatedStar(List<Star> result)
+        {
+            //只有返回为一个的时候才找相关
+            if (result.Count == 1)
+            {
+                string name = result[0].Name;
+                int id = result[0].ID;
+                string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
+                IStarQuery starQuery = new StarQuery(starInfo);
+                List<Star> related = starQuery.QueryStarByKeyword(name);
+                foreach (Star s in related)
+                {
+                    if (s.ID != id)
+                        result.Add(s);
+                }
+            }
         }
 
         private void BuildLayer(string nodeCount,string start,string count,out int[] indices,out int[] counts,out int layer)
