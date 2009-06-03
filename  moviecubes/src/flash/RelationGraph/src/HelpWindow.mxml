@@ -85,8 +85,8 @@
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="表示编剧" styleName="text"/>
 					</mx:GridItem>
-					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
-						<mx:Image source="@Embed('myimage/Cancel.png')" width="30" height="30"/>
+					<mx:GridItem width="100%" height="100%" >
+						<mx:Image source="@Embed('myimage/Cancel.png')"/>
 					</mx:GridItem>
 					
 					<mx:GridItem width="100%" height="100%">
@@ -106,8 +106,8 @@
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="表示主演" styleName="text"/>
 					</mx:GridItem>
-					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
-						<mx:Image source="@Embed('myimage/ArrowDownRight.png')" width="30" height="30"/>
+					<mx:GridItem width="100%" height="100%" >
+						<mx:Image source="@Embed('myimage/ArrowDownRight.png')"/>
 					</mx:GridItem>	
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="在页面中查看" styleName="text"/>
@@ -120,14 +120,14 @@
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="展开的节点" styleName="text"/>
 					</mx:GridItem>
-					<mx:GridItem width="100%" height="100%"  styleName="bgGridStyle">
-						<mx:Image source="@Embed('myimage/ArrowLeft.png')" width="30" height="30"/>
+					<mx:GridItem width="100%" height="100%"  >
+						<mx:Image source="@Embed('myimage/ArrowLeft.png')"/>
 					</mx:GridItem>
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="显示上一页" styleName="text"/>
 					</mx:GridItem>
-					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
-						<mx:Image source="@Embed('myimage/ZoomIn.png')" width="30" height="30"/>
+					<mx:GridItem width="100%" height="100%" >
+						<mx:Image source="@Embed('myimage/ZoomIn.png')"/>
 					</mx:GridItem>
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="重新查看" styleName="text" height="23"/>
@@ -140,8 +140,8 @@
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="表示导演" styleName="text"/>
 					</mx:GridItem>
-					<mx:GridItem width="100%" height="100%" styleName="bgGridStyle">
-						<mx:Image source="@Embed('myimage/ArrowRight.png')" width="30" height="30"/>
+					<mx:GridItem width="100%" height="100%" >
+						<mx:Image source="@Embed('myimage/ArrowRight.png')"/>
 					</mx:GridItem>
 					<mx:GridItem width="100%" height="100%">
 						<mx:Text text="显示下一页" styleName="text"/>

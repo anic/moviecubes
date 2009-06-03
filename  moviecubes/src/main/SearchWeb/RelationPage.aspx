@@ -7,9 +7,9 @@
     <title>MovieCube关系图</title>
     
 </head>
-<body>
+<body style="padding:0; margin:0">
 <form id="form1" runat="server"></form>
-    <div align="center" style="height: 750px; width:100%">
+    <div align="center" style="height: 700px; width:100%; background-color:#000000">
         <embed id="RelationGraph" align="middle" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" allowscriptaccess="sameDomain" name="RelationGraph" bgcolor="#869ca7" quality="high"
          src="flash/RelationGraph.swf"
          height="100%" 

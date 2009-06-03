@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="30" height="30"
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="20" height="20"
 	 mouseOver="{this.onMouseOver();}" mouseOut="{this.onMouseOut();}" initialize="{onInit();}">
-	 
+	 <mx:Style>
+	 	.iconImage
+	 	{
+	 		width:16;
+	 		height:16;
+	 		x:2;
+	 		y:2;
+	 	}
+	 </mx:Style>
 	<mx:Script>
 		<![CDATA[
 		
@@ -9,6 +17,7 @@
 			private function onInit():void
 			{
 				var imageArray:Array = [image0,image1,image2,image3,image4];
+				image0.visible = false;
 				(imageArray[imageIndex] as Image).visible = true;
 			}
 		
@@ -51,10 +60,10 @@
 	</mx:Script>
 	<mx:Fade alphaFrom="0" alphaTo="1.0" id="fadeIn" duration="300" target="{this.btn}"/>
 	<mx:Fade alphaFrom="1.0" alphaTo="0" id="fadeOut" duration="200" target="{this.btn}"/>
-	<mx:Button x="0" y="0" width="29" height="29"  click="{this.dispatchEvent(event);}" alpha="0" id="btn"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image0" source="@Embed('myimage/ArrowLeft.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image1" source="@Embed('myimage/ArrowRight.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image2" source="@Embed('myimage/Cancel.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image3" source="@Embed('myimage/ArrowDownRight.png')" visible="false"/>
-	<mx:Image  x="2" y="2" width="25" height="25" id="image4" source="@Embed('myimage/ZoomIn.png')" visible="false"/>
+	<mx:Button x="0" y="0" width="20" height="20"  click="{this.dispatchEvent(event);}" alpha="0" id="btn"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image0" source="@Embed('myimage/ArrowLeft.png')" />
+	<mx:Image x="2" y="2" styleName="iconImage" id="image1" source="@Embed('myimage/ArrowRight.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image2" source="@Embed('myimage/Cancel.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image3" source="@Embed('myimage/ArrowDownRight.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image4" source="@Embed('myimage/ZoomIn.png')" visible="false"/>
 </mx:Module>
