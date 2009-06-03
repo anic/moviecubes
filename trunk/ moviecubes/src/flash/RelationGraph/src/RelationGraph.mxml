@@ -545,10 +545,10 @@
 		]]>
 	</mx:Script> 
 	
-	<mx:HBox id="recommendBox" left="248" top="116"  visible="false">
+	<mx:HBox id="recommendBox" left="248" top="122"  visible="false">
 		<mx:ComboBox id="recommendList"
 			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
-			  includeInLayout="{this.recommendList.visible}" fontSize="12" height="36" textAlign="center"/>
+			  includeInLayout="{this.recommendList.visible}" fontSize="12" textAlign="center" height="28"/>
 	</mx:HBox>
 	<ns1:TipButton x="248" y="87" width="285" id="help">
 	</ns1:TipButton>
@@ -567,10 +567,10 @@
 			<mx:Label text="节点距离" styleName="text"/>
 			<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="{onDistanceChanged();}" width="101" height="21"/>
 			<mx:Label text="节点大小" styleName="text"/>
-			<mx:HSlider id="hsScale" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
+			<mx:HSlider id="hsScale" value="1.0" minimum="0.5" maximum="2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
 			<mx:Label text="显示节点上限" styleName="text"/>
 			<mx:HSlider id="hsMaxNodeCount" minimum="10" maximum="100" liveDragging="true" width="101" change="{this.defaultNodeLimit = hsMaxNodeCount.value;}" value="{this.defaultNodeLimit}" snapInterval="1"/>
-			<mx:CheckBox label="翻页时删除节点" selected="true" id="cbxDelOldPage"/>
+			<mx:CheckBox label="翻页时删除节点" selected="true" id="cbxDelOldPage"/> 
 			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
 		</mx:HBox>
 	</mx:Panel>

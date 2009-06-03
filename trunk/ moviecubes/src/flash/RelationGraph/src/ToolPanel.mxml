@@ -193,13 +193,20 @@
 			
 		]]>
 	</mx:Script>
+	<mx:Style>
+		ToolButton
+		{
+			width:20;
+			height:20;
+		}
+	</mx:Style>
 	<mx:Fade alphaFrom="1.0" alphaTo="0" id="allOut" duration="500" target="{this}" startDelay="100" />
 	
 		
-	<local:ToolButton x="0"  ImageIndex="0" toolTip="前一页" id="btnPre" bottom="20" width="30"  height="30" click="{onSearchNextPage(false);}" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="18" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="20"  width="30" height="30" click="{onSearchNextPage(true);}"  mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="38" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="20" width="30" height="30" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="58" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="20"  width="30" height="30" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="80" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="20" width="30" height="30" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="0"  ImageIndex="0" toolTip="前一页" id="btnPre" bottom="20" click="{onSearchNextPage(false);}" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="20" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="20" click="{onSearchNextPage(true);}"  mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="40" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="60" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="80" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	
 </mx:Module>

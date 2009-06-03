@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -84,7 +83,15 @@ namespace MovieCube.SearchWeb
                         return;
 
                     case "queryStarByKeyword":
-                        stars = starQuery.QueryStarByKeyword(query);
+                        stars = starQuery.QueryStarByName(query);
+                        if (stars.Count == 0)
+                        {
+                            stars = starQuery.QueryStarByKeyword(query);
+                        }
+                        else if (stars.Count == 1)
+                        {
+                            this.GetRelatedStar(stars);
+                        }
                         Response.Write(JsonConvert.SerializeObject(stars));
                         return;
                     case "queryStarById":
@@ -95,6 +102,14 @@ namespace MovieCube.SearchWeb
                         return;
                     case "queryMovieByKeyword":
                         movies = movieQuery.QueryMovieByKeyword(query);
+                        if (movies.Count == 0)
+                        {
+                            movies = movieQuery.QueryMovieByKeyword(query);
+                        }
+                        else if (movies.Count == 1) 
+                        {
+                            GetRelatedMovie(movies);
+                        }
                         Response.Write(JsonConvert.SerializeObject(movies));
                         return;
                     case "queryMovieById":

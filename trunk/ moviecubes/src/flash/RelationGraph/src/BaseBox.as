@@ -52,7 +52,12 @@ package
 		protected function setRelationContent(txtContent:Text,txtPage:Text):void
 		{
 			if (relationItem.DataLength == 0)
-				txtContent.text = "双击节点查看..."
+				{
+					if(relationItem.rank!=0)
+						txtContent.text = "双击节点查看..."
+					else
+						txtContent.text = ""
+				}
 			else
 			{
 				txtContent.text = "";
