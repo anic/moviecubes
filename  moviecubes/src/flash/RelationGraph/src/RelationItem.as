@@ -40,9 +40,9 @@ package
 		//是否可以移动
 		override public function okToMove():Boolean
 		{
-			if (this.rank == 0)
+			/*if (this.rank == 0)
 				return false;
-			else
+			else*/
 				return !onSelected;
 		}
 		
@@ -160,49 +160,35 @@ package
 		//更新数据
 		public function updateData(data:Object,rank:int,start:int):void
 		{
-			var updated:Boolean = false;
 			if (data.ObjectType == "STAR")
 			{
-				updated = updateMovies(data);
-				
+				updateMovies(data);
 				if (this.data.TotalMovieNum < data.TotalMovieNum)
-				{	
 					this.data.TotalMovieNum = data.TotalMovieNum;
-					updated = true;
-				}
-				
 			}
 			else
 			{
-				updated = updateStars(data);
-				
+				updateStars(data);
 				if (this.data.TotalStarNum < data.TotalStarNum)
-				{
 					this.data.TotalStarNum = data.TotalStarNum;
-					updated = true;
-				}
 			}
-			
-			if (updateAlias(data))
-				updated = true;
+			updateAlias(data);
 			
 			//更新排名，这个排名不是rank，是关联度
 			if (this.rank > rank)
 			{
 				this.rank = rank;
 				updateColor();
-				updated = true;
 			}
 			
 			if (this.start!=start || this.nextStart!= start)
 			{
 				this.start = start;
 				this.nextStart = start;
-				updated = true;
 			}
 			
 							
-			if (updated && this.view!=null)
+			if (this.view!=null)
 				view.onDataUpdate();
 		}
 

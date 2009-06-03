@@ -15,7 +15,7 @@ namespace MovieCube.SearchWeb
     public partial class Relation : System.Web.UI.Page
     {
         protected const int NODE_LIMIT1 = 35;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string type = System.Web.HttpContext.Current.Request.Form["type"];
@@ -34,8 +34,10 @@ namespace MovieCube.SearchWeb
             int[] counts;
             int layer;
 
-            List<Star> stars;
-            List<Movie> movies;
+            List<Star> stars = new List<Star>();
+            List<Movie> movies = new List<Movie>();
+
+
             if (type != null && type == "loadKeys")
             {
                 List<QueryKey> result = KeywordHelper.Instance.GetTipList(query);
@@ -44,79 +46,110 @@ namespace MovieCube.SearchWeb
             }
             else if (type != null && query != null)
             {
+                RelationResult result = new RelationResult();
+                query = query.Trim();
+                string[] subQuery = query.Split(' ');
                 switch (type)
                 {
                     case "queryByKey":
                         //先通过名称查找电影
                         movies = movieQuery.QueryMovieByName(query);
+
                         if (movies.Count != 0)
                         {
-                            Response.Write(JsonConvert.SerializeObject(movies));
+                            result.ResultMovie = movies;
+                            result.RelatedStar = starQuery.QueryStarByKeyword(query);
+                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
+                            result.ClearRedundant();
+                            Response.Write(JsonConvert.SerializeObject(result));
                             return;
                         }
 
                         //没有结果的话，通过名称查找明星
+                        //foreach(string s in subQuery)
+                        //    stars.AddRange(starQuery.QueryStarByName(s));
                         stars = starQuery.QueryStarByName(query);
+
                         if (stars.Count != 0)
                         {
-                            Response.Write(JsonConvert.SerializeObject(stars));
+                            result.ResultStar = stars;
+                            result.RelatedStar = starQuery.QueryStarByKeyword(query);
+                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
+                            /*if (subQuery.Length == 1) //只有一个关键字，而且stars!=0表名搜索到了明星，停止
+                                result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
+                            else //如果不只一个关键字，而且Stars!=0，然后搜索电影，如（刘德华 黎明）、（刘德华 龙）
+                                result.AddSingleMovie(movieQuery.QueryMovieByKeyword(query));
+                            */
+                            result.ClearRedundant();
+                            Response.Write(JsonConvert.SerializeObject(result));
                             return;
                         }
 
-                        //没有结果的话，通过关键字查找电影
+                        //没有结果的话，通过关键字查找电影  和 通过关键字查找明星
                         movies = movieQuery.QueryMovieByKeyword(query);
-                        if (movies.Count != 0)
-                        {
-                            Response.Write(JsonConvert.SerializeObject(movies));
-                            return;
-                        }
-
-                        //没有结果的话，通过关键字查找明星
                         stars = starQuery.QueryStarByKeyword(query);
-                        if (stars.Count != 0)
-                        {
-                            Response.Write(JsonConvert.SerializeObject(stars));
-                            return;
-                        }
-
-                        Response.Write("[]");
+                        result.AddSingleMovie(movies);
+                        result.AddSingleStar(stars);
+                        result.ClearRedundant();
+                        Response.Write(JsonConvert.SerializeObject(result));
                         return;
-
                     case "queryStarByKeyword":
                         stars = starQuery.QueryStarByName(query);
                         if (stars.Count == 0)
                         {
-                            stars = starQuery.QueryStarByKeyword(query);
+                            result.AddSingleStar(starQuery.QueryStarByKeyword(query));
                         }
                         else if (stars.Count == 1)
                         {
-                            this.GetRelatedStar(stars);
+                            result.ResultStar.Add(stars[0]);
+                            GetRelatedStar(result.RelatedStar, stars[0].Name, stars[0].ID);
                         }
-                        Response.Write(JsonConvert.SerializeObject(stars));
+                        else //stars>0
+                        {
+                            result.AddSingleStar(stars);
+                        }
+                        result.ClearRedundant();
+                        Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryStarById":
                         BuildLayer(nodeCount, start, count, out indices, out counts, out layer);
                         stars = starQuery.QueryStarByID(Convert.ToInt32(query), 2, indices, counts);
-                        GetRelatedStar(stars);
-                        Response.Write(JsonConvert.SerializeObject(stars));
+                        if (stars.Count >= 1)
+                        {
+                            result.ResultStar.Add(stars[0]);
+                            //GetRelatedStar(result.RelatedStar,stars[0].Name,stars[0].ID);
+                        }
+                        result.ClearRedundant();
+                        Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryMovieByKeyword":
                         movies = movieQuery.QueryMovieByKeyword(query);
                         if (movies.Count == 0)
                         {
-                            movies = movieQuery.QueryMovieByKeyword(query);
+                            result.AddSingleMovie(movieQuery.QueryMovieByKeyword(query));
                         }
-                        else if (movies.Count == 1) 
+                        else if (movies.Count == 1)
                         {
-                            GetRelatedMovie(movies);
+                            result.ResultMovie.Add(movies[0]);
+                            GetRelatedMovie(result.RelatedMovie, movies[0].Name, movies[0].ID);
                         }
-                        Response.Write(JsonConvert.SerializeObject(movies));
+                        else
+                        {
+                            result.AddSingleMovie(movies);
+                        }
+                        result.ClearRedundant();
+                        Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryMovieById":
-                        BuildLayer(nodeCount,start,count,out indices,out counts,out layer);
+                        BuildLayer(nodeCount, start, count, out indices, out counts, out layer);
                         movies = movieQuery.QueryMovieByID(Convert.ToInt32(query), 2, indices, counts);
-                        GetRelatedMovie(movies);
-                        Response.Write(JsonConvert.SerializeObject(movies));
+                        if (movies.Count >= 1)
+                        {
+                            result.ResultMovie.Add(movies[0]);
+                            //GetRelatedMovie(result.RelatedMovie,movies[0].Name,movies[0].ID);
+                        }
+                        result.ClearRedundant();
+                        Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     default:
                         throw new Exception("未支持类型");
@@ -128,45 +161,37 @@ namespace MovieCube.SearchWeb
 
         }
 
-        private void GetRelatedMovie(List<Movie> result)
+        private void GetRelatedMovie(List<Movie> result,string name,int id)
         {
             //只有返回为一个的时候才找相关
-            if (result.Count == 1)
-            {
-                string name = result[0].Name;
-                int id = result[0].ID;
-                string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
+            string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
 
-                IMovieQuery movieQuery = new MovieQuery(movieInfo);
-                List<Movie> related = movieQuery.QueryMovieByKeyword(name);
-                foreach (Movie m in related)
-                {
-                    if (m.ID != id)
-                        result.Add(m);
-                }
+            IMovieQuery movieQuery = new MovieQuery(movieInfo);
+            List<Movie> related = movieQuery.QueryMovieByKeyword(name);
+            foreach (Movie m in related)
+            {
+                if (m.ID != id)
+                    result.Add(m);
             }
-            
+        
+
         }
 
-        private void GetRelatedStar(List<Star> result)
+        private void GetRelatedStar(List<Star> result, string name, int id)
         {
             //只有返回为一个的时候才找相关
-            if (result.Count == 1)
+            string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
+            IStarQuery starQuery = new StarQuery(starInfo);
+            List<Star> related = starQuery.QueryStarByKeyword(name);
+            foreach (Star s in related)
             {
-                string name = result[0].Name;
-                int id = result[0].ID;
-                string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
-                IStarQuery starQuery = new StarQuery(starInfo);
-                List<Star> related = starQuery.QueryStarByKeyword(name);
-                foreach (Star s in related)
-                {
-                    if (s.ID != id)
-                        result.Add(s);
-                }
+                if (s.ID != id)
+                    result.Add(s);
             }
+
         }
 
-        private void BuildLayer(string nodeCount,string start,string count,out int[] indices,out int[] counts,out int layer)
+        private void BuildLayer(string nodeCount, string start, string count, out int[] indices, out int[] counts, out int layer)
         {
             int nodes = 0;
             if (nodeCount != null)
@@ -198,8 +223,8 @@ namespace MovieCube.SearchWeb
             else
             {
                 layer = 1;
-                indices = new int[] { nStart};
-                counts = new int[] { nCount};
+                indices = new int[] { nStart };
+                counts = new int[] { nCount };
             }
 
         }

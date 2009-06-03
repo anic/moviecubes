@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="110" height="110" initialize="{onInit();}"
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="120" height="110" initialize="{onInit();}"
 		 xmlns:local="*" alpha="0" >
 	<mx:Script>
 		<![CDATA[
@@ -19,7 +19,7 @@
 				timer = new Timer(1000);
 				timer.addEventListener(TimerEvent.TIMER, onTimer);
 				
-			}
+			} 
 			
 			public function onSelected(itemView:RelationItemView):void
 			{
@@ -149,6 +149,8 @@
 						item.start = item.nextStart;
 						var ids:Array = item.getRelatedIds();
 						RelationGraph(Application.application).removeOldPage(ids,item);
+						RelationGraph(Application.application).autoDelete();
+						
 						var dataArray:Array = new Array();
 						var dataObject:Object = new Object();
 						var len:int = item.getCurrentPageCount(countPerPage);
@@ -191,6 +193,14 @@
 				this.onNotSelected(this.currentView);
 			}
 			
+			private function onPen():void
+			{
+				if (currentView!=null)
+				{
+					RelationGraph(Application.application).addToSearch(currentView.data.name);
+				}
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Style>
@@ -205,8 +215,10 @@
 		
 	<local:ToolButton x="0"  ImageIndex="0" toolTip="前一页" id="btnPre" bottom="20" click="{onSearchNextPage(false);}" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	<local:ToolButton x="20" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="20" click="{onSearchNextPage(true);}"  mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="40" ImageIndex="3" toolTip="看TA" id="btnLook" click="{onLook();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="60" ImageIndex="4" toolTip="查TA" id="btnSearch" click="{onSearch();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="80" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="40" ImageIndex="3" toolTip="页面中查看" id="btnLook" click="{onLook();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="60" ImageIndex="4" toolTip="重新加载" id="btnSearch" click="{onSearch();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="80" ImageIndex="5" toolTip="添加到搜索栏" id="btnPen" click="{onPen();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="100" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	
 	
 </mx:Module>

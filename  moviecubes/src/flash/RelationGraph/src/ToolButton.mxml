@@ -16,7 +16,7 @@
 		
 			private function onInit():void
 			{
-				var imageArray:Array = [image0,image1,image2,image3,image4];
+				var imageArray:Array = [image0,image1,image2,image3,image4,image5];
 				image0.visible = false;
 				(imageArray[imageIndex] as Image).visible = true;
 			}
@@ -64,6 +64,7 @@
 	<mx:Image x="2" y="2" styleName="iconImage" id="image0" source="@Embed('myimage/ArrowLeft.png')" />
 	<mx:Image x="2" y="2" styleName="iconImage" id="image1" source="@Embed('myimage/ArrowRight.png')" visible="false"/>
 	<mx:Image x="2" y="2" styleName="iconImage" id="image2" source="@Embed('myimage/Cancel.png')" visible="false"/>
-	<mx:Image x="2" y="2" styleName="iconImage" id="image3" source="@Embed('myimage/ArrowDownRight.png')" visible="false"/>
-	<mx:Image x="2" y="2" styleName="iconImage" id="image4" source="@Embed('myimage/ZoomIn.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image3" source="@Embed('myimage/Search.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image4" source="@Embed('myimage/Refresh.png')" visible="false"/>
+	<mx:Image x="2" y="2" styleName="iconImage" id="image5" source="@Embed('myimage/Pen.png')" visible="false"/>
 </mx:Module>
