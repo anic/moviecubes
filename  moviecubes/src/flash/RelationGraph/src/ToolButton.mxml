@@ -36,7 +36,10 @@
 				}
 			}
 			
-			
+			public function isSelected():Boolean
+			{
+				return this.btn.alpha!=0;
+			}
 			
 			private var imageIndex:int = 0;
 			

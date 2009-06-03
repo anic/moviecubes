@@ -51,6 +51,7 @@
 					txtName.setStyle("fontSize",14);
 					
 				this.addEventListener(MouseEvent.ROLL_OVER,this.onSelected);
+				this.addEventListener(MouseEvent.ROLL_OUT,this.onNotSelected);
 				onDataUpdate();
 			}
 			
@@ -59,18 +60,24 @@
 				RelationGraph(Application.application).toolPanel.onSelected(this);
 			}
 			
+			private function onNotSelected(event:MouseEvent):void
+			{
+				RelationGraph(Application.application).toolPanel.onNotSelected(this);
+			}
+			
 			public function onDataUpdate():void
 			{
 				var offset:int = data.rank*5;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
 				
+				//var target:UIComponent =  (this.width/2 - 20 - offset)>10? this.circle:this.txtName;
 				var target:UIComponent = this;
 				var bubbleTip:BubbleTipTarget = RelationGraph(Application.application).tipMan.getBubbleTip(target);
 				if (bubbleTip==null)
 				{
 					var box:BaseBox = (data.isStar)? new StarBox():new MovieBox();
 					box.data = data;
-					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,box,null,null);
+					RelationGraph(Application.application).tipMan.createMyBubbleTip(target,box,this);
 				}
 				else
 				{

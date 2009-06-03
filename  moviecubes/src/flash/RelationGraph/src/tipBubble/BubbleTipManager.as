@@ -1,7 +1,6 @@
 package tipBubble
 {
 	import mx.core.UIComponent;
-	import mx.events.FlexEvent;
 	
 	public class BubbleTipManager
 	{
@@ -13,9 +12,9 @@ package tipBubble
 		} 
 		
 		//经过修改
-		public function createMyBubbleTip(target:UIComponent, component:UIComponent, onTipOpen:Function,onTipClose:Function):void
+		public function createMyBubbleTip(target:UIComponent, component:UIComponent,outComponent:UIComponent ):void
 		{
-			var tipTarg:BubbleTipTarget = new BubbleTipTarget(target, component,onTipOpen,onTipClose);
+			var tipTarg:BubbleTipTarget = new BubbleTipTarget(target, component,null,null);
 			//var mainApp:DisplayObject = target.parentApplication as DisplayObject;
 			//mainApp.addEventListener(TipBubbleEvent.ROLL_OVER, clearExtraBubbles);
 			
