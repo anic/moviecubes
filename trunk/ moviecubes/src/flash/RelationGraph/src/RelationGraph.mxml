@@ -55,8 +55,8 @@
 		} 
 		
 		private var items: Graph;
-		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-		//private var serviceUrl:String = "/Relation.aspx";
+		//private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		private var serviceUrl:String = "Relation.aspx";
 		private var hideDelayTime:int = 5000;
 		private var oldHintText:String = "";
 		private var defaultMaxWidh:int = 500;
@@ -161,9 +161,13 @@
    			helpWindow.visible = false;
    			helpWindow.x = 0;
    			helpWindow.y = 146;
+   			
+   			pnlSetting.visible = false;
 	   		var types:Array = ["关键字","明星","电影"]; 
 			cbxSearchType.dataProvider = types;
-		    this.reSearch("周华健");
+			help.showTip("在输入框中输入关键字，如\"刘德华\"",false); 
+					
+		    //this.reSearch("周华健");
 	   }
 	   
 	   private function loadKeys():void
@@ -233,6 +237,8 @@
 	   
 	   public function removeOldPage(related:Array,item:RelationItem):void
 	   {
+	   		if(!cbxDelOldPage.selected)
+	   		 	return;
    			var removedArray:Array;
    			//尝试删除旧的页
    			for(var i:int = 0;i<related.length;++i)
@@ -546,7 +552,7 @@
 	</mx:HBox>
 	<ns1:TipButton x="248" y="87" width="285" id="help">
 	</ns1:TipButton>
-	<mx:Image x="11" y="18" source="@Embed('myimage/Logo.png')"/>
+	<mx:Image x="10" y="38" source="@Embed('myimage/Logo.png')"/>
 	<mx:HBox width="100%" height="30">
 		<mx:Spacer width="100%"/>
 		<mx:LinkButton label="设置" id="btnSetting">
@@ -564,6 +570,7 @@
 			<mx:HSlider id="hsScale" value="1.0" minimum="0.05" maximum="1.2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
 			<mx:Label text="显示节点上限" styleName="text"/>
 			<mx:HSlider id="hsMaxNodeCount" minimum="10" maximum="100" liveDragging="true" width="101" change="{this.defaultNodeLimit = hsMaxNodeCount.value;}" value="{this.defaultNodeLimit}" snapInterval="1"/>
+			<mx:CheckBox label="翻页时删除节点" selected="true" id="cbxDelOldPage"/>
 			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
 		</mx:HBox>
 	</mx:Panel>

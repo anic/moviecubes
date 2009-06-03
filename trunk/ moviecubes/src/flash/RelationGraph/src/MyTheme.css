@@ -127,3 +127,18 @@ Panel, Alert, TitleWindow
 	fontFamily:"Century Gothic";
 	border-skin: Embed(source='assets/images/header_bg.png', scaleGridLeft=20, scaleGridRight=200, scaleGridTop=40,scaleGridBottom=42);
 }
+
+CheckBox
+{
+	upIcon: Embed(source='assets/images/CheckBox_upIcon.png');
+	downIcon:Embed(source='assets/images/CheckBox_downIcon.png');
+	overIcon:Embed(source='assets/images/CheckBox_overIcon.png');
+	selectedUpIcon:Embed(source='assets/images/CheckBox_selectedUpIcon.png');
+	selectedOverIcon:Embed(source='assets/images/CheckBox_selectedDownIcon.png');
+	selectedDownIcon:Embed(source='assets/images/CheckBox_selectedOverIcon.png');
+	disabledIcon:Embed(source='assets/images/CheckBox_selectedDisabledIcon.png');
+	selectedDisabledIcon:Embed(source='assets/images/CheckBox_disabledIcon.png');
+	textRollOverColor:#dddddd;
+	textSelectedColor:#aaaaaa;
+	color: #ffffff;
+}
