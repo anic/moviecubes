@@ -6,11 +6,11 @@
 	  >
 
 	<mx:Style source="MyTheme.css" /> 
-	<fc:AutoComplete id="txtSearch"  labelField="name" x="248" y="57" width="285" 
+	<fc:AutoComplete id="txtSearch"  labelField="name" x="314" y="57" width="285" 
 		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
-		  fontSize="14"/>
-	<mx:ComboBox x="541" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
-	<mx:Button x="664" y="57" label="搜索" id="btnSearch" click="{
+		  fontSize="14" />
+	<mx:ComboBox x="607" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
+	<mx:Button x="730" y="57" label="搜索" id="btnSearch" click="{
 			items.empty();
    			this.toolPanel.hide();
    			search();
@@ -19,14 +19,13 @@
 			
 	
 	<fc:SpringGraph id="s" 
-		lineColor="#333388" left="0" right="0" top="161" bottom="0"
+		lineColor="#333388" left="0" right="0" top="103" bottom="0"
 		itemRenderer="RelationItemView" repulsionFactor="{rep.value}"
 		edgeRenderer="{new EdgeRender()}" 
  		>
 	</fc:SpringGraph>
 		
 	<ns1:ToolPanel x="-101" y="175" id="toolPanel"/>
-	<mx:Label x="248" y="122"  id="lblRecommend" styleName="text"/>
 	
 	<mx:Script>
 		<![CDATA[
@@ -49,20 +48,25 @@
 		[Bindable]
 		private var countPerPage:int = 5;
 		
+		private var recommendMax:int = 5;
+		
 		public function get CountPerPage():int
 		{
 			return countPerPage;
 		} 
 		
 		private var items: Graph;
-		//private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-		private var serviceUrl:String = "Relation.aspx";
+		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		//private var serviceUrl:String = "Relation.aspx";
 		private var hideDelayTime:int = 5000;
-		private var oldHintText:String = "";
+		private var oldHintText:String = "";  
 		private var defaultMaxWidh:int = 500;
 		
 		[Bindable]
 		private var defaultNodeLimit:int = 20;
+		
+		[Bindable]
+		private var defaultAutoLimit:int = 50;
 
 		public var tipMan:BubbleTipManager = new BubbleTipManager();
 		
@@ -160,14 +164,14 @@
    			helpWindow = PopUpManager.createPopUp(this,HelpWindow,false) as HelpWindow;
    			helpWindow.visible = false;
    			helpWindow.x = 0;
-   			helpWindow.y = 146;
+   			helpWindow.y = 154;
    			
    			pnlSetting.visible = false;
 	   		var types:Array = ["关键字","明星","电影"]; 
 			cbxSearchType.dataProvider = types;
 			help.showTip("在输入框中输入关键字，如\"刘德华\"",false); 
 					
-		    //this.reSearch("周华健");
+		    this.reSearch("周华健");
 	   }
 	   
 	   private function loadKeys():void
@@ -177,13 +181,13 @@
 	   
 	   public function searchKey(key:String):void
 	   {
-	   		help.showTip("加载 "+key+" 中...");
+	   		help.showTip("搜索 "+key+" 中...");
 	   		this.query("queryByKey",key,onSearchComplete);
 	   }
 	   
 	   public function loadStar(name:String,clearGraph:Boolean = false):void
 	   {
-	   		help.showTip("加载明星 "+name+" 中...");
+	   		help.showTip("搜索明星 "+name+" 中...");
 	   		if (clearGraph)
    				this.clearGraph(name,"STAR");
 	   		this.query("queryStarByKeyword",name,onSearchComplete);
@@ -191,7 +195,7 @@
 	   
 	   public function loadStarById(id:String,name:String,clearGraph:Boolean):void
 	   {
-	   		help.showTip("加载明星 "+name+" 中...");
+	   		help.showTip("搜索明星 "+name+" 中...");
 	   		if (clearGraph)
    				this.clearGraph(name,"STAR");
    				
@@ -200,7 +204,7 @@
 	   
 	   public function loadMovieById(id:String,name:String,clearGraph:Boolean):void
 	   {
-	   		help.showTip("加载电影 "+name+" 中...");
+	   		help.showTip("搜索电影 "+name+" 中...");
 	   		if (clearGraph)
    				this.clearGraph(name,"MOVIE");
 	   		this.query("queryMovieById",id,onSearchComplete);
@@ -208,7 +212,7 @@
 	   
 	   public function loadMovie(name:String,clearGraph:Boolean = false):void
 	   {
-	   		help.showTip("加载电影 "+name+" 中...");
+	   		help.showTip("搜索电影 "+name+" 中...");
 	   		if (clearGraph)
    				this.clearGraph(name,"MOVIE");
 	   		this.query("queryMovieByKeyword",name,onSearchComplete);
@@ -261,13 +265,13 @@
 			removedSoloItem();
 	   }
 	   
-	   public function removedSoloItem():void
+	   public function removedSoloItem(degree:int = 0):void
 	   {
 	   		var removedArray:Array = new Array();
 	   		for(var id:String in items.nodes)
 	   		{
 	   			var item:RelationItem = items.find(id) as RelationItem;
-	   			if (item!=null && item.rank!=0 && items.numLinks(item) == 0)
+	   			if (item!=null && item.rank!=0 && items.numLinks(item) <= degree)
 	   				removedArray.push(item);
 	   		}
 	   		
@@ -312,10 +316,17 @@
 			}
 	   }
 	   
+	   public function autoDelete():void
+	   {
+	   		if (items.nodeCount> this.defaultAutoLimit)
+	   		{
+		   		this.removedSoloItem(1);
+		   		this.removedSoloItem(1);
+		   	}
+	   }
+	   
 	   public function visitRelated(data:Object,newItem:RelationItem,rank:int,level:int):void
 	   {
-	   		if (items.nodeCount > defaultNodeLimit && level > 0)
-	   			return; 
 	   		
 	   		var j:int;
 			var tempItem:RelationItem = null;
@@ -325,7 +336,10 @@
 				{
 					tempItem = items.find(data.Stars[j].Star.ID as String) as RelationItem;
 					if (tempItem == null)
-						addObject(data.Stars[j].Star,newItem,rank + j + 1,level+1);
+					{
+						if (items.nodeCount < defaultNodeLimit || level < 1)
+							addObject(data.Stars[j].Star,newItem,rank + j + 1,level+1);
+					}
 					else
 						updateObject(data.Stars[j].Star,tempItem,rank + j + 1,tempItem.start,level+1);
 				}
@@ -336,7 +350,10 @@
 				{
 					tempItem = items.find(data.Movies[j].Movie.ID as String) as RelationItem;
 					if (tempItem == null)
-						addObject(data.Movies[j].Movie,newItem,rank + j + 1,level+1);
+					{
+						if (items.nodeCount < defaultNodeLimit ||  level < 1)
+							addObject(data.Movies[j].Movie,newItem,rank + j + 1,level+1);
+					}
 					else
 						updateObject(data.Movies[j].Movie,tempItem,rank + j + 1,tempItem.start,level+1);
 				}
@@ -357,7 +374,7 @@
 	   private function errorHandler(e:IOErrorEvent):void
 	   {
 	   		setLoadingCount(false);	   			 
-	   		help.showTip("操作失败");		  		
+	   		help.showTip("获取结果失败");		  		
 	   }
 	   
 	   	private function setLoadingCount(add:Boolean):void
@@ -391,32 +408,44 @@
 			txtSearch.dataProvider=keys;
 			txtSearch.labelField = "Key";
 			txtSearch.typedText = oldText;
-			help.showTip("加载关键字成功");
+			//help.showTip("加载关键字成功");
 			
 		}
 		
 		private function onSearchComplete(event:Event):void
 		{
 			setLoadingCount(false);
-			help.showTip("完成");
 			resetRecommend();
 			
 			var loader:URLLoader = URLLoader(event.target);
-			var result:Array = (JSON.decode(loader.data) as Array);
-			if (result!=null && result.length > 0)
+			var result:Object = (JSON.decode(loader.data) as Object);
+			if (result!=null)
 			{
-				var item:RelationItem = items.find(result[0].ID) as RelationItem;
+				help.showTip("获得"+(result.ResultStar.length+result.ResultMovie.lengt)+"个结果");
+				this.autoDelete();
+				handleResult(result.ResultStar);
+				handleResult(result.ResultMovie);
+				createRecommend(result);
+			}
+			else
+			{
+				help.showTip("获取结果失败");
+			}
+		}
+		
+		private function handleResult(arr:Array):void
+		{
+			for(var i:int = 0;i<arr.length;++i)
+			{
+				var item:RelationItem = items.find(arr[i].ID) as RelationItem;
 				if(item!=null)
 				{
-					updateObject(result[0],item,0,item.nextStart,0);
+					updateObject(arr[i],item,0,item.nextStart,0);
 				}
 				else
 				{
-					addObject(result[0],null,0,0);
-					//help.showTip("第一个结果不对",true);
+					addObject(arr[i],null,0,0);
 				}
-						
-				createRecommend(result);
 			}
 		}
 		
@@ -437,39 +466,58 @@
 		
 		private function createRecommend(result:Object):void
 		{
-			if (result.length <= 1)
+			var totalLen:int = result.RelatedMovie.length + result.RelatedStar.length 
+			if (totalLen == 0)
 			{
 				this.recommendBox.visible = false;
-				this.lblRecommend.visible = false;
 			}
 			else
 			{
-				this.lblRecommend.text = "相关查找 共"+(result.length - 1)+"个";
+				this.help.showTip("；相关结果"+totalLen+"个",true);
 				this.recommendBox.visible = true;
-				this.lblRecommend.visible = true;
+				var recommendBtnArray:Array = new Array();
+				var istar:int = 0;
+				var imovie:int = 0;
 				
-				var end:int = (result.length > 5)? 5:result.length -1;
-				this.recommendList.visible = (result.length >7);
-				var i:int;
-				for(i = 1;i<=end;++i)
+				while(istar + imovie <this.recommendMax)
+				{
+					if (istar<result.RelatedStar.length)
+					{
+						recommendBtnArray.push(result.RelatedStar[istar++]);
+					}
+					
+					if (imovie<result.RelatedMovie.length)
+					{
+						recommendBtnArray.push(result.RelatedMovie[imovie++]);
+					}
+					
+					if (istar + imovie == totalLen)
+						break;
+				}
+				
+				for(var i:int = 0;i<recommendBtnArray.length;++i)
 				{
 					var btnRecommend:Button = new Button();
-					if(result[i].ObjectType == "MOVIE")
+					if(recommendBtnArray[i].ObjectType == "MOVIE")
 						btnRecommend.styleName = "movieButton";
 					else
 						btnRecommend.styleName = "starButton";
 						
-					btnRecommend.label = result[i].Name;
-					btnRecommend.data = result[i];
+					btnRecommend.label = recommendBtnArray[i].Name;
+					btnRecommend.data = recommendBtnArray[i];
 					btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
-					this.recommendBox.addChildAt(btnRecommend,0);
+					this.recommendBox.addChildAt(btnRecommend,i);
 				}
-				
+				this.recommendList.visible = (totalLen >recommendMax);
 				if (this.recommendList.visible)
 				{
 					var dp:Array = new Array();
-					for(i = 6;i<result.length;++i)
-						dp.push(result[i].Name);
+					for(i = istar;i<result.RelatedStar.length;++i)
+						dp.push(result.RelatedStar[i].Name);
+						
+					for(i = imovie;i<result.RelatedMovie.length;++i)
+						dp.push(result.RelatedMovie[i].Name);
+						
 					recommendList.dataProvider = dp;
 				}
 				
@@ -483,9 +531,9 @@
 				if(children[i] != this.recommendList)
 				{
 					this.recommendBox.removeChild(children[i] as UIComponent);
-				}
+				} 
 				
-			this.lblRecommend.visible = false;
+
 			this.recommendList.dataProvider = null;
 			this.recommendList.visible = false;
 			
@@ -541,20 +589,39 @@
 			s.refresh();
 		}
 		
+		public function addToSearch(key:String):void
+		{
+			var arr:Array = txtSearch.text.split(' ');
+			var found:Boolean = false;
+			for(var i:int = 0;i<arr.length;++i)
+				if (arr[i] == key)
+					{ found = true;break;}
+			
+			if (found)
+				return;	 
+			if (txtSearch.text!="" && txtSearch.text.substr(0,1) ==" ")
+					txtSearch.text += " "+key;
+			else
+					txtSearch.text = " "+key;			
+		}
+		
 
 		]]>
 	</mx:Script> 
 	
-	<mx:HBox id="recommendBox" left="248" top="122"  visible="false">
+	<mx:HBox id="recommendBox" left="314" top="122"  visible="false">
 		<mx:ComboBox id="recommendList"
 			 change="{if (recommendList.dataProvider!=null) this.reSearch(recommendList.selectedLabel);}" 
 			  includeInLayout="{this.recommendList.visible}" fontSize="12" textAlign="center" height="28"/>
 	</mx:HBox>
-	<ns1:TipButton x="248" y="87" width="285" id="help">
+	<ns1:TipButton x="314" y="87" width="285" id="help">
 	</ns1:TipButton>
 	<mx:Image x="10" y="38" source="@Embed('myimage/Logo.png')"/>
 	<mx:HBox width="100%" height="30">
 		<mx:Spacer width="100%"/>
+		<mx:LinkButton label="清空图" id="btnClear">
+			<mx:click>{items.empty();}</mx:click>
+		</mx:LinkButton>
 		<mx:LinkButton label="设置" id="btnSetting">
 			<mx:click>{pnlSetting.visible = !pnlSetting.visible;}</mx:click>
 		</mx:LinkButton>
@@ -562,17 +629,45 @@
 			<mx:click>{helpWindow.visible = !helpWindow.visible;}</mx:click>
 		</mx:LinkButton>
 	</mx:HBox>
-	<mx:Panel width="100%" height="129" layout="absolute" x="0" y="154" id="pnlSetting" title="显示设置" includeInLayout="{pnlSetting.visible}">
-		<mx:HBox x="0" y="10" width="100%" height="30">
-			<mx:Label text="节点距离" styleName="text"/>
-			<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="{onDistanceChanged();}" width="101" height="21"/>
-			<mx:Label text="节点大小" styleName="text"/>
-			<mx:HSlider id="hsScale" value="1.0" minimum="0.5" maximum="2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
-			<mx:Label text="显示节点上限" styleName="text"/>
-			<mx:HSlider id="hsMaxNodeCount" minimum="10" maximum="100" liveDragging="true" width="101" change="{this.defaultNodeLimit = hsMaxNodeCount.value;}" value="{this.defaultNodeLimit}" snapInterval="1"/>
+	<mx:Panel width="440" height="225" layout="absolute" x="0" y="154" id="pnlSetting" title="显示设置" includeInLayout="{pnlSetting.visible}">
+		<mx:HBox x="10" y="76" width="292" height="30">
 			<mx:CheckBox label="翻页时删除节点" selected="true" id="cbxDelOldPage"/> 
-			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
+			<mx:CheckBox label="自动删除节点" selected="true" id="cbxDelNode"/>
 		</mx:HBox>
+		<mx:Grid x="10" y="10">
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="100%" height="100%">
+					<mx:Label text="节点距离" styleName="text"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:HSlider id="rep" value="0.18" minimum="0.05" maximum="0.5" liveDragging="true" change="{onDistanceChanged();}" width="101" height="21"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:Label text="节点大小" styleName="text"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:HSlider id="hsScale" value="1.0" minimum="0.5" maximum="2" liveDragging="true" change="{onScaleChanged();}" width="101"/>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="100%" height="100%">
+					<mx:Label text="显示节点上限" styleName="text"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:HSlider id="hsMaxNodeCount" minimum="10" maximum="100" liveDragging="true" width="101" change="{this.defaultNodeLimit = hsMaxNodeCount.value;}" value="{this.defaultNodeLimit}" snapInterval="1"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:Label text="自动删除节点" styleName="text"/>
+				</mx:GridItem>
+				<mx:GridItem width="100%" height="100%">
+					<mx:HSlider id="hsAutoDelete" minimum="10" maximum="200" liveDragging="true" width="101" change="{this.defaultAutoLimit = hsAutoDelete.value;}" value="{this.defaultAutoLimit}" snapInterval="1"/>
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		<mx:ControlBar height="54" y="92">
+			<mx:Spacer width="100%"/>
+			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
+		</mx:ControlBar>
 	</mx:Panel>
 	
 </mx:Application>

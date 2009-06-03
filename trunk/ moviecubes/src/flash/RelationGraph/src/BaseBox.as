@@ -35,19 +35,33 @@ package
 		
 		protected function setAlias(txtAlias:Text,bxAlias:HBox):void
 		{
-			if(relationItem.data.Alias.length == 0)
-				bxAlias.visible = false;
+			this.setArrayValue(txtAlias,bxAlias,relationItem.data.Alias);
+		}
+		
+		protected function setArrayValue(txtContent:Text,bxContent:HBox,strArray:Array):void
+		{
+			if (strArray==null || strArray.length == 0)
+				bxContent.visible = false;
 			else
 			{
-				txtAlias.text = "";
-				for(var i:int= 0;i<relationItem.data.Alias.length;++i)
+				for(var i:int = 0;i<strArray.length;++i)
 				{
 					if(i !=0)
-						txtAlias.text += ",";
-					txtAlias.text += relationItem.data.Alias[i];										
+						txtContent.text += ",";
+					txtContent.text += strArray[i];		
 				}
 			}
 		}
+		
+		protected function setValue(txtContent:Text,bxContent:HBox,strValue:String):void
+		{
+			if (strValue==null || strValue=="")
+				bxContent.visible = false;
+			else
+				txtContent.text = strValue;
+		}
+		
+		
 		
 		protected function setRelationContent(txtContent:Text,txtPage:Text):void
 		{
