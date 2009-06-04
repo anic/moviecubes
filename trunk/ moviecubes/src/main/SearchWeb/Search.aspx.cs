@@ -32,6 +32,7 @@ namespace MovieCube.SearchWeb
 
             string hits = Request.QueryString["hitsPerPage"];
             string start = Request.QueryString["start"];
+            string perSite = Request.QueryString["hitsPerSite"];
 
             if (query != null && query.Equals(""))
                 return;
@@ -44,11 +45,11 @@ namespace MovieCube.SearchWeb
             if (start != null)
                 nStart = Convert.ToInt32(start);
 
-            DoQuery(query, nHits, nStart);
+            DoQuery(query, nHits, nStart, perSite);
             
         }
 
-        private void DoQuery(string query, int hitsPerPage, int start)
+        private void DoQuery(string query, int hitsPerPage, int start, string hitsPerSite)
         {
             GeneralQuery gq = new GeneralQuery();
             TextResult result = gq.QueryText(query, hitsPerPage, start, null);
@@ -89,28 +90,29 @@ namespace MovieCube.SearchWeb
                 }
 
                 RecordPanel.Style.Remove("display");
+
+                List<FooterNaviItem> preAndNext = null;
+                List<FooterNaviItem> footer = GenerateFooterNavi(result.TotalPages, result.StartPage, result.EndPage, result.Context, ref preAndNext);
+
+                if (footer != null)
+                {
+                    Repeater2.DataSource = footer;
+                    Repeater2.DataBind();
+                }
+
             }
             else
             {
                 RecordPanel.Style.Add("display", "none");
             }
-            
 
-            List<FooterNaviItem> preAndNext = null;
-            List<FooterNaviItem> footer = GenerateFooterNavi(result.TotalPages, result.StartPage, result.EndPage, result.Context, ref preAndNext);
-
-            if (footer != null)
-            {
-                Repeater2.DataSource = footer;
-                Repeater2.DataBind();
-            }
         }
 
         protected void Button1_Click(object sender, EventArgs e)
         {
             query = TextBox1.Text;
             encodeQuery = HttpUtility.UrlEncode(query);
-            DoQuery(query, HITSPERPAGE, 0);
+            DoQuery(query, HITSPERPAGE, 0, "0");
         }
 
         private List<FooterNaviItem> GenerateFooterNavi(int total, int start, int end, string url, ref List<FooterNaviItem> prevAndNext)
@@ -161,12 +163,15 @@ namespace MovieCube.SearchWeb
 
             List<FooterNaviItem> footer = new List<FooterNaviItem>();
             FooterNaviItem item;
+
+            string path = HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+            path = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path;
             for (int i = startSlot; i <= endSlot; i++)
             {
                 item = new FooterNaviItem();
                 item.Id = i.ToString();
                 item.IsCurrent = (i == curSlot);
-                item.Url = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "Search.aspx?query=" + query + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((i - 1) * HITSPERPAGE).ToString();
+                item.Url = "http://" + path + "/Search.aspx?query=" + query + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((i - 1) * HITSPERPAGE).ToString();
 
                 footer.Add(item);
             }
