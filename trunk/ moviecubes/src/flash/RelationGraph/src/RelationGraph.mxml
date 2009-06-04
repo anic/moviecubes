@@ -9,8 +9,7 @@
 	<fc:AutoComplete id="txtSearch"  labelField="name" x="314" y="57" width="285" 
 		keyUp="{keyUp(event);}"
 		  fontSize="14"  
-		   
-		    typedTextChange="{tryLoadHint();imgClear.visible = (txtSearch.typedText!='');}"/>
+		    typedTextChange="{tryLoadHint();}"/>
 	<mx:ComboBox x="625" y="56" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
 	<mx:Button x="748" y="56" label="搜索" id="btnSearch" click="{
 			if (!cbxContinue.selected)
@@ -61,8 +60,8 @@
 		} 
 		
 		private var items: Graph;
-		private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
-		//private var serviceUrl:String = "Relation.aspx";
+		//private var serviceUrl:String = "http://localhost:49899/Relation.aspx";
+		private var serviceUrl:String = "Relation.aspx";
 		private var hideDelayTime:int = 5000;
 		private var oldHintText:String = "";  
 		private var defaultMaxWidh:int = 500;
@@ -103,12 +102,12 @@
 		
 		private function tryLoadHint():void
 		{
-			if (txtSearch.typedText.length!=0 &&
-					(oldHintText.length == 0 || oldHintText.charAt(0) != txtSearch.typedText.charAt(0))
+			if (txtSearch.text.length!=0 &&
+					(oldHintText.length == 0 || oldHintText.charAt(0) != txtSearch.text.charAt(0))
 					)
 				{	
 					loadKeys();
-					oldHintText = txtSearch.typedText;
+					oldHintText = txtSearch.text;
 				}
 		}
 		
@@ -179,7 +178,12 @@
 					
 					
 			nodeVisitor = new NodeVisitor(items);
-		    this.reSearch("周华健");
+			
+			var s:String = Application.application.parameters.query;  
+			if (s!= null && s!="")  
+				this.reSearch(s); 
+			 
+		    //this.reSearch("周华健");
 	   }
 	   
 	   private function loadKeys():void
@@ -229,7 +233,10 @@
 	   private function clearGraph(txt:String,type:String):void
 	   {
 	   		if(!cbxContinue.selected) 
-	   			items.empty();
+   			{
+   				items.empty();
+   				
+   			}
    			this.toolPanel.hide();
    			this.txtSearch.text = txt;
    			
@@ -418,7 +425,7 @@
 			var loader:URLLoader = URLLoader(event.target);
 			keys = (JSON.decode(loader.data) as Array);
 			
-			var oldText:String = txtSearch.typedText;
+			var oldText:String = txtSearch.text;
 			txtSearch.dataProvider=keys;
 			txtSearch.labelField = "Key";
 			txtSearch.typedText = oldText;
@@ -429,7 +436,7 @@
 		private function onSearchComplete(event:Event):void
 		{
 			setLoadingCount(false);
-			resetRecommend();
+
 			
 			var loader:URLLoader = URLLoader(event.target);
 			var result:Object = (JSON.decode(loader.data) as Object);
@@ -439,7 +446,16 @@
 				this.autoDelete();
 				handleResult(result.ResultStar);
 				handleResult(result.ResultMovie);
-				createRecommend(result);
+				if (!this.cbxContinue)
+				{
+					resetRecommend();
+					createRecommend(result);
+				}
+				else
+				{
+					
+				}
+				
 			}
 			else
 			{
@@ -468,9 +484,9 @@
 			if (txtSearch.text!="")
 			{
 				funcArray[this.cbxSearchType.selectedIndex](txtSearch.text);
-				if(txtSearch.typedText.substr(0,1) == " ")
+				if(txtSearch.text.substr(0,1) == " ")
 				{
-					txtSearch.typedText = txtSearch.typedText.substr(1);
+					txtSearch.text = txtSearch.text.substr(1);
 				}
 			}
 		}
@@ -613,18 +629,21 @@
 		
 		public function addToSearch(key:String):void
 		{
-			var arr:Array = txtSearch.typedText.split(' ');
-			var found:Boolean = false;
-			for(var i:int = 0;i<arr.length;++i)
-				if (arr[i] == key)
-					{ found = true;break;}
-			
-			if (found)
-				return;	 
 			if (txtSearch.text!="" && txtSearch.text.substr(0,1) ==" ")
-					txtSearch.typedText += " "+key;
+			{
+				var arr:Array = txtSearch.text.split(' ');
+				var found:Boolean = false;
+				for(var i:int = 0;i<arr.length;++i)
+					if (arr[i] == key)
+						{ found = true;break;}
+				
+				if (found)
+					return;
+				
+				txtSearch.text += " "+key;
+			}
 			else
-					txtSearch.typedText = " "+key;			
+				txtSearch.text = " "+key;			
 		}
 		
 
@@ -641,6 +660,9 @@
 	<mx:Image x="10" y="38" source="@Embed('myimage/Logo.png')"/>
 	<mx:HBox width="100%" height="30">
 		<mx:Spacer width="100%"/>
+		<mx:LinkButton label="清空搜索框" id="btnClearSearchText">
+			<mx:click>{this.txtSearch.text="";}</mx:click>
+		</mx:LinkButton>
 		<mx:LinkButton label="清空图" id="btnClear">
 			<mx:click>{items.empty();}</mx:click>
 		</mx:LinkButton>
@@ -692,7 +714,5 @@
 		</mx:ControlBar>
 	</mx:Panel>
 	<mx:CheckBox x="862" y="58" label="继续搜索" id="cbxContinue" selected="true"/>
-	<mx:Image x="604" y="63" source="@Embed('myimage/ClearGraph.png')" toolTip="清空搜索框" id="imgClear"
-		click="{this.txtSearch.typedText ='';}" />
 	
 </mx:Application>

@@ -90,9 +90,10 @@
 			{
 				if (currentView!=null)
 				{
-					navigateToURL(new URLRequest('http://www.g.cn/search?q='+currentView.data.name),'_blank');		
+					//navigateToURL(new URLRequest('http://www.g.cn/search?q='+currentView.data.name),'_blank');		
+					navigateToURL(new URLRequest("./Search.aspx?query="+encodeURI(currentView.data.name)),'_blank');
 				}
-			}
+			} 
 			
 			private function onClose():void
 			{
