@@ -63,7 +63,6 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="default.css" />
-    <Content Include="flash\RelationGraph.swf" />
     <Content Include="Global.asax" />
     <Content Include="img\arrow.png" />
     <Content Include="img\logo.jpg" />
