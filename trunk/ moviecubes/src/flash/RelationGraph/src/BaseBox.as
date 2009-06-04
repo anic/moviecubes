@@ -44,6 +44,7 @@ package
 				bxContent.visible = false;
 			else
 			{
+				txtContent.text = "";
 				for(var i:int = 0;i<strArray.length;++i)
 				{
 					if(i !=0)

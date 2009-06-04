@@ -7,11 +7,14 @@
 
 	<mx:Style source="MyTheme.css" /> 
 	<fc:AutoComplete id="txtSearch"  labelField="name" x="314" y="57" width="285" 
-		keyUp="{keyUp(event);}" typedTextChange="{tryLoadHint();}"
-		  fontSize="14" />
-	<mx:ComboBox x="607" y="57" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
-	<mx:Button x="730" y="57" label="搜索" id="btnSearch" click="{
-			items.empty();
+		keyUp="{keyUp(event);}"
+		  fontSize="14"  
+		   
+		    typedTextChange="{tryLoadHint();imgClear.visible = (txtSearch.typedText!='');}"/>
+	<mx:ComboBox x="625" y="56" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
+	<mx:Button x="748" y="56" label="搜索" id="btnSearch" click="{
+			if (!cbxContinue.selected)
+				items.empty();
    			this.toolPanel.hide();
    			search();
    			}" 
@@ -49,6 +52,8 @@
 		private var countPerPage:int = 5;
 		
 		private var recommendMax:int = 5;
+		
+		private var nodeVisitor:NodeVisitor;
 		
 		public function get CountPerPage():int
 		{
@@ -98,12 +103,12 @@
 		
 		private function tryLoadHint():void
 		{
-			if (txtSearch.text.length!=0 &&
-					(oldHintText.length == 0 || oldHintText.charAt(0) != txtSearch.text.charAt(0))
+			if (txtSearch.typedText.length!=0 &&
+					(oldHintText.length == 0 || oldHintText.charAt(0) != txtSearch.typedText.charAt(0))
 					)
 				{	
 					loadKeys();
-					oldHintText = txtSearch.text;
+					oldHintText = txtSearch.typedText;
 				}
 		}
 		
@@ -111,7 +116,8 @@
 		{
 			if (event.keyCode == 13)
 			{
-				items.empty();
+				if (!cbxContinue.selected)
+					items.empty();
    				this.toolPanel.hide();
    			 	search();
 			}
@@ -171,6 +177,8 @@
 			cbxSearchType.dataProvider = types;
 			help.showTip("在输入框中输入关键字，如\"刘德华\"",false); 
 					
+					
+			nodeVisitor = new NodeVisitor(items);
 		    this.reSearch("周华健");
 	   }
 	   
@@ -220,7 +228,8 @@
 	   
 	   private function clearGraph(txt:String,type:String):void
 	   {
-	   		items.empty();
+	   		if(!cbxContinue.selected) 
+	   			items.empty();
    			this.toolPanel.hide();
    			this.txtSearch.text = txt;
    			
@@ -245,24 +254,29 @@
 	   		 	return;
    			var removedArray:Array;
    			//尝试删除旧的页
-   			for(var i:int = 0;i<related.length;++i)
+   			/*for(var i:int = 0;i<related.length;++i)
 			{
 				var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
 				removedArray = [relatedItem];
 				if (relatedItem!= null && relatedItem.rank!=0)
 				{
-					this.toolPanel.onItemRemove(relatedItem);
-					items.remove(relatedItem);
-					/*relatedItem.canBeRemoved(items,item,removedArray);
+					//this.toolPanel.onItemRemove(relatedItem);
+					//items.remove(relatedItem);
+					relatedItem.canBeRemoved(items,item,removedArray);
 					for(var j:int = 0;j<removedArray.length;++j)
 					{
 						this.toolPanel.onItemRemove(removedArray[j]);
 						items.remove(removedArray[j]);
-					}*/
+					}
 					
 				}
-			}
-			removedSoloItem();
+			}*/
+			
+			var removedItems:Object = nodeVisitor.visit(item);
+			for(var id:String in removedItems)
+					items.remove(removedItems[id]);
+			
+			//removedSoloItem();
 	   }
 	   
 	   public function removedSoloItem(degree:int = 0):void
@@ -421,7 +435,7 @@
 			var result:Object = (JSON.decode(loader.data) as Object);
 			if (result!=null)
 			{
-				help.showTip("获得"+(result.ResultStar.length+result.ResultMovie.lengt)+"个结果");
+				help.showTip("获得"+(result.ResultStar.length+result.ResultMovie.length)+"个结果");
 				this.autoDelete();
 				handleResult(result.ResultStar);
 				handleResult(result.ResultMovie);
@@ -451,10 +465,13 @@
 		
 		private function search():void
 		{
-			
 			if (txtSearch.text!="")
 			{
 				funcArray[this.cbxSearchType.selectedIndex](txtSearch.text);
+				if(txtSearch.typedText.substr(0,1) == " ")
+				{
+					txtSearch.typedText = txtSearch.typedText.substr(1);
+				}
 			}
 		}
 		
@@ -554,11 +571,12 @@
 		{
 			
 			this.toolPanel.onItemRemove(item);
-			var related:Array = item.getRelatedIdsFromGraph(items);
+			//var related:Array = item.getRelatedIdsFromGraph(items);
+			/*var related:Object = items.neighbors(item.id);
 			var removedArray:Array;
-   			for(var i:int = 0;i<related.length;++i)
+   			for(var id:String in related)
 			{
-				var relatedItem:RelationItem = items.find(related[i]) as RelationItem;
+				var relatedItem:RelationItem = related[id] as RelationItem;
 				removedArray = [relatedItem];
 				if (relatedItem!= null && relatedItem.canBeRemoved(items,item,removedArray))
 				{
@@ -569,7 +587,11 @@
 				}
 			}
 			this.items.remove(item);
-			removedSoloItem();
+			removedSoloItem();*/
+			var removedItems:Object = nodeVisitor.visit(item);
+			for(var id:String in removedItems)
+				items.remove(removedItems[id]);
+			this.items.remove(item);
 		}
 		
 		public function setToolPanelPosition(x:int,y:int):void
@@ -591,7 +613,7 @@
 		
 		public function addToSearch(key:String):void
 		{
-			var arr:Array = txtSearch.text.split(' ');
+			var arr:Array = txtSearch.typedText.split(' ');
 			var found:Boolean = false;
 			for(var i:int = 0;i<arr.length;++i)
 				if (arr[i] == key)
@@ -600,9 +622,9 @@
 			if (found)
 				return;	 
 			if (txtSearch.text!="" && txtSearch.text.substr(0,1) ==" ")
-					txtSearch.text += " "+key;
+					txtSearch.typedText += " "+key;
 			else
-					txtSearch.text = " "+key;			
+					txtSearch.typedText = " "+key;			
 		}
 		
 
@@ -669,5 +691,8 @@
 			<mx:Button label="隐藏" width="87" click="{this.pnlSetting.visible = false;}"/>
 		</mx:ControlBar>
 	</mx:Panel>
+	<mx:CheckBox x="862" y="58" label="继续搜索" id="cbxContinue" selected="true"/>
+	<mx:Image x="604" y="63" source="@Embed('myimage/ClearGraph.png')" toolTip="清空搜索框" id="imgClear"
+		click="{this.txtSearch.typedText ='';}" />
 	
 </mx:Application>
