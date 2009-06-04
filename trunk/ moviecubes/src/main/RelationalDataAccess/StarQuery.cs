@@ -31,6 +31,23 @@ namespace MovieCube.RelationalDataAccess
 
         #region IStarQuery 成员
 
+
+        public List<Star> QueryStarAllInfoByName(string name)
+        {
+            List<Star> resultStars = GetStarAllInfoByName(name);
+
+            resultStars.Sort();
+            return resultStars;
+        }
+
+        public List<Star> QueryStarAllInfoByKeyword(string keyword)
+        {
+            List<Star> resultStars = GetStarAllInfoByKeyword(keyword);
+
+            resultStars.Sort();
+            return resultStars;
+        }
+
         public List<Star> QueryStarByName(string name)
         {
             List<Star> resultStars = GetStarInfoByName(name);
@@ -277,6 +294,52 @@ namespace MovieCube.RelationalDataAccess
             return result;
         }
 
+        public List<Star> GetStarAllInfoByName(string name)
+        {
+            List<Star> result = new List<Star>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher(starInfo);
+            QueryParser queryParser = new QueryParser("Name", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+
+            query = queryParser.Parse(name);
+            hits = indexSearcher.Search(query);
+
+            for (int i = 0; i < hits.Length(); i++)
+            {
+                Document hitDoc = hits.Doc(i);
+
+                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                result.Add(star);
+            }
+            return result;
+        }
+
+        public List<Star> GetStarAllInfoByKeyword(string keyword)
+        {
+            List<Star> result = new List<Star>();
+            Query query = null;
+            Hits hits = null;
+            IndexSearcher indexSearcher = new IndexSearcher(starInfo);
+            QueryParser queryParser = new QueryParser("SearchField", new StandardAnalyzer());
+
+            queryParser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+
+            query = queryParser.Parse(keyword);
+            hits = indexSearcher.Search(query);
+
+            for (int i = 0; i < hits.Length(); i++)
+            {
+                Document hitDoc = hits.Doc(i);
+
+                Star star = ConvertLuceneDocumentToStar(hitDoc);
+                result.Add(star);
+            }
+            return result;
+        }
+
         public List<Star> GetStarInfoByKeyword(string keyword, int index, int count)
         {
             List<Star> result = new List<Star>();
@@ -373,6 +436,51 @@ namespace MovieCube.RelationalDataAccess
                 loopCount += index;
 
                 for (int i = index; i < loopCount; i++)
+                {
+                    movieIDs[i] = movieIDs[i].Trim();
+                    if (movieIDs[i] != "")
+                    {
+                        Movie addMovie = new Movie();
+                        addMovie.ID = Convert.ToInt32(movieIDs[i].Trim());
+                        addMovie.Name = movieName[i].Trim();
+                        result.AddMovies(addMovie, movieRoles[i]);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+        private static Star ConvertLuceneDocumentToStar(Document doc)
+        {
+            Star result = new Star();
+
+            result.ID = Convert.ToInt32(doc.Get("ID"));
+            result.Name = doc.Get("Name");
+            result.Rank = Convert.ToDouble(doc.Get("Rank"));
+            result.Area = doc.Get("Area");
+            result.Introduction = doc.Get("Introduction");
+
+            Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
+
+            string[] movieIDs = doc.Get("MovieID").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieRoles = doc.Get("MovieRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieName = doc.Get("MovieName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            if (movieIDs.Length == movieRoles.Length && movieRoles.Length == movieName.Length)
+            {
+                int totalCount = movieIDs.Length;
+
+                if (movieIDs[movieIDs.Length - 1].Trim() == "")
+                    totalCount = totalCount - 1;
+
+                result.TotalMovieNum = totalCount;
+
+                
+
+                for (int i = 0; i < totalCount; i++)
                 {
                     movieIDs[i] = movieIDs[i].Trim();
                     if (movieIDs[i] != "")
