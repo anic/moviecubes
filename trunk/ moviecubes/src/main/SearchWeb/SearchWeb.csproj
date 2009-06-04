@@ -69,6 +69,7 @@
     <Content Include="img\SiteLogo.png" />
     <Content Include="img\toGuanxi.bmp" />
     <Content Include="Relation.aspx" />
+    <Content Include="RelationGraph.swf" />
     <Content Include="RelationPage.aspx" />
     <Content Include="Search.aspx" />
     <Content Include="TODO.txt" />

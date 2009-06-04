@@ -58,9 +58,9 @@ namespace MovieCube.SearchWeb
                         if (movies.Count != 0)
                         {
                             result.ResultMovie = movies;
-                            result.RelatedStar = starQuery.QueryStarByKeyword(query);
-                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
-                            result.ClearRedundant();
+                            result.RelatedStar = starQuery.QueryStarByKeyword(query, 0, Definition.Related_Count);
+                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query, 0, Definition.Related_Count);
+                            result.HandleBeforeTransfer();
                             Response.Write(JsonConvert.SerializeObject(result));
                             return;
                         }
@@ -73,24 +73,24 @@ namespace MovieCube.SearchWeb
                         if (stars.Count != 0)
                         {
                             result.ResultStar = stars;
-                            result.RelatedStar = starQuery.QueryStarByKeyword(query);
-                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
+                            result.RelatedStar = starQuery.QueryStarByKeyword(query, 0, Definition.Related_Count);
+                            result.RelatedMovie = movieQuery.QueryMovieByKeyword(query, 0, Definition.Related_Count);
                             /*if (subQuery.Length == 1) //只有一个关键字，而且stars!=0表名搜索到了明星，停止
                                 result.RelatedMovie = movieQuery.QueryMovieByKeyword(query);
                             else //如果不只一个关键字，而且Stars!=0，然后搜索电影，如（刘德华 黎明）、（刘德华 龙）
                                 result.AddSingleMovie(movieQuery.QueryMovieByKeyword(query));
                             */
-                            result.ClearRedundant();
+                            result.HandleBeforeTransfer();
                             Response.Write(JsonConvert.SerializeObject(result));
                             return;
                         }
 
                         //没有结果的话，通过关键字查找电影  和 通过关键字查找明星
-                        movies = movieQuery.QueryMovieByKeyword(query);
-                        stars = starQuery.QueryStarByKeyword(query);
+                        movies = movieQuery.QueryMovieByKeyword(query, 0, Definition.Related_Count);
+                        stars = starQuery.QueryStarByKeyword(query, 0, Definition.Related_Count);
                         result.AddSingleMovie(movies);
                         result.AddSingleStar(stars);
-                        result.ClearRedundant();
+                        result.HandleBeforeTransfer();
                         Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryStarByKeyword":
@@ -108,7 +108,7 @@ namespace MovieCube.SearchWeb
                         {
                             result.AddSingleStar(stars);
                         }
-                        result.ClearRedundant();
+                        result.HandleBeforeTransfer();
                         Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryStarById":
@@ -119,7 +119,7 @@ namespace MovieCube.SearchWeb
                             result.ResultStar.Add(stars[0]);
                             //GetRelatedStar(result.RelatedStar,stars[0].Name,stars[0].ID);
                         }
-                        result.ClearRedundant();
+                        result.HandleBeforeTransfer();
                         Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryMovieByKeyword":
@@ -137,7 +137,7 @@ namespace MovieCube.SearchWeb
                         {
                             result.AddSingleMovie(movies);
                         }
-                        result.ClearRedundant();
+                        result.HandleBeforeTransfer();
                         Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     case "queryMovieById":
@@ -148,7 +148,7 @@ namespace MovieCube.SearchWeb
                             result.ResultMovie.Add(movies[0]);
                             //GetRelatedMovie(result.RelatedMovie,movies[0].Name,movies[0].ID);
                         }
-                        result.ClearRedundant();
+                        result.HandleBeforeTransfer();
                         Response.Write(JsonConvert.SerializeObject(result));
                         return;
                     default:
