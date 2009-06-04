@@ -25,7 +25,7 @@
                 Width="80px" Height="19px" />
         </span>
     </div>
-  <div class="no-result-panel" id="NoResultPanel">抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
+  <div class="no-result-panel" id="NoResultPanel" runat=server>抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
   <div class=content-wrapper>
   
   <DIV id=LeftPanel class=template2-left-wrapper>

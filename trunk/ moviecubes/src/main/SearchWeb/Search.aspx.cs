@@ -27,6 +27,7 @@ namespace MovieCube.SearchWeb
             RelativeMoviePanel.Style.Add("display", "none");
             RelativeStarsPanel.Style.Add("display", "none");
             RecordPanel.Style.Add("display", "none");
+            NoResultPanel.Style.Add("display", "none");
 
             query = Request.QueryString["query"];
             encodeQuery = HttpUtility.UrlEncode(query);
@@ -63,6 +64,8 @@ namespace MovieCube.SearchWeb
 
             if (result.TotalPages > 0)
             {
+                NoResultPanel.Style.Add("display", "none");
+
                 Label1.Text = " 约有 " + result.TotalPages.ToString() + " 项符合 "
                 + query + " 的查询结果，以下是第" + result.StartPage.ToString()
                 + "-" + (result.EndPage).ToString() + " 项";
@@ -105,6 +108,7 @@ namespace MovieCube.SearchWeb
             else
             {
                 RecordPanel.Style.Add("display", "none");
+                NoResultPanel.Style.Remove("display");
             }
 
         }
