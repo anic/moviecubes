@@ -18,7 +18,7 @@ namespace MovieCube.GeneralSearchAdapter
 {
     public class GeneralQuery : IQuery
     {
-        private string nutchUrl = "http://166.111.80.110:8888/nutch-1.0/";
+        private string nutchUrl = "http://166.111.80.110:8888/nutch-1.0";
         private string queryPage = "query.jsp";
 
         private string httpRequest;
@@ -43,9 +43,14 @@ namespace MovieCube.GeneralSearchAdapter
 
         private string RemoteQuery(string query, int hitPages, int start)
         {
-            httpRequest = nutchUrl + queryPage + "?" + "query=\"" + query + "\"";
+            httpRequest = nutchUrl + "/" + queryPage + "?" + "query=\"" + query + "\"";
+            httpRequest += "&hitsPerSite=0";
+            httpRequest += "&start=" + start.ToString();
+        
 
-            WebRequest request = WebRequest.Create(httpRequest + "&hitsPerPage=" + hitPages.ToString() + "&start=" + start.ToString());
+            WebRequest request = WebRequest.Create(httpRequest + "&hitsPerPage=" + hitPages.ToString());
+
+
 
             // If required by the server, set the credentials.
             request.Credentials = CredentialCache.DefaultCredentials;
