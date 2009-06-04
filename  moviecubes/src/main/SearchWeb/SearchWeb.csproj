@@ -161,7 +161,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>if exist ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf copy ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf ..\flash\</PreBuildEvent>
+    <PreBuildEvent>if exist ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf copy ..\..\..\flash\RelationGraph\bin-debug\RelationGraph.swf ..\</PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
