@@ -8,6 +8,23 @@ namespace MovieCube.Common.Interface
     public interface IMovieQuery
     {
         /// <summary>
+        /// 根据name获取电影列表，for lz, 优先
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        List<Movie> QueryMovieAllInfoByName(string name);
+
+
+        /// <summary>
+        /// 根据keyword获取电影列表，for lz
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        List<Movie> QueryMovieAllInfoByKeyword(string keyword);
+
+        
+
+        /// <summary>
         /// 根据关键词搜索电影
         /// </summary>
         /// <param name="keyword"></param>

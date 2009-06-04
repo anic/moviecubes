@@ -24,6 +24,19 @@ namespace MovieCube.Common
             }
         }
 
+        public static string ConvertListItemToString(List<string> item)
+        {
+            string result = "";
+            for (int i = 0; i < item.Count; i++)
+            {
+                if (i == 0)
+                    result += item[i];
+                else
+                    result += "," + item[i];
+            }
+            return result;
+        }
+
         /// <summary>
         /// 给定id在List<Movie>中查找movie
         /// </summary>

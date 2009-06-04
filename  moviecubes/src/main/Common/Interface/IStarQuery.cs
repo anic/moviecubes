@@ -7,6 +7,20 @@ namespace MovieCube.Common.Interface
 {
     public interface IStarQuery
     {
+        /// <summary>
+        /// 根据name获取star所有信息，for lz, 优先
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        List<Star> QueryStarAllInfoByName(string name);
+
+        /// <summary>
+        /// 根据keyword获取star所有信息，for lz
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        List<Star> QueryStarAllInfoByKeyword(string keyword);
+
         List<Star> QueryStarByKeyword(string keyword);
 
         /// <summary>
