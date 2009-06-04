@@ -7,13 +7,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <LINK rel="stylesheet" type="text/css" href="default.css">
 <LINK rel="stylesheet" type="text/css" href="WebResource.css">
-<title>Untitled Document</title>
+<title>影立方 搜索</title>
 </head>
 <body>
     <form id="form1" runat="server">
     <div class="header-wrapper2">
         <span class="guanxi-logo">
-            <a href="RelationPage.aspx?query=<%=encodeQuery %>>"><img src="img/toGuanxi.bmp" /></a>
+            <a href="RelationPage.aspx?query=<%=encodeQuery %>"><img src="img/toGuanxi.bmp" /></a>
         </span>
              <span class="yinglifang-logo">
             <a href=""><img src="img/SiteLogo.png" style="width:130px;height:75px;"/></a>
