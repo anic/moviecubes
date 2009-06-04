@@ -1,4 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300">
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="35">
+	<mx:HBox id="recommendBox" width="100%" height="100%" x="0" y="0">
+		<mx:ComboBox id="recommendList" 
+			 change="{onChange();}" 
+			  includeInLayout="{this.recommendList.visible}" fontSize="12" textAlign="center" height="28" visible="false"/>
+	</mx:HBox>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.EffectEvent;
+			import mx.effects.Fade;
+			import mx.messaging.AbstractConsumer;
+			import mx.controls.Button;
+			import flash.display.DisplayObject;
+			import mx.core.Application;
+			import mx.core.UIComponent;
+		
+			private var recommendMax:int =4;
+			
+			private var dataArray:Array = new Array();
+		
+			private function onChange():void
+			{
+				if (recommendList.dataProvider!=null) 
+					RelationGraph(Application.application).reSearch(recommendList.selectedLabel);
+			}
+			
+			public function createRecommend(result:Object):void
+			{
+				var i:int = 0;
+				var totalLen:int = result.RelatedMovie.length + result.RelatedStar.length 
+				
+				//this.help.showTip("；相关结果"+totalLen+"个",true);
+				var istar:int = 0;
+				var imovie:int = 0;
+				
+				while(istar + imovie <this.recommendMax)
+				{
+					if (istar<result.RelatedStar.length)
+					{
+						if (!hasId(result.RelatedStar[istar].ID))
+							dataArray.push(result.RelatedStar[istar]);
+						
+						++istar;
+					}
+					
+					if (imovie<result.RelatedMovie.length)
+					{
+						if (!hasId(result.RelatedMovie[imovie].ID))
+							dataArray.push(result.RelatedMovie[imovie]);
+						
+						++imovie;
+					}
+					
+					if (istar + imovie == totalLen)
+						break;
+				}
+				
+				//dataArray构造完毕
+				for(i = istar;i<result.RelatedStar.length;++i)
+					dataArray.push(result.RelatedStar[i]);
+						
+				for(i = imovie;i<result.RelatedMovie.length;++i)
+					dataArray.push(result.RelatedMovie[i]);
+			
+				clearControl();
+				
+				updateControl();
+				
+			}
+		
+			public function resetRecommend():void
+			{
+				
+				dataArray = new Array();
 	
+				this.recommendList.dataProvider = null;
+				//this.recommendList.visible = false;
+				
+			} 
+			
+			private function updateControl():void
+			{
+					//this.recommendBox.visible = (dataArray.length>0);
+					var len:int = dataArray.length > this.recommendMax? recommendMax:dataArray.length;
+					for(var i:int = 0;i<len;++i)
+					{
+						var btnRecommend:Button = new Button(); 
+						if(dataArray[i].ObjectType == "MOVIE")
+							btnRecommend.styleName = "movieButton";
+						else
+							btnRecommend.styleName = "starButton";
+							
+						btnRecommend.label = dataArray[i].Name;
+						btnRecommend.data = dataArray[i];
+						btnRecommend.addEventListener(MouseEvent.CLICK,searchRecommend);
+						this.recommendBox.addChildAt(btnRecommend,i);
+					}
+					
+					
+					this.recommendList.visible = (len < dataArray.length);
+					if (this.recommendList.visible)
+					{
+						var dp:Array = new Array();
+						for(i = len;i<dataArray.length;++i)
+							dp.push(dataArray[i].Name);
+
+						recommendList.dataProvider = dp;
+					}
+					
+			}
+			
+			
+			private function clearControl():void
+			{
+				var children:Array = this.recommendBox.getChildren();
+				for(var i:int = 0;i<children.length;++i)
+					if(children[i] != this.recommendList)
+					{
+						this.recommendBox.removeChild(children[i] as UIComponent);
+					} 
+			}
+			
+			private function hasId(id:String)
+			{
+				for(var i:int = 0;i<dataArray.length;++i)
+					if (dataArray[i].ID == id)
+						return true;
+				return false;
+			}
+			
+			//查找推荐
+			private function searchRecommend(event:MouseEvent):void
+			{
+				var btn:Button = event.target as Button;
+				var aData:Object = btn.data;
+				if (aData.ObjectType == "STAR")
+					RelationGraph(Application.application).loadStarById(aData.ID,aData.Name,true);
+				else
+					RelationGraph(Application.application).loadMovieById(aData.ID,aData.Name,true);
+					
+				var effect:Fade = new Fade(btn);
+				effect.alphaFrom = 1;
+				effect.alphaTo = 0;
+				effect.startDelay = 500;
+				effect.duration = 1000;
+				effect.addEventListener(EffectEvent.EFFECT_END, remove);
+				effect.play();
+			} 
+			
+			private function remove(event:EffectEvent):void
+			{
+				var id:String = "";
+				if ((event.target as Fade).target is Button)
+				{
+					id = ((event.target as Fade).target as Button).data.ID;
+				}
+				
+				var newArray:Array = new Array();
+				for(var i:int = 0;i<dataArray.length;++i)
+				{
+					if (dataArray[i].ID != id)
+						newArray.push(dataArray[i]);			
+				}
+				dataArray =  newArray;
+				clearControl();
+				updateControl();
+			}
+			
+		]]>
+	</mx:Script>
 </mx:Module>
