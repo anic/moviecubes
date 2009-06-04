@@ -171,6 +171,18 @@ package
 				updateStars(data);
 				if (this.data.TotalStarNum < data.TotalStarNum)
 					this.data.TotalStarNum = data.TotalStarNum;
+					
+				if (data.Language!=null && data.Language !="")
+					this.data.Language = data.Language;
+					
+				if (data.Type !=null && data.Type.length>0)
+					this.data.Type = data.Type;
+				
+				if (data.Area!=null && data.Area !="")
+					this.data.Area = data.Area;
+					
+				if (data.Time !=null && data.Time !="")
+					this.data.Time = data.Time;
 			}
 			updateAlias(data);
 			
@@ -192,7 +204,7 @@ package
 				view.onDataUpdate();
 		}
 
-		public function getRelatedIdsFromGraph(g:Graph):Array
+		/*public function getRelatedIdsFromGraph(g:Graph):Array
 		{
 			var result:Array = new Array();
 			for(var id:String in g.neighbors(this.id))
@@ -200,7 +212,7 @@ package
 				result.push(id);
 			}
 			return result;
-		}
+		}*/
 		
 		//获得关联项的ID
 		public function getRelatedIds():Array
@@ -224,7 +236,7 @@ package
 			return result;
 		}
 		
-		public function canBeRemoved(g:Graph,fromItem:RelationItem,removedArray:Array):Boolean
+		/*public function canBeRemoved(g:Graph,fromItem:RelationItem,removedArray:Array):Boolean
 		{
 			if(this.rank == 0)
 				return false;
@@ -235,21 +247,24 @@ package
 				return true;
 			}
 			
-			var relatedIds:Array = this.getRelatedIdsFromGraph(g);//this.getRelatedIds();
+			var relatedIds:Object = g.neighbors(this.id);
+			//this.getRelatedIdsFromGraph(g);
+			//this.getRelatedIds();
 			
 			var result: Boolean = false;
-			for(var i:int = 0;i<relatedIds.length;++i)
+			for(var id:String in relatedIds)
 			{
-				if (relatedIds[i] == fromItem.id)
+				if (id == fromItem.id)
 					continue;
 				
-				var relatedItem:RelationItem = g.find(relatedIds[i]) as RelationItem;
+				var relatedItem:RelationItem = relatedIds[id] as RelationItem;
 				if(relatedItem!=null && !relatedItem.canBeRemoved(g,this,removedArray))
 					return false;
+					
 			}
 			removedArray.push(this);
 			return result;
-		}
+		}*/
 		
 		public function get TotalNum():int
 		{

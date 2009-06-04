@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="238" height="270" initialize="fillData()">
+<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="238" height="316" initialize="fillData()">
 
 	<mx:Script>
 		<![CDATA[
@@ -12,6 +12,7 @@
 					super.setAlias(txtAlias,bxAlias);
 					super.setRelationContent(txtMovies,txtPage);
 					super.setRank(txtRank,bxRank);
+					super.setValue(txtArea,bxArea,data.data.Area);
 				}
 			}
 		]]>
@@ -28,6 +29,10 @@
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
 			<mx:Text text="分数" width="50"/>
 			<mx:Text id="txtRank" width="100%"/>
+		</mx:HBox>
+		<mx:HBox width="100%" id="bxArea"  includeInLayout="{bxArea.visible}">
+			<mx:Text text="地区" width="50"/>
+			<mx:Text id="txtArea" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxMovies">
 			<mx:Text text="电影" width="50" id="titleMovie"/>

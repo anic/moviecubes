@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="270" initialize="fillData()">
+<BaseBox xmlns="*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="190" height="348" initialize="fillData()">
 	<mx:Style source="MyTheme.css" />
 	<mx:Script>
 		<![CDATA[
@@ -12,6 +12,10 @@
 					super.setAlias(txtAlias,bxAlias);
 					super.setRelationContent(txtStars,txtPage);
 					super.setRank(txtRank,bxRank);
+					super.setArrayValue(txtType,bxType,data.data.Type);
+					super.setValue(txtYear,bxYear,data.data.Time);
+					super.setValue(txtArea,bxArea,data.data.Area);
+					super.setValue(txtLanguage,bxLanguage,data.data.Language);
 				}
 			}			
 		]]>
@@ -24,6 +28,22 @@
 		<mx:HBox width="100%" id="bxAlias"  includeInLayout="{bxAlias.visible}">
 			<mx:Text text="别名" width="50"/>
 			<mx:Text id="txtAlias" width="100%"/>
+		</mx:HBox>
+		<mx:HBox width="100%" id="bxYear"  includeInLayout="{bxYear.visible}">
+			<mx:Text text="时间" width="50"/>
+			<mx:Text id="txtYear" width="100%"/>
+		</mx:HBox>
+		<mx:HBox width="100%" id="bxType"  includeInLayout="{bxType.visible}">
+			<mx:Text text="类型" width="50"/>
+			<mx:Text id="txtType" width="100%"/>
+		</mx:HBox>
+		<mx:HBox width="100%" id="bxArea"  includeInLayout="{bxArea.visible}">
+			<mx:Text text="地区" width="50"/>
+			<mx:Text id="txtArea" width="100%"/>
+		</mx:HBox>
+		<mx:HBox width="100%" id="bxLanguage"  includeInLayout="{bxLanguage.visible}">
+			<mx:Text text="语言" width="50"/>
+			<mx:Text id="txtLanguage" width="100%"/>
 		</mx:HBox>
 		<mx:HBox width="100%" id="bxRank"  includeInLayout="{bxRank.visible}">
 			<mx:Text text="分数" width="50"/>
