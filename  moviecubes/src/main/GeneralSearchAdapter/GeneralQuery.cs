@@ -43,14 +43,33 @@ namespace MovieCube.GeneralSearchAdapter
 
         private string RemoteQuery(string query, int hitPages, int start)
         {
-            httpRequest = nutchUrl + "/" + queryPage + "?" + "query=\"" + query + "\"";
+            string[] originKeywords;
+            string keywords = "";
+            
+            bool isFirst = true;
+            if (query != null)
+            {
+                originKeywords = query.Split(' ');
+                foreach (string s in originKeywords)
+                {
+                    if (s.Equals(" "))
+                        continue;
+
+                    if (isFirst)
+                    {
+                        keywords += ("\"" + s + "\"");
+                        isFirst = false;
+                    }
+                    else
+                        keywords += ("+\"" + s + "\"");
+                }
+            }
+
+            httpRequest = nutchUrl + "/" + queryPage + "?" + "query=" + keywords;
             httpRequest += "&hitsPerSite=0";
             httpRequest += "&start=" + start.ToString();
-        
 
             WebRequest request = WebRequest.Create(httpRequest + "&hitsPerPage=" + hitPages.ToString());
-
-
 
             // If required by the server, set the credentials.
             request.Credentials = CredentialCache.DefaultCredentials;

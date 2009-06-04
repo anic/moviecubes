@@ -19,13 +19,14 @@ namespace MovieCube.SearchWeb
         private const int MAXRELATIVEMOVIE = 7;
         private const int MAXRELATIVESTAR = 7;
 
-        private string query;
+        protected string query;
         protected string encodeQuery;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             RelativeMoviePanel.Style.Add("display", "none");
             RelativeStarsPanel.Style.Add("display", "none");
+            RecordPanel.Style.Add("display", "none");
 
             query = Request.QueryString["query"];
             encodeQuery = HttpUtility.UrlEncode(query);
@@ -34,7 +35,7 @@ namespace MovieCube.SearchWeb
             string start = Request.QueryString["start"];
             string perSite = Request.QueryString["hitsPerSite"];
 
-            if (query != null && query.Equals(""))
+            if (query == null || query.Equals(""))
                 return;
 
             int nHits = HITSPERPAGE;
@@ -46,7 +47,7 @@ namespace MovieCube.SearchWeb
                 nStart = Convert.ToInt32(start);
 
             DoQuery(query, nHits, nStart, perSite);
-            
+            TextBox1.Text = query;
         }
 
         private void DoQuery(string query, int hitsPerPage, int start, string hitsPerSite)
@@ -64,7 +65,7 @@ namespace MovieCube.SearchWeb
             {
                 Label1.Text = " 约有 " + result.TotalPages.ToString() + " 项符合 "
                 + query + " 的查询结果，以下是第" + result.StartPage.ToString()
-                + "-" + result.EndPage.ToString() + " 项";
+                + "-" + (result.EndPage).ToString() + " 项";
                 Label1.DataBind();
 
                 movies = RelativeMovieQuery(query);
@@ -113,6 +114,7 @@ namespace MovieCube.SearchWeb
             query = TextBox1.Text;
             encodeQuery = HttpUtility.UrlEncode(query);
             DoQuery(query, HITSPERPAGE, 0, "0");
+            TextBox1.Text = query;
         }
 
         private List<FooterNaviItem> GenerateFooterNavi(int total, int start, int end, string url, ref List<FooterNaviItem> prevAndNext)
@@ -125,7 +127,7 @@ namespace MovieCube.SearchWeb
 
 
             int nSlot = total / HITSPERPAGE;
-            nSlot = nSlot > MAXFOOTERNAVI ? MAXFOOTERNAVI : nSlot;
+            //nSlot = nSlot > MAXFOOTERNAVI ? MAXFOOTERNAVI : nSlot;
 
             if (nSlot == 0)
                 return null;
