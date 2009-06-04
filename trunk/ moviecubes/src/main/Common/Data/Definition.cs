@@ -15,9 +15,13 @@ namespace MovieCube.Common.Data
         //获取电影的最大评论个数
         public const int Max_Comment_Num = 10;
 
+        //最大结果数
+        public const int Max_Result_Once = 3;
+
         public const string Role_Director = "导演";
         public const string Role_Writer = "编剧";
         public const string Role_Actor = "主演";
 
+        public const int Related_Count = 7;
     }
 }

@@ -18,6 +18,7 @@ namespace MovieCube.Common.Data
             this.RelatedStar = new List<Star>();
             this.ResultMovie = new List<Movie>();
             this.ResultStar = new List<Star>();
+            this.RelatedCount = 0;
         }
 
         [JsonProperty]
@@ -32,8 +33,27 @@ namespace MovieCube.Common.Data
         [JsonProperty]
         public List<Star> RelatedStar { get; set; }
 
-        public void ClearRedundant()
-        { 
+        [JsonProperty]
+        public int RelatedCount { get; set; }
+
+        public void HandleBeforeTransfer()
+        {
+            int max = Definition.Max_Result_Once;
+            if (ResultMovie.Count > max)
+            {
+                List<Movie> other = ResultMovie.GetRange(max, ResultMovie.Count - max);
+                RelatedMovie.InsertRange(0, other);
+                ResultMovie.RemoveRange(max, ResultMovie.Count - max);
+            }
+
+            if (ResultStar.Count > max)
+            {
+                List<Star> other = ResultStar.GetRange(max, ResultStar.Count - max);
+                RelatedStar.InsertRange(0, other);
+                ResultStar.RemoveRange(max, ResultStar.Count - max);
+            }
+
+
             List<Movie> removedMovie = new List<Movie>();
             foreach (Movie m in RelatedMovie)
                 if (hasResultMovie(m))
@@ -43,14 +63,26 @@ namespace MovieCube.Common.Data
             foreach (Movie m in removedMovie)
                 RelatedMovie.Remove(m);
 
+    
             List<Star> removedStar = new List<Star>();
             foreach (Star s in RelatedStar)
                 if (hasResultStar(s))
                     removedStar.Add(s);
 
+
             //删除相关明星中的重复部分
             foreach (Star s in removedStar)
                 RelatedStar.Remove(s);
+
+            //记录相关项总数
+            this.RelatedCount = RelatedMovie.Count + RelatedStar.Count;
+
+            //限制相关项个数
+            if (RelatedStar.Count > Definition.Related_Count)
+                RelatedStar = RelatedStar.GetRange(0, Definition.Related_Count);
+
+            if (RelatedMovie.Count > Definition.Related_Count)
+                RelatedMovie = RelatedMovie.GetRange(0, Definition.Related_Count);
 
             foreach (Movie m in RelatedMovie)
                 m.Stars.Clear();
