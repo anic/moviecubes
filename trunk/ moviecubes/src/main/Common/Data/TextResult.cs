@@ -30,9 +30,14 @@ namespace MovieCube.Common.Data
         public int TotalPages = 0;
 
         /// <summary>
-        /// 当前页号
+        /// 开始页号
         /// </summary>
-        public int CurrentPage = 0;
+        public int StartPage = 0;
+
+        /// <summary>
+        /// 结束页号
+        /// </summary>
+        public int EndPage = 0;
 
         /// <summary>
         /// 搜索其他的上下文，可能是一些用户的设置，如每页多少个，用什么排序等

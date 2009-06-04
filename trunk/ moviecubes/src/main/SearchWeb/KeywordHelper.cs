@@ -5,7 +5,7 @@ using System.Collections;
 using System.IO;
 using MovieCube.Common.Data;
 
-namespace SearchWeb
+namespace MovieCube.SearchWeb
 {
     public class KeywordHelper
     {

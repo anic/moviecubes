@@ -14,12 +14,20 @@ namespace MovieCube.Common.Data
         /// <summary>
         /// 标题
         /// </summary>
-        public string Title = string.Empty;
+        public string Title
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// 链接地址
         /// </summary>
-        public string Url = string.Empty;
+        public string Url
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// 大小，文本格式，如10K
@@ -29,6 +37,28 @@ namespace MovieCube.Common.Data
         /// <summary>
         /// 摘要
         /// </summary>
-        public string Abstract = string.Empty;
+        public string Summary
+        {
+            get;
+            set;
+        }
+
+        public string Cache
+        {
+            get;
+            set;
+        }
+
+        public string Explain
+        {
+            get;
+            set;
+        }
+
+        public string More
+        {
+            get;
+            set;
+        }
     }
 }

@@ -7,6 +7,6 @@ namespace MovieCube.Common.Interface
 {
     public interface IQuery
     {
-        TextResult QueryText(string query, int page, string context);
+        TextResult QueryText(string query, int hitPages, int start, string context);
     }
 }
