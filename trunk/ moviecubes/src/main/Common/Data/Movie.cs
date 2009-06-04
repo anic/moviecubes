@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace MovieCube.Common.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class StarMovie
+    public class StarMovie : IComparable<StarMovie>
     {
         [JsonProperty]
         public Movie Movie { get; set; }
@@ -29,6 +29,20 @@ namespace MovieCube.Common.Data
             Movie = movie;
             Role = role;
         }
+
+        #region IComparable<StarMovie> 成员
+
+        public int CompareTo(StarMovie other)
+        {
+            if (this.Movie.Rank < other.Movie.Rank)
+                return 1;
+            else if (this.Movie.Rank == other.Movie.Rank)
+                return 0;
+            else
+                return -1;
+        }
+
+        #endregion
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -55,6 +69,12 @@ namespace MovieCube.Common.Data
         {
             Stars.Add(new MovieStar(addStar, role));
         }
+
+        public string Introduction { get; set; }
+
+        public string Feature { get; set; }
+
+        public string BehindCurtain { get; set; }
 
         /// <summary>
         /// ID
