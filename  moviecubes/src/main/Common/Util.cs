@@ -55,5 +55,29 @@ namespace MovieCube.Common
             }
             return null;
         }
+
+        /// <summary>
+        /// 将字符串转换为Base64编码
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string Base64Encode(string data)
+        {
+            byte[] buf = Encoding.Default.GetBytes(data);
+
+            return Convert.ToBase64String(buf);
+        }
+
+        /// <summary>
+        /// 将base64编码的字符串解码为普通字符串
+        /// </summary>
+        /// <param name="base64Str"></param>
+        /// <returns></returns>
+        public static string Base64Decode(string base64Str)
+        {
+            byte[] buf = Convert.FromBase64String(base64Str);
+
+            return Encoding.Default.GetString(buf);
+        }
     }
 }
