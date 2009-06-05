@@ -8,6 +8,7 @@ package
 		
 		private var removedItems:Object;
 		private var visitedTag:Object;
+		private var rootNode:RelationItem;
 		
 		private var NOT_VISITED:int = 0;
 		private var VISITING:int = 1;
@@ -22,6 +23,7 @@ package
 		{
 			removedItems = new Object();
 			visitedTag = new Object();
+			this.rootNode = startNode;
 			var neighbors:Object = items.neighbors(startNode.id);
 			for(var id:String in neighbors)
 			{
@@ -74,7 +76,8 @@ package
 					{ 
 						if(item.rank == 0) 
 						{
-							result = false;
+							if (item != rootNode)
+								result = false;
 						}
 						else
 						{
