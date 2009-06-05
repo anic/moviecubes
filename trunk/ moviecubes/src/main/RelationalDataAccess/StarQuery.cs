@@ -414,9 +414,9 @@ namespace MovieCube.RelationalDataAccess
 
             Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
 
-            string[] movieIDs = doc.Get("MovieID").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            string[] movieRoles = doc.Get("MovieRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            string[] movieName = doc.Get("MovieName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieIDs = doc.Get("MovieID").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieRoles = doc.Get("MovieRole").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] movieName = doc.Get("MovieName").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
 
 
             if (movieIDs.Length == movieRoles.Length && movieRoles.Length == movieName.Length)
