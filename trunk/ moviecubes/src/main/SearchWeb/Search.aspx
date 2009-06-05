@@ -37,7 +37,7 @@
         <DIV class=item>
         <DIV class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Area")%></SPAN></A></DIV>
         <DIV class=title><A title="点击搜索 <%# Eval("Name")%>>" href=""><%# Eval("Name")%></A></DIV>
-        <DIV class=join><A title="点击搜索 <%# Eval("Name")%>+</asp:Label>" href="">加入查询</A></DIV>
+        <DIV class=join><A title="点击搜索 <%# Eval("Name")%>+</asp:Label>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></DIV>
         <DIV class=why><A onClick="" href="javascript:">了解更多</A></DIV></DIV>
         <DIV class=hr></DIV>
         </ItemTemplate>
@@ -54,7 +54,7 @@
         <DIV class=item>
         <DIV class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Language")%></SPAN></A></DIV>
         <DIV class=title><A title="点击搜索 <%# Eval("Name")%>>" href=""><%# Eval("Name")%></A></DIV>
-        <DIV class=join><A title="点击搜索 <%# Eval("Name")%>+</asp:Label>" href="">加入查询</A></DIV>
+        <DIV class=join><A title="点击搜索 <%# Eval("Name")%>+</asp:Label>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></DIV>
         <DIV class=why><A onClick="" href="javascript:">了解更多</A></DIV></DIV>
         <DIV class=hr></DIV>
         </ItemTemplate>
