@@ -414,9 +414,9 @@ namespace MovieCube.RelationalDataAccess
             Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
             Util.ProcessStringItem(doc.Get("Type"), result.Type);
 
-            string[] starIDs = doc.Get("StarID").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            string[] starRoles = doc.Get("StarRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            string[] starName = doc.Get("StarName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starIDs = doc.Get("StarID").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starRoles = doc.Get("StarRole").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starName = doc.Get("StarName").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
 
 
             if (starIDs.Length == starRoles.Length && starRoles.Length == starName.Length)
@@ -471,9 +471,9 @@ namespace MovieCube.RelationalDataAccess
             Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
             Util.ProcessStringItem(doc.Get("Type"), result.Type);
 
-            string[] starIDs = doc.Get("StarID").Split(new string[]{","}, StringSplitOptions.RemoveEmptyEntries);
-            string[] starRoles = doc.Get("StarRole").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            string[] starName = doc.Get("StarName").Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starIDs = doc.Get("StarID").Split(new string[]{"##"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] starRoles = doc.Get("StarRole").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] starName = doc.Get("StarName").Split(new string[] { "##" }, StringSplitOptions.RemoveEmptyEntries);
 
 
             if (starIDs.Length == starRoles.Length && starRoles.Length == starName.Length)
