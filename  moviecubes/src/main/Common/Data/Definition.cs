@@ -16,7 +16,7 @@ namespace MovieCube.Common.Data
         public const int Max_Comment_Num = 10;
 
         //最大结果数
-        public const int Max_Result_Once = 3;
+        public const int Max_Result_Once = 1;
 
         public const string Role_Director = "导演";
         public const string Role_Writer = "编剧";
