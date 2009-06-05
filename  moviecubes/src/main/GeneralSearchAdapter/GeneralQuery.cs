@@ -121,11 +121,11 @@ namespace MovieCube.GeneralSearchAdapter
                     else if (attr.Name.Equals("summary"))
                         item.Summary = Util.Base64Decode(attr.InnerText);
                     else if (attr.Name.Equals("cache"))
-                        item.Cache = nutchUrl + Util.Base64Decode(attr.InnerText).Substring(3);
+                        item.Cache = nutchUrl + "/" + Util.Base64Decode(attr.InnerText).Substring(3);
                     else if (attr.Name.Equals("explain"))
-                        item.Explain = nutchUrl + Util.Base64Decode(attr.InnerText).Substring(3);
+                        item.Explain = nutchUrl + "/" + Util.Base64Decode(attr.InnerText).Substring(3);
                     else if (attr.Name.Equals("more"))
-                        item.More = nutchUrl + Util.Base64Decode(attr.InnerText).Substring(3);
+                        item.More = nutchUrl + "/" + Util.Base64Decode(attr.InnerText).Substring(3);
                     else
                         ;
     

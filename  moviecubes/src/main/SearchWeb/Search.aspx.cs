@@ -21,34 +21,45 @@ namespace MovieCube.SearchWeb
 
         protected string query;
         protected string encodeQuery;
+        protected string queryPageUrl;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RelativeMoviePanel.Style.Add("display", "none");
-            RelativeStarsPanel.Style.Add("display", "none");
-            RecordPanel.Style.Add("display", "none");
-            NoResultPanel.Style.Add("display", "none");
 
-            query = Request.QueryString["query"];
-            encodeQuery = HttpUtility.UrlEncode(query);
+            if (!IsPostBack)
+            {
+                RelativeMoviePanel.Style.Add("display", "none");
+                RelativeStarsPanel.Style.Add("display", "none");
+                RecordPanel.Style.Add("display", "none");
+                NoResultPanel.Style.Add("display", "none");
 
-            string hits = Request.QueryString["hitsPerPage"];
-            string start = Request.QueryString["start"];
-            string perSite = Request.QueryString["hitsPerSite"];
+                query = Request.QueryString["query"];
+                encodeQuery = HttpUtility.UrlEncode(query);
 
-            if (query == null || query.Equals(""))
-                return;
+                string path = HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+                path = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path;
+                queryPageUrl = "http://" + path + "/Search.aspx";
 
-            int nHits = HITSPERPAGE;
-            if (hits != null)
-                nHits = Convert.ToInt32(hits);
+                string hits = Request.QueryString["hitsPerPage"];
+                string start = Request.QueryString["start"];
+                string perSite = Request.QueryString["hitsPerSite"];
 
-            int nStart = 0;
-            if (start != null)
-                nStart = Convert.ToInt32(start);
+                if (query == null || query.Equals(""))
+                    return;
 
-            DoQuery(query, nHits, nStart, perSite);
-            TextBox1.Text = query;
+                int nHits = HITSPERPAGE;
+                if (hits != null)
+                    nHits = Convert.ToInt32(hits);
+
+                int nStart = 0;
+                if (start != null)
+                    nStart = Convert.ToInt32(start);
+
+                DoQuery(query, nHits, nStart, perSite);
+                TextBox1.Text = query;
+
+            }
+            
         }
 
         private void DoQuery(string query, int hitsPerPage, int start, string hitsPerSite)
