@@ -9,6 +9,8 @@ package
 		public function BaseBox()
 		{
 			super();
+			this.verticalScrollPolicy="off";
+			this.horizontalScrollPolicy="off";
 		}
 		
 		public virtual function fillData():void

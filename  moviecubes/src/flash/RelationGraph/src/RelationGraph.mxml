@@ -15,6 +15,8 @@
 			if (!cbxContinue.selected)
 				items.empty();
    			this.toolPanel.hide();
+   			rbox.resetRecommend();
+   			rbox.clearControl();
    			search();
    			}" 
    		styleName="mainButton" fontSize="14"/>
@@ -66,7 +68,7 @@
 		private var defaultMaxWidh:int = 500;
 		
 		[Bindable]
-		private var defaultNodeLimit:int = 20;
+		private var defaultNodeLimit:int = 30;
 		
 		[Bindable]
 		private var defaultAutoLimit:int = 50;
@@ -117,6 +119,8 @@
 				if (!cbxContinue.selected)
 					items.empty();
    				this.toolPanel.hide();
+   				rbox.resetRecommend();
+   				rbox.clearControl(); 
    			 	search();
 			}
 		}
@@ -449,9 +453,11 @@
 					rbox.resetRecommend();
 				rbox.createRecommend(result);
 				
-				var totalLen:int = result.RelatedMovie.length + result.RelatedStar.length 
-				if (totalLen >0)
-					this.help.showTip("；相关结果"+totalLen+"个",true);
+				//var totalLen:int = result.RelatedMovie.length + result.RelatedStar.length 
+				//if (totalLen >0)
+				var relatedLen:int = result.RelatedCount;
+				if (relatedLen>0)
+					this.help.showTip("；相关结果"+relatedLen+"个",true);
 			}
 			else
 			{
@@ -575,6 +581,9 @@
 		</mx:LinkButton>
 		<mx:LinkButton label="清空图" id="btnClear">
 			<mx:click>{items.empty();}</mx:click>
+		</mx:LinkButton>
+		<mx:LinkButton label="清空推荐" id="btnClearRecommend">
+			<mx:click>{rbox.resetRecommend();rbox.clearControl();}</mx:click>
 		</mx:LinkButton>
 		<mx:LinkButton label="设置" id="btnSetting">
 			<mx:click>{pnlSetting.visible = !pnlSetting.visible;}</mx:click>

@@ -217,9 +217,9 @@
 	<local:ToolButton x="0"  ImageIndex="0" toolTip="前一页" id="btnPre" bottom="20" click="{onSearchNextPage(false);}" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	<local:ToolButton x="20" ImageIndex="1" toolTip="后一页" id="btnNext" bottom="20" click="{onSearchNextPage(true);}"  mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	<local:ToolButton x="40" ImageIndex="3" toolTip="页面中查看" id="btnLook" click="{onLook();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="60" ImageIndex="4" toolTip="重新加载" id="btnSearch" click="{onSearch();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="60" ImageIndex="4" toolTip="展开节点" id="btnSearch" click="{onSearch();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	<local:ToolButton x="80" ImageIndex="5" toolTip="添加到搜索栏" id="btnPen" click="{onPen();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
-	<local:ToolButton x="100" ImageIndex="2" toolTip="关闭" id="btnClose" click="{onClose();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
+	<local:ToolButton x="100" ImageIndex="2" toolTip="关闭节点" id="btnClose" click="{onClose();}" bottom="20" mouseOver="{onEnter();}" mouseOut="{onOut();}"/>
 	
 	
 </mx:Module>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="25" height="25" >
-	<mx:Image  x="0" y="0" width="25" height="25" id="image3" source="@Embed('myimage/Document.png')" visible="true"/>
-	<mx:Text width="25" textAlign="center" horizontalCenter="0" verticalCenter="0" text="{data}"/>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="28" height="28" >
+	<mx:Image  x="6.8" y="0" width="25" height="25" id="imgMore" source="@Embed('myimage/Document.png')" visible="false"/>
+	<mx:Image  x="0" y="3" width="25" height="25" source="@Embed('myimage/Document.png')" visible="true"/>
+	<mx:Text width="26" textAlign="left" horizontalCenter="0" verticalCenter="0" text="{data}" height="18"/>
 	<mx:Fade alphaFrom="1.0"  alphaTo="0" target="{this}" duration="1000" startDelay="7000" id="effectFade" >
-		
+		 
 	</mx:Fade>
 	<mx:Script>
 		<![CDATA[
@@ -21,6 +22,11 @@
 			{
 				if (this.parent!=null);
 					this.parent.removeChild(this);
+			}
+			
+			public function showMore():void
+			{
+				this.imgMore.visible = true;
 			}
 		]]>
 	</mx:Script>

@@ -3,7 +3,7 @@
 	<mx:HBox id="recommendBox" width="100%" height="100%" x="0" y="0">
 		<mx:ComboBox id="recommendList" 
 			 change="{onChange();}" 
-			  includeInLayout="{this.recommendList.visible}" fontSize="12" textAlign="center" height="28" visible="false"/>
+			  includeInLayout="{this.recommendList.visible}" fontSize="13" textAlign="center" height="28" visible="false"/>
 	</mx:HBox>
 	<mx:Script>
 		<![CDATA[
@@ -21,8 +21,11 @@
 		
 			private function onChange():void
 			{
-				if (recommendList.dataProvider!=null) 
-					RelationGraph(Application.application).reSearch(recommendList.selectedLabel);
+				if (recommendList.dataProvider!=null)
+				{
+					if (recommendList.selectedLabel!="更多") 
+						RelationGraph(Application.application).reSearch(recommendList.selectedLabel);
+				}
 			}
 			
 			public function createRecommend(result:Object):void
@@ -76,10 +79,9 @@
 	
 				this.recommendList.dataProvider = null;
 				//this.recommendList.visible = false;
-				
 			} 
 			
-			private function updateControl():void
+			public function updateControl():void
 			{
 					//this.recommendBox.visible = (dataArray.length>0);
 					var len:int = dataArray.length > this.recommendMax? recommendMax:dataArray.length;
@@ -102,6 +104,7 @@
 					if (this.recommendList.visible)
 					{
 						var dp:Array = new Array();
+						dp.push("更多");
 						for(i = len;i<dataArray.length;++i)
 							dp.push(dataArray[i].Name);
 
@@ -111,7 +114,7 @@
 			}
 			
 			
-			private function clearControl():void
+			public function clearControl():void
 			{
 				var children:Array = this.recommendBox.getChildren();
 				for(var i:int = 0;i<children.length;++i)
@@ -119,6 +122,8 @@
 					{
 						this.recommendBox.removeChild(children[i] as UIComponent);
 					} 
+				
+				this.recommendList.visible = false;
 			}
 			
 			private function hasId(id:String)
