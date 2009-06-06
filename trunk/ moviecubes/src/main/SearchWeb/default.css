@@ -105,7 +105,7 @@ OL {
 {
 	FONT-SIZE: 1.6em;
 	padding-top: 10px;
-	padding-left: 10px;
+	padding-left: 10px;	
 }
 
 .bold {
@@ -214,7 +214,9 @@ OL {
 	width:auto;
 	margin:auto; 
 	text-align:center;
-	BACKGROUND-COLOR: #11a4d0;
+	/*BACKGROUND-COLOR: #11a4d0;*/
+	background-repeat:repeat-x;
+	background-image:url('img/title_bg.png');
 }
 .header-wrapper .logo {
 	FLOAT: left
@@ -716,4 +718,30 @@ time-input {
 }
 .time-panel .ajax__calendar_active .ajax__calendar_year {
 	TEXT-ALIGN: center; PADDING-BOTTOM: 3px; BACKGROUND-COLOR: #ccc; COLOR: black; FONT-WEIGHT: bold
+}
+
+.searchbutton
+{
+	background-image:url('img/button_up.png');
+	background-repeat:no-repeat;
+	background-color:Transparent;
+	font:13px; 
+	height:28px;
+	Width:105px;
+	color:#444444;
+	cursor:pointer;
+	vertical-align:middle;
+	border-color:#e5b421;
+	font-weight:bold;
+}
+
+.searchbar
+{
+	font-size:15px; 
+	width:285px;
+	height:24px;
+	background-color:White;
+	vertical-align:middle;
+	text-align:left;
+	padding-top:4px;
 }
