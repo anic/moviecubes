@@ -89,7 +89,10 @@ namespace MovieCube.SearchWeb
                 if (movies.Count == 0)
                     RelativeMoviePanel.Style.Add("display", "none");
                 else
+                {
                     RelativeMoviePanel.Style.Remove("display");
+                    //List<MovieComment> comments = RelativeCommentQuery(query);
+                }
 
                 stars = RelativeStarQuery(query);
                 Repeater3.DataSource = stars.GetRange(0, stars.Count > MAXRELATIVESTAR ? MAXRELATIVESTAR : stars.Count);
@@ -211,6 +214,14 @@ namespace MovieCube.SearchWeb
 
             IStarQuery starQuery = new StarQuery(starInfo);
             return starQuery.QueryStarByKeyword(query);
+        }
+
+        private List<MovieComment> RelativeCommentQuery(string name)
+        {
+            string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
+
+            IMovieComment movieCommentQuery = new DoubanComment();
+            return movieCommentQuery.GetMovieCommentByName(name);
         }
     }
 }
