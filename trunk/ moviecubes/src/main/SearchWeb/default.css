@@ -659,6 +659,12 @@ TABLE.rebang THEAD .num {
 .title-bar {
 	PADDING-BOTTOM: 5px; BACKGROUND-COLOR: #1fabe0; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; COLOR: #ffffff; FONT-SIZE: 1.2em; PADDING-TOP: 5px
 }
+
+.title-bar-btn {
+	PADDING-BOTTOM: 5px; BACKGROUND-COLOR: #1fabe0; PADDING-LEFT: 10px; PADDING-RIGHT: 10px; FONT-SIZE: 1.2em; PADDING-TOP: 5px;
+	font-weight:bolder;
+	color:White;
+}
 .navlink {
 	COLOR: blue; FONT-WEIGHT: normal; TEXT-DECORATION: underline
 }
