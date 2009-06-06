@@ -503,6 +503,15 @@ width:auto;
 .panel .item .join A {
 	COLOR: #555
 }
+
+.more-info-panel 
+{
+	BORDER-TOP: #ccc 1px solid; BORDER-BOTTOM: #ccc 1px solid; BORDER-LEFT: #ccc 1px solid; 
+	PADDING-BOTTOM: 3px; BACKGROUND-COLOR: #f1f7f8; 
+	PADDING-LEFT: 3px; PADDING-RIGHT: 3px; 
+	BORDER-RIGHT: #ccc 1px solid; PADDING-TOP: 3px
+}
+
 .panel .item .homepage {
 	MARGIN: 0px 10px 0px 0px; DISPLAY: inline
 }

@@ -45,7 +45,14 @@ namespace MovieCube.SearchWeb
                 string perSite = Request.QueryString["hitsPerSite"];
 
                 if (query == null || query.Equals(""))
+                {
+                    RelativeStarsPanel.Style.Add("display", "none");
+                    RelativeMoviePanel.Style.Add("display", "none");
+
+                    RecordPanel.Style.Add("display", "none");
                     return;
+                }
+                
 
                 int nHits = HITSPERPAGE;
                 if (hits != null)
@@ -57,7 +64,6 @@ namespace MovieCube.SearchWeb
 
                 DoQuery(query, nHits, nStart, perSite);
                 TextBox1.Text = query;
-
             }
             
         }
@@ -122,6 +128,8 @@ namespace MovieCube.SearchWeb
             else
             {
                 RecordPanel.Style.Add("display", "none");
+                RelativeStarsPanel.Style.Add("display", "none");
+                RelativeMoviePanel.Style.Add("display", "none");
                 NoResultPanel.Style.Remove("display");
             }
 
