@@ -21,13 +21,17 @@
              
         <br />
         <span class="input-panel" style="float:left; padding-left:15px">
-            <asp:TextBox ID="TextBox1" runat="server" BorderWidth="1px" 
+            <asp:TextBox ID="TextBox1" OnTextChanged="Button1_Click" onfocus="javascript:this.select()" runat="server" BorderWidth="1px" 
             CssClass="searchbar"></asp:TextBox>&nbsp;
             <asp:Button ID="Button1"  runat="server" onclick="Button1_Click" Text="搜索" 
              CssClass="searchbutton" />
         </span>
     </div>
-    
+    <script type= "text/javascript" language="javascript">
+        var txtBox = document.getElementById("TextBox1");
+        if (txtBox != null) 
+            txtBox.focus();
+    </script>
   <div class="no-result-panel" id="NoResultPanel" runat="server">抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
   <div class="content-wrapper">
   <DIV id="LeftPanel" class="template2-left-wrapper">
@@ -74,7 +78,7 @@
         <div class=title><A title="点击搜索 <%# Eval("Name")%>" href=""><%# Eval("Name")%></A></div>
         <div class=join><A title="点击搜索 <%# Eval("Name")%>+<%=query %>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></div>
         <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#">了解更多</A></div>
-        <div class=join id="vertical_slide_<%#Eval("ID") %>">
+        <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">
             <div class=content>评分：<%#Eval("FormatRank")%></div>
             <div class=content>产地：<%#Eval("Area") %></div>
             <div class=content>出品时间：<%#Eval("Time") %></div>
@@ -87,6 +91,7 @@
         <div class=hr></div>
         <script type= "text/javascript" language="javascript">
             var myVerticalSlide<%#Eval("ID") %> = new Fx.Slide('vertical_slide_<%#Eval("ID") %>');
+            myVerticalSlide<%#Eval("ID") %>.hide();
             $('v_toggle_<%#Eval("ID") %>').addEvent('click', function(e) {
                 e.stop();
                 myVerticalSlide<%#Eval("ID") %>.toggle();
