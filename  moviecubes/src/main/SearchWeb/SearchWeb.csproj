@@ -67,7 +67,9 @@
     <Content Include="img\arrow.png" />
     <Content Include="img\logo.jpg" />
     <Content Include="img\SiteLogo.png" />
+    <Content Include="img\title_bg.png" />
     <Content Include="img\toGuanxi.bmp" />
+    <Content Include="img\toGuanxi.png" />
     <Content Include="js\demo.js" />
     <Content Include="js\mootools.js" />
     <Content Include="Relation.aspx" />

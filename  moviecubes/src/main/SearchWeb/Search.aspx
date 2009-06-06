@@ -14,24 +14,24 @@
 <body>
     <form id="form1" runat="server">
     <div class="header-wrapper2">
+        <div style="float:left;  padding-left :70px;"><img alt="logo" src="img/SiteLogo.png" style="width:229px; height:120px;"/></div>
         <span class="guanxi-logo">
-            <a href="RelationPage.aspx?query=<%=encodeQuery %>"><img src="img/toGuanxi.bmp" /></a>
+            <a href="RelationPage.aspx?query=<%=encodeQuery %>"><img alt="查看关系图" src="img/toGuanxi.png" /></a>
         </span>
-             <span class="yinglifang-logo">
-            <a href=""><img src="img/SiteLogo.png" style="width:130px;height:75px;"/></a>
-            </span>
+             
         <br />
-        <span class="input-panel">
-            <asp:TextBox ID="TextBox1" runat="server" Width="210px" BorderWidth="1px"></asp:TextBox>&nbsp;
-            <asp:Button ID="Button1" runat="server" onclick="Button1_Click" Text="搜索" 
-                Width="80px" Height="19px" />
+        <span class="input-panel" style="float:left; padding-left:15px">
+            <asp:TextBox ID="TextBox1" runat="server" BorderWidth="1px" 
+            CssClass="searchbar"></asp:TextBox>&nbsp;
+            <asp:Button ID="Button1"  runat="server" onclick="Button1_Click" Text="搜索" 
+             CssClass="searchbutton" />
         </span>
     </div>
-  <div class="no-result-panel" id="NoResultPanel" runat=server>抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
-  <div class=content-wrapper>
-  
-  <div id=LeftPanel class=template2-left-wrapper>
-  <div id="RelativeStarsPanel" runat=server>
+    
+  <div class="no-result-panel" id="NoResultPanel" runat="server">抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
+  <div class="content-wrapper">
+  <DIV id="LeftPanel" class="template2-left-wrapper">
+  <div id="RelativeStarsPanel" runat="server">
   <div class=title-bar>演员<a id="v_toggle_StarPanel" href="#">-</a></div>
   <div id="StarPanel" class=panel>
       <asp:Repeater ID="Repeater3" runat="server">
@@ -114,12 +114,12 @@
             }
         });
     </script> 
-  </div>
+  </DIV>
   </div>
 
 <div class="template2-right-wrapper">
-<div id="RecordPanel" runat=server>
-<div class=title-bar>网页 <span class="page-total">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <asp:Label ID="Label1" runat="server" Text=""></asp:Label></span></div>
+<div id="RecordPanel" runat="server">
+<div class="title-bar">网页 <span class="page-total">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <asp:Label ID="Label1" runat="server" Text=""></asp:Label></span></div>
 <div class="panel">
     <asp:Repeater ID="Repeater1" runat="server">
     
