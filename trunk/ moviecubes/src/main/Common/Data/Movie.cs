@@ -8,6 +8,7 @@ namespace MovieCube.Common.Data
     [JsonObject(MemberSerialization.OptIn)]
     public class StarMovie : IComparable<StarMovie>
     {
+
         [JsonProperty]
         public Movie Movie { get; set; }
 
@@ -136,6 +137,14 @@ namespace MovieCube.Common.Data
         [JsonProperty]
         public double Rank { get; set; }
 
+        public double FormatRank
+        {
+            get
+            {
+                return Math.Round(Rank, 1);
+            }
+        }
+
         /// <summary>
         /// 默认图片
         /// </summary>
@@ -147,6 +156,21 @@ namespace MovieCube.Common.Data
         /// </summary>
         [JsonProperty]
         public string ObjectType { get { return "MOVIE"; } }
+
+        public string MainStar
+        {
+            get
+            {
+                string value = "";
+
+                for (int i = 0; i < Stars.Count && i < 5; i++)
+                {
+                    value += Stars[i].Star.Name + " ";
+                }
+
+                return value;
+            }
+        }
 
         #region ICloneable Members
 

@@ -68,6 +68,8 @@
     <Content Include="img\logo.jpg" />
     <Content Include="img\SiteLogo.png" />
     <Content Include="img\toGuanxi.bmp" />
+    <Content Include="js\demo.js" />
+    <Content Include="js\mootools.js" />
     <Content Include="Relation.aspx" />
     <Content Include="RelationGraph.swf" />
     <Content Include="RelationPage.aspx" />
@@ -87,6 +89,7 @@
     <None Include="fake\FakeDb.cs" />
     <None Include="fake\FakeMovieQuery.cs" />
     <None Include="fake\FakeStarQuery.cs" />
+    <None Include="js\demo.js.bak" />
     <Compile Include="FooterNaviItem.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
