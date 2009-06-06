@@ -145,7 +145,7 @@
     	    <SPAN class=url><%# Eval("Url")%></SPAN>
     	</div>
         <DIV>
-            <SPAN class=info><A href=<%# Eval("Cache")%>>网页快照</A> - <A href=<%# Eval("More")%>>更多</A></SPAN>
+            <SPAN class=info><A href=<%# Eval("Cache")%>>网页快照</A></SPAN>
         </div>
     </div>
     </ItemTemplate>
@@ -171,16 +171,10 @@
     </div>
     </div>
 
-    <div class=footer-wrapper><A href="http://www.thss.tsinghua.edu.cn/"><SPAN 
+    <div class=footer-wrapper><A href="http://www.tsinghua.edu.cn/"><SPAN 
 style="COLOR: #0000ff; TEXT-DECORATION: underline">Tsinghua University</SPAN></A> <SPAN class=foot_Label3>| </SPAN><A 
-href="http://www.tsinghua.edu.cn"><SPAN 
-class=navlink>Feedback</SPAN></A> <BR>© 2009 Tsinghua 版权所有 | <A 
-href="http://www.thss.tsinghua.edu.cn" target=_blank>联系我们</A> | <A 
-href="http://www.thss.tsinghua.edu.cn" target=_blank>隐私声明</A> 
-| <A href="http://www.thss.tsinghua.edu.cn" 
-target=_blank>商标</A> | <A id=statmentLInk 
-href="http://www.thss.tsinghua.edu.cn" 
-target=_blank>使用条款</A> </div>
+href="mailto:wangw04@gmail.com"><SPAN 
+class=navlink>Feedback</SPAN></A> <BR>© 2009 Tsinghua 版权所有</div>
  </form>
  
  	
