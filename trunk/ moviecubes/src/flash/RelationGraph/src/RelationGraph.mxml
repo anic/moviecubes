@@ -3,13 +3,14 @@
 	layout="absolute" creationComplete="init()" viewSourceURL="srcview/index.html" 	  
 	xmlns:ns1="*"
 	 backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#000000, #FFFFFF]"
+	  
 	  >
 
 	<mx:Style source="MyTheme.css" /> 
-	<fc:AutoComplete id="txtSearch"  labelField="name" x="314" y="57" width="285" 
+	<fc:AutoComplete id="txtSearch"  labelField="name" y="57" width="285" 
 		keyUp="{keyUp(event);}"
 		  fontSize="14"  
-		    typedTextChange="{tryLoadHint();}"/>
+		    typedTextChange="{tryLoadHint();}" x="314"/>
 	<mx:ComboBox x="625" y="56" width="115" id="cbxSearchType"  textAlign="center" fontSize="14"/>
 	<mx:Button x="748" y="56" label="搜索" id="btnSearch" click="{
 			if (!cbxContinue.selected)
@@ -573,7 +574,7 @@
 	
 	<ns1:TipButton x="314" y="87" width="285" id="help">
 	</ns1:TipButton>
-	<mx:Image x="10" y="38" source="@Embed('myimage/Logo.png')"/>
+	<mx:Image x="70" y="38" source="@Embed('myimage/Logo.png')" click="{navigateToURL(new URLRequest('./Default.aspx'),'_self');}" buttonMode="true"/>
 	<mx:HBox width="100%" height="30">
 		<mx:Spacer width="100%"/>
 		<mx:LinkButton label="清空搜索框" id="btnClearSearchText">
@@ -636,9 +637,9 @@
 	<ns1:RecommendBox x="314" y="124" id="rbox" width="100%">
 	</ns1:RecommendBox>
 	<mx:Image y="29" source="@Embed('myimage/toSearch.png')" right="0"  buttonMode="true"
-		click="{navigateToURL(new URLRequest('./Search.aspx'),'_self');}"
+		click="{navigateToURL(new URLRequest('./Search.aspx?query='+encodeURI(txtSearch.text)),'_self');}"
 	 	
-		 />
+		  width="67"/>
 	
 	
 </mx:Application>

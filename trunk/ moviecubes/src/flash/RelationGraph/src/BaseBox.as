@@ -25,7 +25,7 @@ package
 		protected function setName(txtName:Text):void
 		{
 			txtName.text = data.name;
-		}
+		} 
 		
 		protected function setRank(txtRank:Text,bxRank:HBox):void
 		{
