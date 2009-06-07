@@ -117,7 +117,7 @@ namespace MovieCube.Common.Data
             get 
             {
                 string result = "";
-                for (int i = 0; i < Movies.Count && i < 5; i++)
+                for (int i = 0; i < Movies.Count && i < 10; i++)
                 {
                     result += "&nbsp;&nbsp;" + Movies[i].Movie.Name + " - " + Movies[i].Role + "<br>";
                 }
