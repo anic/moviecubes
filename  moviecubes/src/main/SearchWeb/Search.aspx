@@ -14,7 +14,7 @@
 <body>
     <form id="form1" runat="server">
     <div class="header-wrapper2">
-        <div style="float:left;  padding-left :70px;"><img alt="logo" src="img/SiteLogo.png" style="width:229px; height:120px;"/></div>
+        <div style="float:left;  padding-left :70px;"><a href="Default.aspx" title="主页"><img alt="logo" src="img/SiteLogo.png" style="width:229px; height:120px;"/></a></div>
         <span class="guanxi-logo">
             <a href="RelationPage.aspx?query=<%=encodeQuery %>"><img alt="查看关系图" src="img/toGuanxi.png" /></a>
         </span>
@@ -32,6 +32,7 @@
         if (txtBox != null) 
             txtBox.focus();
     </script>
+    <br/><br/>
   <div class="no-result-panel" id="NoResultPanel" runat="server">抱歉 我们没有找到 "<em><%=query %></em>" 相关结果</div>
   <div class="content-wrapper">
   <DIV id="LeftPanel" class="template2-left-wrapper">
@@ -83,7 +84,7 @@
         <ItemTemplate>
         <div class=item>
         <div class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Language")%></SPAN></A></div>
-        <div class=title><A title="点击搜索 <%# Eval("Name")%>" href=""><%# Eval("Name")%></A></div>
+        <div class=title><A title="点击搜索 <%# Eval("Name")%>" href="<%=queryPageUrl%>?query=<%#Eval("Name") %>"><%# Eval("Name")%></A></div>
         <div class=join><A title="点击搜索 <%# Eval("Name")%>+<%=query %>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></div>
         <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#"><span>了解更多</span><img src="img/Expand_small.png" style=" vertical-align:middle" /></A></div>
         <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">

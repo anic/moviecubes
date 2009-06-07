@@ -740,7 +740,7 @@ time-input {
 	background-image:url('img/button_up.png');
 	background-repeat:no-repeat;
 	background-color:Transparent;
-	font:13px; 
+	font-size:13px; 
 	height:28px;
 	Width:105px;
 	color:#444444;
@@ -760,3 +760,24 @@ time-input {
 	text-align:left;
 	padding-top:4px;
 }
+
+.rdb
+{
+	font-size:13px; 
+	margin-left:20px;
+	color:#444444;
+	font-weight:bold;
+}
+
+.searchbar2
+{
+	font-size:15px; 
+	width:285px;
+	height:24px;
+	background-color:White;
+	vertical-align:middle;
+	text-align:left;
+	margin-left:120px;
+	padding-top:4px;		
+}
+
