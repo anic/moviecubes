@@ -34,6 +34,13 @@ namespace MovieCube.SearchWeb
                 NoResultPanel.Style.Add("display", "none");
 
                 query = Request.QueryString["query"];
+                if (query == null || query.Trim() == "")
+                {
+                    Response.Redirect("Default.aspx?type=1");
+                    return;
+                }
+
+
                 encodeQuery = HttpUtility.UrlEncode(query);
 
                 string path = HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
