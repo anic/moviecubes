@@ -45,8 +45,30 @@
         <div class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Area")%></SPAN></A></div>
         <div class=title><A title="点击搜索 <%# Eval("Name")%>" href="<%=queryPageUrl%>?query=<%#Eval("Name")%>"><%# Eval("Name")%></A></div>
         <div class=join><A title="点击搜索 <%# Eval("Name")%>+<%=query %>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></div>
+        <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#"><span>了解更多</span><img src="img/Expand_small.png" style=" vertical-align:middle" /></A></div>
+        <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">
+            <div class=content>参演电影：<br><%#Eval("HtmlMovies")%></div>
+        </div>
         </div>
         <div class=hr></div>
+        <script type= "text/javascript" language="javascript">
+            var myVerticalSlide<%#Eval("ID") %> = new Fx.Slide('vertical_slide_<%#Eval("ID") %>');
+            myVerticalSlide<%#Eval("ID") %>.hide();
+            $('v_toggle_<%#Eval("ID") %>').addEvent('click', function(e) {
+                e.stop();
+                myVerticalSlide<%#Eval("ID") %>.toggle();
+                var node = document.getElementById("v_toggle_<%#Eval("ID") %>");
+                if (node.childNodes[0].innerHTML == "了解更多") {
+                    node.childNodes[0].innerHTML = "隐藏信息";
+                    node.childNodes[1].src = "img/Collapse_small.png";
+                    
+                }
+                else {
+                    node.childNodes[0].innerHTML = "了解更多";
+                    node.childNodes[1].src = "img/Expand_small.png";
+                }              
+            });
+        </script>   
         </ItemTemplate>
         <FooterTemplate>
         </FooterTemplate>
@@ -68,9 +90,10 @@
         <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#"><span>了解更多</span><img src="img/Expand_small.png" style=" vertical-align:middle" /></A></div>
         <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">
             <div class=content>评分：<%#Eval("FormatRank")%></div>
+            <div class=content>类型：<%#Eval("HtmlType")%></div>
             <div class=content>产地：<%#Eval("Area") %></div>
             <div class=content>出品时间：<%#Eval("Time") %></div>
-            <div class=content>主要演员：</div>
+            <div class=content>主创人员：</div>
             <div class=content>  <%#Eval("MainStar") %></div>
         </div>
         </div>

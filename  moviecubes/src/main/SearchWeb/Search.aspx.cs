@@ -219,8 +219,14 @@ namespace MovieCube.SearchWeb
             string movieInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/movieinfo");
 
             IMovieQuery movieQuery = new MovieQuery(movieInfo);
-            
-            return movieQuery.QueryMovieByKeyword(query);
+
+            List<Movie> result = movieQuery.QueryMovieByName(query);
+            if (result.Count < 1)
+            {
+                result = movieQuery.QueryMovieByKeyword(query);
+            }
+
+            return result;
         }
 
         private List<Star> RelativeStarQuery(string query)
@@ -228,7 +234,13 @@ namespace MovieCube.SearchWeb
             string starInfo = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/starinfo");
 
             IStarQuery starQuery = new StarQuery(starInfo);
-            return starQuery.QueryStarByKeyword(query);
+
+            List<Star> result = starQuery.QueryStarByName(query);
+
+            if (result.Count < 1)
+                result = starQuery.QueryStarByKeyword(query);
+
+            return result;
         }
 
         private List<MovieComment> RelativeCommentQuery(string name)
