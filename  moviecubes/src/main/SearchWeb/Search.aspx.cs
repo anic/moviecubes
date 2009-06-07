@@ -159,7 +159,7 @@ namespace MovieCube.SearchWeb
             int nextSlot = -1;
 
 
-            int nSlot = total / HITSPERPAGE;
+            int nSlot = (total + HITSPERPAGE - 1) / HITSPERPAGE;
             //nSlot = nSlot > MAXFOOTERNAVI ? MAXFOOTERNAVI : nSlot;
 
             if (nSlot == 0)
