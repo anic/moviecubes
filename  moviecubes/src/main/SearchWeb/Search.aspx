@@ -37,7 +37,7 @@
   <div class="content-wrapper">
   <DIV id="LeftPanel" class="template2-left-wrapper">
   <div id="RelativeStarsPanel" runat="server">
-  <div class="title-bar">演员<a id="v_toggle_StarPanel" class="title-bar-btn" href="#"><img src="img/Expand_large.png" alt="展开" style=" vertical-align:middle" /></a></div>
+  <div class="title-bar">演员<a id="v_toggle_StarPanel" class="title-bar-btn" href="#"><img src="img/Collapse_large.png" alt="收起" style=" vertical-align:middle" /></a></div>
   <div id="StarPanel" class="panel">
       <asp:Repeater ID="Repeater3" runat="server">
       <ItemTemplate>
@@ -78,7 +78,7 @@
   
   
   <div id="RelativeMoviePanel" runat="server">
-  <div class="title-bar">电影<a class=title-bar-btn id="v_toggle_MoviePanel" href="#"><img src="img/Expand_large.png" alt="展开" style=" vertical-align:middle" /></a></div>
+  <div class="title-bar">电影<a class=title-bar-btn id="v_toggle_MoviePanel" href="#"><img src="img/Collapse_large.png" alt="收起" style=" vertical-align:middle" /></a></div>
   <div id="MoviePanel" class="panel">
       <asp:Repeater ID="Repeater4" runat="server">
         <ItemTemplate>
