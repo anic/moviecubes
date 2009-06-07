@@ -23,7 +23,7 @@ BLOCKQUOTE {
 	PADDING-BOTTOM: 0px; MARGIN: 1.25em; PADDING-LEFT: 1.25em; PADDING-RIGHT: 1.25em; PADDING-TOP: 1.25em
 }
 BODY {
-	MIN-WIDTH: 960px; PADDING-BOTTOM: 0px; LINE-HEIGHT: 2em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: "verdana", "arial","tahoma", "ms sans serif", sans-serif; BACKGROUND: url(../image/topbg.gif) #fff repeat-x 0px -93px; HEIGHT: 100%; COLOR: #302f40; FONT-SIZE: 63%; PADDING-TOP: 0px
+	MIN-WIDTH: 960px; PADDING-BOTTOM: 0px; LINE-HEIGHT: 2em; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: "verdana", "arial","tahoma", "ms sans serif", sans-serif; BACKGROUND: url(../image/topbg.gif) #fff repeat-x 0px -93px; HEIGHT: 100%; COLOR: #302f40; FONT-SIZE: 12px; PADDING-TOP: 0px
 }
 H3 {
 	MARGIN: 0px 0px 5px; COLOR: #ff6600; FONT-SIZE: 1.2em
@@ -764,7 +764,7 @@ time-input {
 .rdb
 {
 	font-size:13px; 
-	margin-left:20px;
+	margin-left:50px;
 	color:#444444;
 	font-weight:bold;
 }
