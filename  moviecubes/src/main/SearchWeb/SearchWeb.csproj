@@ -65,6 +65,10 @@
     <Content Include="default.css" />
     <Content Include="Global.asax" />
     <Content Include="img\arrow.png" />
+    <Content Include="img\Collapse_large.png" />
+    <Content Include="img\Collapse_small.png" />
+    <Content Include="img\Expand_large.png" />
+    <Content Include="img\Expand_small.png" />
     <Content Include="img\logo.jpg" />
     <Content Include="img\SiteLogo.png" />
     <Content Include="img\title_bg.png" />
