@@ -12,23 +12,21 @@
     <form id="form1" runat="server">
          <div style="text-align:center"><img alt="logo" src="img/SiteLogo.png" style="width:229px; height:120px;"/></div>
        <div class="header-wrapper2">
-        
-        <br />
-        <span class="input-panel" style="text-align:center">
+        <br style="height:5px;"/>
+        <div class="input-panel" style="text-align:center;">
             <asp:TextBox ID="TextBox1" OnTextChanged="Button1_Click" 
                onfocus="javascript:this.select()" runat="server" BorderWidth="1px" 
             CssClass="searchbar2" Width="350px"></asp:TextBox>
             <asp:Button ID="Button1"  runat="server" onclick="Button1_Click" Text="搜索"
              CssClass="searchbutton" />
-        </span>
+        </div>
+        <br style=" font-size:10px"/>
         
-        <br />
-        <span>
+        <div>
             <asp:RadioButton ID="rdbRelation" Text="关系搜索" runat="server" CssClass="rdb" GroupName="stype" 
                Checked="True" />
-            
             <asp:RadioButton ID="rdbPage" Text="页面搜索" runat="server" CssClass="rdb"  GroupName="stype" />
-        </span>
+        </div>
     </div>
     <script type= "text/javascript" language="javascript">
         var txtBox = document.getElementById("TextBox1");
