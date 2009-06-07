@@ -48,6 +48,7 @@
         <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#"><span>了解更多</span><img src="img/Expand_small.png" style=" vertical-align:middle" /></A></div>
         <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">
             <div class=content>参演电影：<br><%#Eval("HtmlMovies")%></div>
+            <div class=content><%#Eval("HtmlIntroduction").Equals("") ? "" : "简介："%><br><%#Eval("HtmlIntroduction")%><br><span style="color:Blue"><a href="http://www.mdbchina.cn/persons/<%#Eval("ID") %>/others/?#movieIntro"><%#Eval("HtmlIntroduction").Equals("") ? "" : "[更多]"%></a></span></div>
         </div>
         </div>
         <div class=hr></div>
@@ -95,6 +96,7 @@
             <div class=content>出品时间：<%#Eval("Time") %></div>
             <div class=content>主创人员：</div>
             <div class=content>  <%#Eval("MainStar") %></div>
+            <div class=content><%#Eval("HtmlIntroduction").Equals("") ? "" : "简介："%><br><%#Eval("HtmlIntroduction")%><br><a href="http://www.mdbchina.cn/movies/<%#Eval("ID") %>/others/?#movieIntro"><%#Eval("HtmlIntroduction").Equals("") ? "" : "[更多]"%></a></div>
         </div>
         </div>
         

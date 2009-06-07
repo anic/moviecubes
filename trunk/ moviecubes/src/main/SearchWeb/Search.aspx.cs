@@ -111,7 +111,7 @@ namespace MovieCube.SearchWeb
                 Repeater3.DataSource = stars.GetRange(0, stars.Count > MAXRELATIVESTAR ? MAXRELATIVESTAR : stars.Count);
                 Repeater3.DataBind();
 
-                if (stars.Count == 1 && stars[0].Name.Equals(query) || stars.Count == 0)
+                if (stars.Count == 0)
                 {
                     RelativeStarsPanel.Style.Add("display", "none");
                 }
@@ -220,10 +220,10 @@ namespace MovieCube.SearchWeb
 
             IMovieQuery movieQuery = new MovieQuery(movieInfo);
 
-            List<Movie> result = movieQuery.QueryMovieByName(query);
+            List<Movie> result = movieQuery.QueryMovieAllInfoByName(query); //QueryMovieByName(query);
             if (result.Count < 1)
             {
-                result = movieQuery.QueryMovieByKeyword(query);
+                result = movieQuery.QueryMovieAllInfoByKeyword(query);
             }
 
             return result;
@@ -235,10 +235,10 @@ namespace MovieCube.SearchWeb
 
             IStarQuery starQuery = new StarQuery(starInfo);
 
-            List<Star> result = starQuery.QueryStarByName(query);
+            List<Star> result = starQuery.QueryStarAllInfoByName(query);//QueryStarByName(query);
 
             if (result.Count < 1)
-                result = starQuery.QueryStarByKeyword(query);
+                result = starQuery.QueryStarAllInfoByKeyword(query); //QueryStarByKeyword(query);
 
             return result;
         }
