@@ -72,6 +72,22 @@ namespace MovieCube.Common.Data
 
         public string Introduction { get; set; }
 
+        public string HtmlIntroduction
+        {
+            get
+            {
+                string result = "";
+
+                if (!Introduction.Equals(""))
+                {
+                    result = Introduction.Substring(0, 70 > Introduction.Length ? Introduction.Length : 70);
+                    result += "...";
+                }
+
+                return result;
+            }
+        }
+
         /// <summary>
         /// ID
         /// </summary>
@@ -95,6 +111,19 @@ namespace MovieCube.Common.Data
         /// </summary>
         [JsonProperty]
         public List<StarMovie> Movies { get; set; }
+
+        public string HtmlMovies 
+        {
+            get 
+            {
+                string result = "";
+                for (int i = 0; i < Movies.Count && i < 5; i++)
+                {
+                    result += "&nbsp;&nbsp;" + Movies[i].Movie.Name + " - " + Movies[i].Role + "<br>";
+                }
+                return result;
+            }
+        }
 
         /// <summary>
         /// 总电影个数

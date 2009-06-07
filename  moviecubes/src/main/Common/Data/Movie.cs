@@ -73,6 +73,22 @@ namespace MovieCube.Common.Data
 
         public string Introduction { get; set; }
 
+        public string HtmlIntroduction 
+        {
+            get
+            {
+                string result = "";
+
+                if (!Introduction.Equals(""))
+                {
+                    result = Introduction.Substring(0, 70 > Introduction.Length ? Introduction.Length : 70);
+                    result += "...";
+                }
+
+                return result;
+            }
+        }
+
         public string Feature { get; set; }
 
         public string BehindCurtain { get; set; }
@@ -118,6 +134,18 @@ namespace MovieCube.Common.Data
         /// </summary>
         [JsonProperty]
         public List<string> Type { get; set; }
+
+        public string HtmlType
+        {
+            get
+            {
+                string result = "";
+                for (int i = 0; i < Type.Count && i < 3; i++)
+                    result += Type[i] + "  ";
+
+                return result;
+            }
+        }
 
         /// <summary>
         /// 地区
@@ -165,7 +193,7 @@ namespace MovieCube.Common.Data
 
                 for (int i = 0; i < Stars.Count && i < 5; i++)
                 {
-                    value += Stars[i].Star.Name + " ";
+                    value += "&nbsp;&nbsp;" + Stars[i].Star.Name + " - " + Stars[i].Role + "<br>";
                 }
 
                 return value;
