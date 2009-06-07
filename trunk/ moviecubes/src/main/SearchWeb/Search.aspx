@@ -37,7 +37,7 @@
   <div class="content-wrapper">
   <DIV id="LeftPanel" class="template2-left-wrapper">
   <div id="RelativeStarsPanel" runat="server">
-  <div class="title-bar">演员<a id="v_toggle_StarPanel" class="title-bar-btn" href="#"><img src="img/Collapse_large.png" alt="收起" style=" vertical-align:middle" /></a></div>
+  <div class="title-bar">演员</div>
   <div id="StarPanel" class="panel">
       <asp:Repeater ID="Repeater3" runat="server">
       <ItemTemplate>
@@ -53,32 +53,11 @@
     </asp:Repeater>
   
   </div>
-     <script type= "text/javascript" language="javascript">
-         var myVerticalSlideStarPanel = new Fx.Slide('StarPanel');
-         $('v_toggle_StarPanel').addEvent('click', function(e) {
-             e.stop();
-             myVerticalSlideStarPanel.toggle();
-             var altExpand = "展开";
-             var altCollapsed = "收起";
-             var expand = "img/Expand_large.png";
-             var collapsed = "img/Collapse_large.png";
-             var node = document.getElementById("v_toggle_StarPanel").childNodes[0];
-             if (node.alt == altExpand) {
-                 node.src = collapsed;
-                 node.alt = altCollapsed;
-             }
-             else {
-                 node.alt = altExpand;
-                 node.src = expand;
-             }
-
-         });
-    </script> 
   </div>
   
   
   <div id="RelativeMoviePanel" runat="server">
-  <div class="title-bar">电影<a class=title-bar-btn id="v_toggle_MoviePanel" href="#"><img src="img/Collapse_large.png" alt="收起" style=" vertical-align:middle" /></a></div>
+  <div class="title-bar">电影</div>
   <div id="MoviePanel" class="panel">
       <asp:Repeater ID="Repeater4" runat="server">
         <ItemTemplate>
@@ -119,26 +98,7 @@
         </ItemTemplate>
       </asp:Repeater>
     </div>
-    <script type= "text/javascript" language="javascript">
-        var myVerticalSlideMoviePanel = new Fx.Slide('MoviePanel');
-        $('v_toggle_MoviePanel').addEvent('click', function(e) {
-            e.stop();
-            myVerticalSlideMoviePanel.toggle();
-            var altExpand = "展开";
-            var altCollapsed = "收起";
-            var expand = "img/Expand_large.png";
-            var collapsed = "img/Collapse_large.png";
-            var node = document.getElementById("v_toggle_MoviePanel").childNodes[0];
-            if (node.alt == altExpand) {
-                node.src = collapsed;
-                node.alt = altCollapsed;
-            }
-            else {
-                node.alt = altExpand;
-                node.src = expand;
-            }
-        });
-    </script> 
+
   </DIV>
   </div>
 
