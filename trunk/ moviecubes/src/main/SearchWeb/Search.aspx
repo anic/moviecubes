@@ -36,8 +36,8 @@
   <div class="content-wrapper">
   <DIV id="LeftPanel" class="template2-left-wrapper">
   <div id="RelativeStarsPanel" runat="server">
-  <div class=title-bar>演员<a id="v_toggle_StarPanel" class=title-bar-btn href="#">-</a></div>
-  <div id="StarPanel" class=panel>
+  <div class="title-bar">演员<a id="v_toggle_StarPanel" class="title-bar-btn" href="#"><img src="img/Expand_large.png" alt="展开" style=" vertical-align:middle" /></a></div>
+  <div id="StarPanel" class="panel">
       <asp:Repeater ID="Repeater3" runat="server">
       <ItemTemplate>
         <div class=item>
@@ -57,27 +57,35 @@
          $('v_toggle_StarPanel').addEvent('click', function(e) {
              e.stop();
              myVerticalSlideStarPanel.toggle();
-             if (document.getElementById("v_toggle_StarPanel").innerHTML == "+") {
-                 document.getElementById("v_toggle_StarPanel").innerHTML = "-";
+             var altExpand = "展开";
+             var altCollapsed = "收起";
+             var expand = "img/Expand_large.png";
+             var collapsed = "img/Collapse_large.png";
+             var node = document.getElementById("v_toggle_StarPanel").childNodes[0];
+             if (node.alt == altExpand) {
+                 node.src = collapsed;
+                 node.alt = altCollapsed;
              }
              else {
-                 document.getElementById("v_toggle_StarPanel").innerHTML = "+";
+                 node.alt = altExpand;
+                 node.src = expand;
              }
+
          });
     </script> 
   </div>
   
   
-  <div id="RelativeMoviePanel" runat=server>
-  <div class=title-bar>电影<a class=title-bar-btn id="v_toggle_MoviePanel" href="#">-</a></div>
-  <div id="MoviePanel" class=panel>
+  <div id="RelativeMoviePanel" runat="server">
+  <div class="title-bar">电影<a class=title-bar-btn id="v_toggle_MoviePanel" href="#"><img src="img/Expand_large.png" alt="展开" style=" vertical-align:middle" /></a></div>
+  <div id="MoviePanel" class="panel">
       <asp:Repeater ID="Repeater4" runat="server">
         <ItemTemplate>
         <div class=item>
         <div class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Language")%></SPAN></A></div>
         <div class=title><A title="点击搜索 <%# Eval("Name")%>" href=""><%# Eval("Name")%></A></div>
         <div class=join><A title="点击搜索 <%# Eval("Name")%>+<%=query %>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></div>
-        <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#">了解更多</A></div>
+        <div class=why><A id="v_toggle_<%#Eval("ID") %>" href="#"><span>了解更多</span><img src="img/Expand_small.png" style=" vertical-align:middle" /></A></div>
         <div class=more-info-panel id="vertical_slide_<%#Eval("ID") %>">
             <div class=content>评分：<%#Eval("FormatRank")%></div>
             <div class=content>产地：<%#Eval("Area") %></div>
@@ -95,11 +103,15 @@
             $('v_toggle_<%#Eval("ID") %>').addEvent('click', function(e) {
                 e.stop();
                 myVerticalSlide<%#Eval("ID") %>.toggle();
-                if (document.getElementById("v_toggle_<%#Eval("ID") %>").innerHTML == "了解更多") {
-                    document.getElementById("v_toggle_<%#Eval("ID") %>").innerHTML = "隐藏信息";
+                var node = document.getElementById("v_toggle_<%#Eval("ID") %>");
+                if (node.childNodes[0].innerHTML == "了解更多") {
+                    node.childNodes[0].innerHTML = "隐藏信息";
+                    node.childNodes[1].src = "img/Collapse_small.png";
+                    
                 }
                 else {
-                    document.getElementById("v_toggle_<%#Eval("ID") %>").innerHTML = "了解更多";
+                    node.childNodes[0].innerHTML = "了解更多";
+                    node.childNodes[1].src = "img/Expand_small.png";
                 }                
             });
         </script>   
@@ -111,11 +123,18 @@
         $('v_toggle_MoviePanel').addEvent('click', function(e) {
             e.stop();
             myVerticalSlideMoviePanel.toggle();
-            if (document.getElementById("v_toggle_MoviePanel").innerHTML == "+") {
-                document.getElementById("v_toggle_MoviePanel").innerHTML = "-";
+            var altExpand = "展开";
+            var altCollapsed = "收起";
+            var expand = "img/Expand_large.png";
+            var collapsed = "img/Collapse_large.png";
+            var node = document.getElementById("v_toggle_MoviePanel").childNodes[0];
+            if (node.alt == altExpand) {
+                node.src = collapsed;
+                node.alt = altCollapsed;
             }
             else {
-                document.getElementById("v_toggle_MoviePanel").innerHTML = "+";
+                node.alt = altExpand;
+                node.src = expand;
             }
         });
     </script> 
