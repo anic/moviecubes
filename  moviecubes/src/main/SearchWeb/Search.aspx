@@ -43,7 +43,7 @@
       <ItemTemplate>
         <div class=item>
         <div class=relationship><SPAN style="COLOR: #f60; TEXT-DECORATION: underline"><%# Eval("Area")%></SPAN></A></div>
-        <div class=title><A title="点击搜索 <%# Eval("Name")%>" href=""><%# Eval("Name")%></A></div>
+        <div class=title><A title="点击搜索 <%# Eval("Name")%>" href="<%=queryPageUrl%>?query=<%#Eval("Name")%>"><%# Eval("Name")%></A></div>
         <div class=join><A title="点击搜索 <%# Eval("Name")%>+<%=query %>" href="<%=queryPageUrl%>?query=<%=query%>+<%#Eval("Name") %>">加入查询</A></div>
         </div>
         <div class=hr></div>
