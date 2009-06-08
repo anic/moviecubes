@@ -23,11 +23,18 @@ namespace MovieCube.SearchWeb
         protected string encodeQuery;
         protected string queryPageUrl;
 
+        protected FooterNaviItem prevPage;
+        protected FooterNaviItem nextPage;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            prevPage = new FooterNaviItem();
+            nextPage = new FooterNaviItem();
 
             if (!IsPostBack)
             {
+
+
                 RelativeMoviePanel.Style.Add("display", "none");
                 RelativeStarsPanel.Style.Add("display", "none");
                 RecordPanel.Style.Add("display", "none");
@@ -122,8 +129,7 @@ namespace MovieCube.SearchWeb
 
                 RecordPanel.Style.Remove("display");
 
-                List<FooterNaviItem> preAndNext = null;
-                List<FooterNaviItem> footer = GenerateFooterNavi(result.TotalPages, result.StartPage, result.EndPage, result.Context, ref preAndNext);
+                List<FooterNaviItem> footer = GenerateFooterNavi(result.TotalPages, result.StartPage, result.EndPage, result.Context);
 
                 if (footer != null)
                 {
@@ -150,7 +156,7 @@ namespace MovieCube.SearchWeb
             TextBox1.Text = query;
         }
 
-        private List<FooterNaviItem> GenerateFooterNavi(int total, int start, int end, string url, ref List<FooterNaviItem> prevAndNext)
+        private List<FooterNaviItem> GenerateFooterNavi(int total, int start, int end, string url)
         {
             int curSlot = (start + HITSPERPAGE - 1) / HITSPERPAGE;
             int startSlot;
@@ -174,33 +180,32 @@ namespace MovieCube.SearchWeb
             lastSlot = curSlot - 1 >= 1 ? curSlot - 1 : lastSlot;
             nextSlot = curSlot + 1 <= endSlot ? curSlot + 1 : endSlot;
 
-
-            prevAndNext = new List<FooterNaviItem>();
-            FooterNaviItem prev = new FooterNaviItem();
-            FooterNaviItem next = new FooterNaviItem();
+            string path = HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+            path = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path;
 
             if (lastSlot < 1)
-                prev.Id = "";
+                prevPage.Id = "";
             else 
             {
-                prev.Id = lastSlot.ToString();
-                prev.Url = url + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((lastSlot - 1) * HITSPERPAGE + 1).ToString();
+                prevPage.Id = lastSlot.ToString();
+                //prevPage.Url = url + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((lastSlot - 1) * HITSPERPAGE + 1).ToString();
+                prevPage.Url = "http://" + path + "/Search.aspx?query=" + query + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((lastSlot - 1) * HITSPERPAGE).ToString();
             }
 
-            if (nextSlot < 1)
-                next.Id = "";
+            if (nextSlot == curSlot)
+                nextPage.Id = "";
             else 
             {
-                next.Id = nextSlot.ToString();
-                next.Url = url + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((nextSlot - 1) * HITSPERPAGE + 1).ToString();
+                nextPage.Id = nextSlot.ToString();
+                //nextPage.Url = url + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((nextSlot - 1) * HITSPERPAGE + 1).ToString();
+                nextPage.Url = "http://" + path + "/Search.aspx?query=" + query + "&hitsPerPage=" + HITSPERPAGE.ToString() + "&start=" + ((nextSlot - 1) * HITSPERPAGE).ToString();
             }
             
 
             List<FooterNaviItem> footer = new List<FooterNaviItem>();
             FooterNaviItem item;
 
-            string path = HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
-            path = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path;
+            
             for (int i = startSlot; i <= endSlot; i++)
             {
                 item = new FooterNaviItem();
@@ -220,7 +225,7 @@ namespace MovieCube.SearchWeb
 
             IMovieQuery movieQuery = new MovieQuery(movieInfo);
 
-            List<Movie> result = movieQuery.QueryMovieAllInfoByName(query); //QueryMovieByName(query);
+            List<Movie> result = movieQuery.QueryMovieAllInfoByName(query);
             if (result.Count < 1)
             {
                 result = movieQuery.QueryMovieAllInfoByKeyword(query);
@@ -235,10 +240,10 @@ namespace MovieCube.SearchWeb
 
             IStarQuery starQuery = new StarQuery(starInfo);
 
-            List<Star> result = starQuery.QueryStarAllInfoByName(query);//QueryStarByName(query);
+            List<Star> result = starQuery.QueryStarAllInfoByName(query);
 
             if (result.Count < 1)
-                result = starQuery.QueryStarAllInfoByKeyword(query); //QueryStarByKeyword(query);
+                result = starQuery.QueryStarAllInfoByKeyword(query);
 
             return result;
         }

@@ -163,11 +163,13 @@
     <div class="p">
         <asp:Repeater ID="Repeater2" runat="server">
             <HeaderTemplate>
+                <a href="<%=(prevPage.Id).Equals("") ? "" : prevPage.Url %>"><%=(prevPage.Id).Equals("") ? "" : "前一页" %></a>
             </HeaderTemplate>
             <ItemTemplate>
                 <a href = "<%# Eval("Url")%>"><%# Eval("IsCurrent").ToString().Equals("True") ? "" : "["%><%# Eval("Id")%><%# Eval("IsCurrent").ToString().Equals("True") ? "" : "]"%></a>&nbsp;
             </ItemTemplate> 
             <FooterTemplate>
+                <a href="<%=(nextPage.Id).Equals("") ? "" : nextPage.Url %>"><%=(nextPage.Id).Equals("") ? "" : "后一页"%></a>
             </FooterTemplate>
         </asp:Repeater>
     </div>
