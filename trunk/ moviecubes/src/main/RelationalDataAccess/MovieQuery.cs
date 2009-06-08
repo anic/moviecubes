@@ -465,8 +465,8 @@ namespace MovieCube.RelationalDataAccess
             result.Time = doc.Get("Time");
 
             result.Introduction = doc.Get("Introduction");
-            result.Feature = doc.Get("Feature");
-            result.BehindCurtain = doc.Get("BehindCurtain");
+            //result.Feature = doc.Get("Feature");
+            //result.BehindCurtain = doc.Get("BehindCurtain");
 
             Util.ProcessStringItem(doc.Get("Alias"), result.Alias);
             Util.ProcessStringItem(doc.Get("Type"), result.Type);
