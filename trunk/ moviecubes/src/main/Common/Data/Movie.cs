@@ -191,7 +191,7 @@ namespace MovieCube.Common.Data
             {
                 string value = "";
 
-                for (int i = 0; i < Stars.Count && i < 10; i++)
+                for (int i = 0; i < Stars.Count && i < 15; i++)
                 {
                     value += "&nbsp;&nbsp;" + Stars[i].Star.Name + " - " + Stars[i].Role + "<br>";
                 }
