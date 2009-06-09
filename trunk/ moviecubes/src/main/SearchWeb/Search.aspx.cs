@@ -29,7 +29,10 @@ namespace MovieCube.SearchWeb
         protected void Page_Load(object sender, EventArgs e)
         {
             prevPage = new FooterNaviItem();
+            prevPage.Id = "";
+
             nextPage = new FooterNaviItem();
+            nextPage.Id = "";
 
             if (!IsPostBack)
             {
