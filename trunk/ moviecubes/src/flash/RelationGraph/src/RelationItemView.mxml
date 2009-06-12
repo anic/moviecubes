@@ -22,7 +22,7 @@
         blurXFrom="0.0" blurXTo="50.0" 
         blurYFrom="0.0" blurYTo="50.0" 
         target="{this.circle}"
-        color="{data.color}"/>
+        />
         
     
 	<local:Circle id="circle" width="100%" height="100%" color="{data.color}"/>
@@ -69,7 +69,16 @@
 			{
 				var offset:int = data.rank*5;
 				this.circle.unscaledRadius = (this.width/2 - 20 - offset)>10? (this.width/2 - 20 - offset):10 ;
-				
+				if (this.effectAdd.isPlaying)
+				{
+					this.effectAdd.stop();
+					this.effectAdd.color = this.circle.color;
+					this.effectAdd.play();
+				}
+				else
+				{
+					this.effectAdd.color = this.circle.color;
+				}
 				//var target:UIComponent =  (this.width/2 - 20 - offset)>10? this.circle:this.txtName;
 				var target:UIComponent = this;
 				var bubbleTip:BubbleTipTarget = RelationGraph(Application.application).tipMan.getBubbleTip(target);
